@@ -1,6 +1,6 @@
 # Development Workflow Plugin
 
-A comprehensive Claude Code plugin providing 25+ specialized skills for end-to-end product development. Covers strategy, design, architecture, implementation, testing, and security with quality gates and feedback loops.
+A comprehensive Claude Code plugin providing 26+ specialized skills for end-to-end product development. Covers strategy, design, architecture, implementation, testing, validation, and security with quality gates and feedback loops.
 
 ## Installation
 
@@ -59,14 +59,26 @@ The orchestrator will:
 4. Validate outputs at each quality gate
 5. Route feedback between skills
 6. Track progress to completion
+7. Generate project chronicle documentation
 
-## Skills (25 Total)
+## Commands
+
+| Command | Purpose |
+| ------- | ------- |
+| `/start` | Start project orchestration |
+| `/project-chronicle` | Generate project documentation |
+| `/project-chronicle --full` | Include all artifact content |
+| `/project-chronicle --minimal` | Summary only |
+| `/project-chronicle --theme dark` | Set default theme |
+
+## Skills (26 Total)
 
 ### Meta/Management
 
 | Skill                  | Purpose                                     |
 | ---------------------- | ------------------------------------------- |
 | `project-orchestrator` | Coordinates entire workflow, enforces gates |
+| `project-chronicler`   | Generates HTML documentation of project journey |
 
 ### Strategy & Research
 
@@ -78,10 +90,10 @@ The orchestrator will:
 
 ### Requirements & Architecture
 
-| Skill                | Purpose                             |
-| -------------------- | ----------------------------------- |
-| `business-analyst`   | Requirements, BRD, user stories     |
-| `solution-architect` | System design, ADRs, tech decisions |
+| Skill                | Purpose                                        |
+| -------------------- | ---------------------------------------------- |
+| `business-analyst`   | Requirements, BRD, user stories, acceptance testing |
+| `solution-architect` | System design, ADRs, tech decisions            |
 
 ### Design
 
@@ -150,29 +162,33 @@ Pre-configured agents for common workflows:
 │                                                                  │
 │   [DISCOVERY] ──→ [STRATEGY] ──→ [REQUIREMENTS] ──→ [ARCH]      │
 │                                         │                        │
-│                                    [GATE: OK?]                   │
+│                                    [GATE 1: Requirements OK?]    │
 │                                         │                        │
 │   [DATA + API] ←────────────────────────┘                       │
 │        │                                                         │
-│   [GATE: Contracts OK?]                                          │
+│   [GATE 2: Contracts OK?]                                        │
 │        │                                                         │
 │   [UX] ──→ [UI] ──→ [INTERACTION] ──→ [CONTENT]                 │
 │        │                                                         │
-│   [GATE: Design OK?]                                             │
+│   [GATE 3: Design OK?]                                           │
 │        │                                                         │
 │   [IMPLEMENTATION] ──→ [DOCS]                                    │
 │        │                                                         │
-│   [GATE: Code OK?]                                               │
+│   [GATE 4: Code OK?]                                             │
 │        │                                                         │
 │   [QA] + [ACCESSIBILITY] + [PERFORMANCE]                         │
 │        │                                                         │
-│   [GATE: Quality OK?]                                            │
+│   [GATE 5: QA OK?] ←── First Launch Protocol                     │
+│        │                                                         │
+│   [BUSINESS ACCEPTANCE TESTING] ←── BA validates user stories    │
+│        │                                                         │
+│   [GATE 6: Business Acceptance OK?]                              │
 │        │                                                         │
 │   [SECURITY]                                                     │
 │        │                                                         │
-│   [GATE: Security OK?]                                           │
+│   [GATE 7: Security OK?]                                         │
 │        │                                                         │
-│   [DEVOPS] ──→ [DEPLOY] ──→ [DONE]                              │
+│   [DEVOPS] ──→ [DEPLOY] ──→ [CHRONICLE] ──→ [DONE]              │
 │                                                                  │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -181,24 +197,89 @@ Pre-configured agents for common workflows:
 
 Each phase must pass validation before proceeding:
 
-| Gate           | Pass Criteria                                        |
-| -------------- | ---------------------------------------------------- |
-| Requirements   | All requirements have IDs, are testable, prioritized |
-| Architecture   | ADRs documented, no TBDs, security addressed         |
-| Design         | All flows covered, accessible, responsive            |
-| Implementation | Tests pass, no linting errors, documented            |
-| Quality        | No critical defects, requirements verified           |
-| Security       | No high/critical vulnerabilities                     |
+| Gate | Pass Criteria |
+| ---- | ------------- |
+| Requirements | All requirements have IDs, are testable, prioritized |
+| Architecture | ADRs documented, no TBDs, security addressed |
+| Design | All flows covered, accessible, responsive |
+| Implementation | Tests pass, no linting errors, documented |
+| QA | No critical defects, First Launch Protocol passes |
+| Business Acceptance | User stories validated from real user perspective |
+| Security | No high/critical vulnerabilities |
+
+## Business Acceptance Testing
+
+After technical QA passes, the Business Analyst validates the product from a user perspective:
+
+- **First Impressions Test**: Does the app load? Is purpose clear? Can user navigate?
+- **User Story Validation**: Can users achieve their goals per acceptance criteria?
+- **Requirements Traceability**: Does implementation match intent?
+- **Problem-Solution Fit**: Does the product solve the original problem?
+
+Results: **ACCEPT**, **REJECT**, or **CONDITIONAL** with issues routed to appropriate skills.
+
+## Document Output Structure
+
+Skills produce artifacts in standardized locations for traceability:
+
+```
+docs/
+├── discovery/           # Product Strategist outputs
+│   ├── PROJECT-BRIEF.md
+│   ├── MARKET-ANALYSIS.md
+│   ├── COMPETITIVE-ANALYSIS.md
+│   └── BUSINESS-MODEL.md
+├── requirements/        # Business Analyst outputs
+│   ├── BRD.md
+│   ├── REQUIREMENTS-CATALOGUE.md
+│   └── USER-STORIES.md
+├── architecture/        # Solution Architect outputs
+│   ├── SYSTEM-DESIGN.md
+│   └── ADR/
+│       └── ADR-001-*.md
+├── data/                # Data Architect outputs
+│   └── DATA-MODEL.md
+├── api/                 # API Designer outputs
+│   └── API-SPEC.md
+├── design/              # UX/UI Designer outputs
+│   ├── USER-FLOWS.md
+│   ├── WIREFRAMES.md
+│   └── UI-SPEC.md
+├── qa/                  # QA Engineer outputs
+│   ├── TEST-PLAN.md
+│   └── DEFECT-LOG.md
+├── security/            # Security Engineer outputs
+│   └── SECURITY-REVIEW.md
+├── devops/              # DevOps Engineer outputs
+│   └── DEPLOYMENT-CONFIG.md
+└── chronicles/          # Project Chronicler outputs
+    └── PROJECT-CHRONICLE-*.html
+```
+
+## Project Chronicle
+
+The `project-chronicler` skill generates a self-contained HTML file documenting the entire project journey:
+
+- **Timeline**: Visual journey from discovery to deployment with gate markers
+- **Artifact Gallery**: All produced documents organized by type
+- **Decision Log**: ADRs with context and consequences
+- **Metrics Dashboard**: Gates passed, defects resolved, test coverage
+- **Diagrams**: Architecture, ERD, sequence diagrams (via Mermaid.js)
+- **Workflow Visualization**: Skill invocation sequence
+
+Generated automatically at phase completion or manually via `/project-chronicle`.
 
 ## Feedback Loops
 
 Skills give feedback to each other:
 
 ```
-QA finds bug         → Routes to Developer
-Developer unclear    → Routes to BA for clarification
-Security finds vuln  → Routes to Developer + Architect
-Design issue found   → Routes to UX/UI Designer
+QA finds bug              → Routes to Developer
+Developer unclear         → Routes to BA for clarification
+Security finds vuln       → Routes to Developer + Architect
+Design issue found        → Routes to UX/UI Designer
+BA finds UX issue in BAT  → Routes to UX Designer
+Feature doesn't work      → Routes to Developer
 ```
 
 ## Sharing with Friends
@@ -236,6 +317,8 @@ description: What this skill does. Use when [trigger conditions].
 [Skill instructions...]
 ```
 
+3. Add Output Location section pointing to appropriate `docs/` subdirectory
+
 ### Adding a New Agent
 
 1. Create file: `agents/my-agent.md`
@@ -251,9 +334,14 @@ tools: Read, Write, Bash
 [Agent instructions...]
 ```
 
+### Adding a New Command
+
+1. Create file: `commands/my-command.md`
+2. Add frontmatter and instructions
+
 ## License
 
-MIT - Feel free to use, modify, and share.
+MIT - See [LICENSE](LICENSE) file for details.
 
 ## Contributing
 
