@@ -58,28 +58,26 @@ claude --plugin-dir ./development-workflow-plugin
 
 ### Full Project Mode (Recommended for New Projects)
 
-Start any project with proper intake:
+Start any project with the orchestrator:
 
 ```
-/init-project
+/project-orchestrator
 ```
 
-This walks you through structured questions and then:
+Or simply describe what you want to build:
 
 ```
-/start
+"I want to build an app that helps students track their study habits"
 ```
 
-The orchestrator will:
+The orchestrator automatically:
 
-1. Conduct multi-angle project analysis
-2. Determine which skills and agents are needed
-3. Create a skill execution plan
-4. Enable continuous flow (items progress independently)
-5. Validate outputs at each quality gate
-6. Route feedback between skills
-7. Track progress to completion
-8. Generate project chronicle documentation
+1. **Calls product-intake** - Structured questions to gather requirements
+2. **Invokes product-design** - 3-phase flow (Strategy → CX → Design)
+3. **Routes to specialists** - BA, Architect, Designer, Developer, QA
+4. **Automates implementation** - Dev iterations without manual gates
+5. **Validates at gates** - Quality checkpoints that matter
+6. **Generates chronicles** - Visual HTML documentation at milestones
 
 ### Standalone Mode (For Specific Tasks)
 
@@ -130,9 +128,8 @@ You can also chain skills manually for a focused workflow:
 
 | Command | Purpose |
 | ------- | ------- |
-| `/init-project` | **Start a new project with structured intake form** |
-| `/start` | Start project orchestration (after intake) |
-| `/project-chronicle` | Generate project documentation |
+| `/project-orchestrator` | **Start a new project** - Auto-calls product-intake, then orchestrates full workflow |
+| `/project-chronicle` | Generate visual HTML documentation of project journey |
 | `/project-chronicle --full` | Include all artifact content |
 | `/project-chronicle --minimal` | Summary only |
 | `/project-chronicle --theme dark` | Set default theme |
