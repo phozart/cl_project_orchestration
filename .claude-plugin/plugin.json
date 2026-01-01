@@ -1,0 +1,23 @@
+{
+  "name": "development-workflow",
+  "version": "1.0.0",
+  "description": "Complete development workflow orchestration with 15+ specialized skills for end-to-end product development. Covers strategy, design, architecture, implementation, testing, and security.",
+  "author": {
+    "name": "Agent Workflow Studio",
+    "url": "https://github.com/agent-workflow-studio"
+  },
+  "keywords": [
+    "development",
+    "workflow",
+    "orchestration",
+    "skills",
+    "product",
+    "design",
+    "architecture",
+    "testing",
+    "security"
+  ],
+  "agents": "./agents/",
+  "skills": "./skills/",
+  "commands": "./commands/"
+}
