@@ -43,6 +43,8 @@
       --accent-purple: #8b5cf6;
       --accent-purple-dim: #7c3aed;
       --accent-cyan: #06b6d4;
+      --accent-pink: #ec4899;
+      --accent-orange: #f97316;
 
       --border-color: #334155;
       --border-subtle: #1e293b;
@@ -63,6 +65,10 @@
       --space-lg: 1.5rem;
       --space-xl: 2rem;
       --space-2xl: 3rem;
+
+      /* Layout */
+      --sidebar-width: 280px;
+      --header-height: 64px;
 
       /* Border radius */
       --radius-sm: 4px;
@@ -118,21 +124,201 @@
     }
 
     /* ========================================
+       LAYOUT: SIDEBAR + MAIN
+       ======================================== */
+    .chronicle-layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* ========================================
+       SIDEBAR
+       ======================================== */
+    .chronicle-sidebar {
+      width: var(--sidebar-width);
+      background: var(--bg-primary);
+      border-right: 1px solid var(--border-subtle);
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      overflow-y: auto;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar-header {
+      padding: var(--space-lg);
+      border-bottom: 1px solid var(--border-subtle);
+      background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+    }
+
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      font-family: var(--font-display);
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      margin-bottom: var(--space-sm);
+    }
+
+    .sidebar-title {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.3;
+    }
+
+    .sidebar-meta {
+      display: flex;
+      gap: var(--space-sm);
+      margin-top: var(--space-sm);
+    }
+
+    .sidebar-nav {
+      flex: 1;
+      padding: var(--space-md) 0;
+      overflow-y: auto;
+    }
+
+    .nav-section {
+      margin-bottom: var(--space-md);
+    }
+
+    .nav-section-title {
+      font-family: var(--font-display);
+      font-size: 0.625rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      padding: var(--space-sm) var(--space-lg);
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: var(--space-sm) var(--space-lg);
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      border-left: 3px solid transparent;
+      transition: all var(--transition-fast);
+    }
+
+    .nav-item:hover {
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+    }
+
+    .nav-item.active {
+      background: var(--bg-secondary);
+      color: var(--accent-blue);
+      border-left-color: var(--accent-blue);
+      font-weight: 500;
+    }
+
+    .nav-item-icon {
+      width: 20px;
+      text-align: center;
+      font-size: 0.875rem;
+    }
+
+    .nav-item-badge {
+      margin-left: auto;
+      font-family: var(--font-mono);
+      font-size: 0.625rem;
+      padding: 2px 6px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-tertiary);
+      color: var(--text-muted);
+    }
+
+    .nav-item-badge--success {
+      background: var(--accent-success-dim);
+      color: var(--accent-success);
+    }
+
+    .nav-item-badge--warning {
+      background: var(--accent-warning-dim);
+      color: var(--accent-warning);
+    }
+
+    .sidebar-footer {
+      padding: var(--space-md) var(--space-lg);
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      gap: var(--space-sm);
+    }
+
+    /* ========================================
+       MAIN CONTENT
+       ======================================== */
+    .chronicle-main {
+      flex: 1;
+      margin-left: var(--sidebar-width);
+      min-height: 100vh;
+    }
+
+    .main-header {
+      background: var(--bg-primary);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: var(--space-md) var(--space-xl);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+
+    .breadcrumb-sep {
+      color: var(--text-muted);
+    }
+
+    .breadcrumb-current {
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    .main-actions {
+      display: flex;
+      gap: var(--space-sm);
+    }
+
+    .main-content {
+      padding: var(--space-xl);
+      max-width: 1200px;
+    }
+
+    /* ========================================
        TYPOGRAPHY
        ======================================== */
     h1, h2, h3, h4, h5, h6 {
       font-family: var(--font-display);
       font-weight: 600;
-      line-height: 1.2;
+      line-height: 1.3;
       color: var(--text-primary);
     }
 
-    h1 { font-size: 2.5rem; letter-spacing: -0.02em; }
-    h2 { font-size: 1.75rem; letter-spacing: -0.01em; }
-    h3 { font-size: 1.25rem; }
-    h4 { font-size: 1rem; }
+    h1 { font-size: 2rem; letter-spacing: -0.02em; margin-bottom: var(--space-lg); }
+    h2 { font-size: 1.5rem; letter-spacing: -0.01em; margin-bottom: var(--space-md); }
+    h3 { font-size: 1.125rem; margin-bottom: var(--space-sm); }
+    h4 { font-size: 1rem; margin-bottom: var(--space-sm); }
 
-    p { margin-bottom: var(--space-md); }
+    p { margin-bottom: var(--space-md); color: var(--text-secondary); }
 
     a {
       color: var(--accent-blue);
@@ -144,68 +330,38 @@
     code, .mono {
       font-family: var(--font-mono);
       font-size: 0.875em;
-    }
-
-    /* ========================================
-       HEADER
-       ======================================== */
-    .chronicle-header {
-      background: linear-gradient(180deg, var(--bg-primary) 0%, var(--bg-void) 100%);
-      border-bottom: 1px solid var(--border-subtle);
-      padding: var(--space-xl) var(--space-lg);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      backdrop-filter: blur(12px);
-    }
-
-    .header-content {
-      max-width: 1400px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: var(--space-lg);
-    }
-
-    .header-title {
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-xs);
-    }
-
-    .header-title h1 {
-      display: flex;
-      align-items: center;
-      gap: var(--space-sm);
-    }
-
-    .header-title h1::before {
-      content: '';
-      width: 8px;
-      height: 32px;
-      background: linear-gradient(180deg, var(--accent-blue) 0%, var(--accent-purple) 100%);
+      background: var(--bg-tertiary);
+      padding: 2px 6px;
       border-radius: var(--radius-sm);
     }
 
-    .header-meta {
-      font-size: 0.875rem;
+    pre {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: var(--space-md);
+      overflow-x: auto;
+      margin-bottom: var(--space-md);
+    }
+
+    pre code {
+      background: none;
+      padding: 0;
+    }
+
+    ul, ol {
+      margin-bottom: var(--space-md);
+      padding-left: var(--space-xl);
       color: var(--text-secondary);
-      display: flex;
-      gap: var(--space-lg);
     }
 
-    .header-meta span {
-      display: flex;
-      align-items: center;
-      gap: var(--space-xs);
+    li {
+      margin-bottom: var(--space-xs);
     }
 
-    .header-actions {
-      display: flex;
-      gap: var(--space-sm);
-    }
-
+    /* ========================================
+       BUTTONS
+       ======================================== */
     .btn {
       font-family: var(--font-display);
       font-size: 0.875rem;
@@ -234,8 +390,15 @@
       justify-content: center;
     }
 
-    /* Status Badge */
-    .status-badge {
+    .btn-sm {
+      font-size: 0.75rem;
+      padding: var(--space-xs) var(--space-sm);
+    }
+
+    /* ========================================
+       BADGES
+       ======================================== */
+    .badge {
       display: inline-flex;
       align-items: center;
       gap: var(--space-xs);
@@ -244,120 +407,94 @@
       font-size: 0.75rem;
       font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.03em;
     }
 
-    .status-badge--active {
-      background: var(--accent-blue-dim);
-      color: var(--accent-blue);
-      border: 1px solid var(--accent-blue);
-    }
-
-    .status-badge--complete {
-      background: var(--accent-success-dim);
-      color: var(--accent-success);
-      border: 1px solid var(--accent-success);
-    }
-
-    .status-badge--warning {
-      background: var(--accent-warning-dim);
-      color: var(--accent-warning);
-      border: 1px solid var(--accent-warning);
-    }
-
-    .status-badge--error {
-      background: var(--accent-error-dim);
-      color: var(--accent-error);
-      border: 1px solid var(--accent-error);
-    }
+    .badge--blue { background: var(--accent-blue-dim); color: var(--accent-blue); border: 1px solid var(--accent-blue); }
+    .badge--success { background: var(--accent-success-dim); color: var(--accent-success); border: 1px solid var(--accent-success); }
+    .badge--warning { background: var(--accent-warning-dim); color: var(--accent-warning); border: 1px solid var(--accent-warning); }
+    .badge--error { background: var(--accent-error-dim); color: var(--accent-error); border: 1px solid var(--accent-error); }
+    .badge--purple { background: var(--accent-purple-dim); color: var(--accent-purple); border: 1px solid var(--accent-purple); }
+    .badge--muted { background: var(--bg-tertiary); color: var(--text-secondary); border: 1px solid var(--border-color); }
 
     /* ========================================
-       NAVIGATION
+       SECTIONS
        ======================================== */
-    .chronicle-nav {
-      background: var(--bg-primary);
-      border-bottom: 1px solid var(--border-subtle);
-      position: sticky;
-      top: 88px;
-      z-index: 90;
-    }
-
-    .nav-content {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 0 var(--space-lg);
-      display: flex;
-      gap: var(--space-xs);
-      overflow-x: auto;
-    }
-
-    .nav-link {
-      font-family: var(--font-display);
-      font-size: 0.875rem;
-      font-weight: 500;
-      color: var(--text-secondary);
-      padding: var(--space-md) var(--space-md);
-      border-bottom: 2px solid transparent;
-      white-space: nowrap;
-      transition: all var(--transition-fast);
-    }
-
-    .nav-link:hover {
-      color: var(--text-primary);
-      background: var(--bg-secondary);
-    }
-
-    .nav-link.active {
-      color: var(--accent-blue);
-      border-bottom-color: var(--accent-blue);
-    }
-
-    /* ========================================
-       MAIN CONTENT
-       ======================================== */
-    .chronicle-main {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: var(--space-2xl) var(--space-lg);
-    }
-
     .section {
       margin-bottom: var(--space-2xl);
-      scroll-margin-top: 160px;
+      scroll-margin-top: 80px;
     }
 
     .section-header {
       display: flex;
       align-items: center;
+      justify-content: space-between;
       gap: var(--space-md);
-      margin-bottom: var(--space-xl);
+      margin-bottom: var(--space-lg);
       padding-bottom: var(--space-md);
       border-bottom: 1px solid var(--border-subtle);
     }
 
-    .section-header h2 {
+    .section-title {
       display: flex;
       align-items: center;
       gap: var(--space-sm);
     }
 
     .section-icon {
-      width: 32px;
-      height: 32px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: var(--bg-secondary);
-      border-radius: var(--radius-md);
-      color: var(--accent-blue);
+      font-size: 1.25rem;
     }
 
     /* ========================================
-       OVERVIEW CARDS
+       CARDS
        ======================================== */
-    .overview-grid {
+    .card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      transition: all var(--transition-fast);
+    }
+
+    .card:hover {
+      border-color: var(--border-color);
+    }
+
+    .card-header {
+      padding: var(--space-md) var(--space-lg);
+      background: var(--bg-tertiary);
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-md);
+    }
+
+    .card-title {
+      font-family: var(--font-display);
+      font-size: 0.875rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .card-body {
+      padding: var(--space-lg);
+    }
+
+    .card-footer {
+      padding: var(--space-md) var(--space-lg);
+      background: var(--bg-tertiary);
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    /* ========================================
+       OVERVIEW METRICS
+       ======================================== */
+    .metrics-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
       gap: var(--space-md);
       margin-bottom: var(--space-xl);
     }
@@ -371,12 +508,11 @@
     }
 
     .metric-card:hover {
-      border-color: var(--border-color);
       transform: translateY(-2px);
       box-shadow: var(--shadow-md);
     }
 
-    .metric-card__label {
+    .metric-label {
       font-size: 0.75rem;
       font-weight: 600;
       text-transform: uppercase;
@@ -385,350 +521,356 @@
       margin-bottom: var(--space-sm);
     }
 
-    .metric-card__value {
+    .metric-value {
       font-family: var(--font-display);
       font-size: 2rem;
       font-weight: 700;
-      color: var(--text-primary);
       line-height: 1;
     }
 
-    .metric-card__subtext {
-      font-size: 0.875rem;
-      color: var(--text-secondary);
+    .metric-subtext {
+      font-size: 0.75rem;
+      color: var(--text-muted);
       margin-top: var(--space-xs);
     }
 
-    .metric-card--success .metric-card__value { color: var(--accent-success); }
-    .metric-card--warning .metric-card__value { color: var(--accent-warning); }
-    .metric-card--error .metric-card__value { color: var(--accent-error); }
-    .metric-card--info .metric-card__value { color: var(--accent-blue); }
+    .metric-card--blue .metric-value { color: var(--accent-blue); }
+    .metric-card--success .metric-value { color: var(--accent-success); }
+    .metric-card--warning .metric-value { color: var(--accent-warning); }
+    .metric-card--error .metric-value { color: var(--accent-error); }
+    .metric-card--purple .metric-value { color: var(--accent-purple); }
 
     /* ========================================
-       TIMELINE
+       CONTENT BLOCKS
        ======================================== */
-    .timeline {
-      position: relative;
-      padding-left: var(--space-2xl);
-    }
-
-    .timeline::before {
-      content: '';
-      position: absolute;
-      left: 11px;
-      top: 0;
-      bottom: 0;
-      width: 2px;
-      background: linear-gradient(180deg, var(--accent-blue) 0%, var(--accent-purple) 50%, var(--bg-tertiary) 100%);
-    }
-
-    .timeline-item {
-      position: relative;
-      padding-bottom: var(--space-xl);
-    }
-
-    .timeline-item:last-child {
-      padding-bottom: 0;
-    }
-
-    .timeline-marker {
-      position: absolute;
-      left: calc(-1 * var(--space-2xl) + 4px);
-      width: 16px;
-      height: 16px;
-      border-radius: var(--radius-full);
-      background: var(--bg-primary);
-      border: 3px solid var(--accent-blue);
-      z-index: 1;
-    }
-
-    .timeline-marker--gate {
-      width: 24px;
-      height: 24px;
-      left: calc(-1 * var(--space-2xl));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.75rem;
-    }
-
-    .timeline-marker--passed {
-      background: var(--accent-success);
-      border-color: var(--accent-success);
-      color: var(--text-inverse);
-    }
-
-    .timeline-marker--failed {
-      background: var(--accent-error);
-      border-color: var(--accent-error);
-      color: var(--text-inverse);
-    }
-
-    .timeline-marker--pending {
-      background: var(--accent-warning);
-      border-color: var(--accent-warning);
-      color: var(--text-inverse);
-    }
-
-    .timeline-content {
+    .content-block {
       background: var(--bg-secondary);
       border: 1px solid var(--border-subtle);
       border-radius: var(--radius-lg);
-      padding: var(--space-lg);
+      margin-bottom: var(--space-lg);
     }
 
-    .timeline-content:hover {
-      border-color: var(--border-color);
-    }
-
-    .timeline-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: var(--space-md);
-      margin-bottom: var(--space-sm);
-    }
-
-    .timeline-title {
-      font-family: var(--font-display);
-      font-size: 1rem;
-      font-weight: 600;
-    }
-
-    .timeline-date {
-      font-family: var(--font-mono);
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      white-space: nowrap;
-    }
-
-    .timeline-description {
-      font-size: 0.875rem;
-      color: var(--text-secondary);
-    }
-
-    .timeline-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: var(--space-xs);
-      margin-top: var(--space-md);
-    }
-
-    .timeline-tag {
-      font-family: var(--font-mono);
-      font-size: 0.75rem;
-      padding: 2px var(--space-sm);
-      background: var(--bg-tertiary);
-      border-radius: var(--radius-sm);
-      color: var(--text-secondary);
-    }
-
-    /* ========================================
-       ARTIFACT GALLERY
-       ======================================== */
-    .artifact-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-      gap: var(--space-md);
-    }
-
-    .artifact-card {
-      background: var(--bg-secondary);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-      transition: all var(--transition-fast);
-    }
-
-    .artifact-card:hover {
-      border-color: var(--border-color);
-      box-shadow: var(--shadow-md);
-    }
-
-    .artifact-card__header {
-      display: flex;
-      align-items: center;
-      gap: var(--space-md);
+    .content-block-header {
       padding: var(--space-md) var(--space-lg);
       background: var(--bg-tertiary);
+      border-bottom: 1px solid var(--border-subtle);
       cursor: pointer;
-    }
-
-    .artifact-card__icon {
-      width: 40px;
-      height: 40px;
       display: flex;
       align-items: center;
-      justify-content: center;
-      background: var(--bg-primary);
-      border-radius: var(--radius-md);
-      font-size: 1.25rem;
+      justify-content: space-between;
     }
 
-    .artifact-card__title {
-      flex: 1;
+    .content-block-header:hover {
+      background: var(--bg-elevated);
     }
 
-    .artifact-card__title h4 {
-      font-family: var(--font-display);
-      font-size: 0.875rem;
-      font-weight: 600;
-      margin-bottom: 2px;
+    .content-block-title {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
     }
 
-    .artifact-card__id {
+    .content-block-title h3 {
+      margin: 0;
+      font-size: 1rem;
+    }
+
+    .content-block-id {
       font-family: var(--font-mono);
       font-size: 0.75rem;
+      color: var(--accent-purple);
+    }
+
+    .content-block-chevron {
       color: var(--text-muted);
+      transition: transform var(--transition-fast);
     }
 
-    .artifact-card__status {
-      font-size: 0.625rem;
+    .content-block.expanded .content-block-chevron {
+      transform: rotate(180deg);
     }
 
-    .artifact-card__body {
+    .content-block-body {
       padding: var(--space-lg);
       display: none;
     }
 
-    .artifact-card.expanded .artifact-card__body {
+    .content-block.expanded .content-block-body {
       display: block;
     }
 
-    .artifact-card__meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: var(--space-md);
+    .content-block.always-open .content-block-body {
+      display: block;
+    }
+
+    /* Content Subsections */
+    .content-subsection {
+      margin-bottom: var(--space-lg);
+    }
+
+    .content-subsection:last-child {
+      margin-bottom: 0;
+    }
+
+    .content-subsection-label {
       font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
       color: var(--text-muted);
+      margin-bottom: var(--space-sm);
+    }
+
+    .content-subsection-text {
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    /* ========================================
+       PERSONA CARDS
+       ======================================== */
+    .persona-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: var(--space-md);
+    }
+
+    .persona-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: var(--space-lg);
+    }
+
+    .persona-header {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
       margin-bottom: var(--space-md);
       padding-bottom: var(--space-md);
       border-bottom: 1px solid var(--border-subtle);
     }
 
-    .artifact-card__meta span {
+    .persona-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-full);
+      background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-purple) 100%);
       display: flex;
       align-items: center;
-      gap: var(--space-xs);
+      justify-content: center;
+      font-size: 1.5rem;
     }
 
-    .artifact-card__summary {
+    .persona-name {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 1rem;
+    }
+
+    .persona-role {
       font-size: 0.875rem;
       color: var(--text-secondary);
-      line-height: 1.7;
     }
 
-    .artifact-card__links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: var(--space-xs);
-      margin-top: var(--space-md);
+    .persona-section {
+      margin-bottom: var(--space-md);
     }
 
-    .artifact-link {
-      font-family: var(--font-mono);
-      font-size: 0.75rem;
-      padding: 2px var(--space-sm);
-      background: var(--bg-primary);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-sm);
-      color: var(--accent-blue);
-    }
-
-    .artifact-link:hover {
-      background: var(--accent-blue);
-      color: var(--text-inverse);
-    }
-
-    /* ========================================
-       DECISION LOG
-       ======================================== */
-    .decision-list {
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-md);
-    }
-
-    .decision-item {
-      background: var(--bg-secondary);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-    }
-
-    .decision-item__header {
-      display: flex;
-      align-items: center;
-      gap: var(--space-md);
-      padding: var(--space-md) var(--space-lg);
-      cursor: pointer;
-      transition: background var(--transition-fast);
-    }
-
-    .decision-item__header:hover {
-      background: var(--bg-tertiary);
-    }
-
-    .decision-item__id {
-      font-family: var(--font-mono);
-      font-size: 0.875rem;
-      font-weight: 600;
-      color: var(--accent-purple);
-      min-width: 80px;
-    }
-
-    .decision-item__title {
-      flex: 1;
-      font-family: var(--font-display);
-      font-size: 1rem;
-      font-weight: 500;
-    }
-
-    .decision-item__date {
-      font-family: var(--font-mono);
-      font-size: 0.75rem;
-      color: var(--text-muted);
-    }
-
-    .decision-item__chevron {
-      color: var(--text-muted);
-      transition: transform var(--transition-fast);
-    }
-
-    .decision-item.expanded .decision-item__chevron {
-      transform: rotate(180deg);
-    }
-
-    .decision-item__body {
-      padding: 0 var(--space-lg) var(--space-lg);
-      display: none;
-    }
-
-    .decision-item.expanded .decision-item__body {
-      display: block;
-    }
-
-    .decision-section {
-      margin-bottom: var(--space-lg);
-    }
-
-    .decision-section:last-child {
+    .persona-section:last-child {
       margin-bottom: 0;
     }
 
-    .decision-section__label {
+    .persona-section-title {
       font-size: 0.75rem;
       font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: var(--space-xs);
+    }
+
+    /* ========================================
+       REQUIREMENTS TABLE
+       ======================================== */
+    .requirements-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+    }
+
+    .requirements-table th,
+    .requirements-table td {
+      padding: var(--space-sm) var(--space-md);
+      text-align: left;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .requirements-table th {
+      background: var(--bg-tertiary);
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+    }
+
+    .requirements-table tr:hover {
+      background: var(--bg-tertiary);
+    }
+
+    .req-id {
+      font-family: var(--font-mono);
+      color: var(--accent-cyan);
+      font-weight: 500;
+    }
+
+    .priority-must { color: var(--accent-error); }
+    .priority-should { color: var(--accent-warning); }
+    .priority-could { color: var(--accent-success); }
+
+    /* ========================================
+       USER STORIES
+       ======================================== */
+    .user-story {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      margin-bottom: var(--space-md);
+      overflow: hidden;
+    }
+
+    .user-story-header {
+      padding: var(--space-md) var(--space-lg);
+      background: var(--bg-tertiary);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+    }
+
+    .user-story-id {
+      font-family: var(--font-mono);
+      font-size: 0.875rem;
+      color: var(--accent-blue);
+      font-weight: 600;
+    }
+
+    .user-story-title {
+      font-family: var(--font-display);
+      font-weight: 500;
+      margin-left: var(--space-md);
+    }
+
+    .user-story-body {
+      padding: var(--space-lg);
+      display: none;
+    }
+
+    .user-story.expanded .user-story-body {
+      display: block;
+    }
+
+    .user-story-statement {
+      background: var(--bg-tertiary);
+      border-left: 3px solid var(--accent-blue);
+      padding: var(--space-md);
+      margin-bottom: var(--space-md);
+      font-style: italic;
+      color: var(--text-secondary);
+    }
+
+    .acceptance-criteria {
+      margin-top: var(--space-md);
+    }
+
+    .acceptance-criteria h5 {
+      font-size: 0.75rem;
       text-transform: uppercase;
       letter-spacing: 0.05em;
       color: var(--text-muted);
       margin-bottom: var(--space-sm);
     }
 
-    .decision-section__content {
+    .acceptance-criteria ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .acceptance-criteria li {
+      padding: var(--space-xs) 0;
+      padding-left: var(--space-lg);
+      position: relative;
+    }
+
+    .acceptance-criteria li::before {
+      content: '[ ]';
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      position: absolute;
+      left: 0;
+      color: var(--text-muted);
+    }
+
+    /* ========================================
+       ADR (Architecture Decision Records)
+       ======================================== */
+    .adr-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      margin-bottom: var(--space-md);
+      overflow: hidden;
+    }
+
+    .adr-header {
+      padding: var(--space-md) var(--space-lg);
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      cursor: pointer;
+      transition: background var(--transition-fast);
+    }
+
+    .adr-header:hover {
+      background: var(--bg-tertiary);
+    }
+
+    .adr-id {
+      font-family: var(--font-mono);
       font-size: 0.875rem;
-      color: var(--text-secondary);
-      line-height: 1.7;
+      color: var(--accent-purple);
+      font-weight: 600;
+      min-width: 80px;
+    }
+
+    .adr-title {
+      flex: 1;
+      font-family: var(--font-display);
+      font-weight: 500;
+    }
+
+    .adr-status {
+      font-size: 0.75rem;
+    }
+
+    .adr-body {
+      padding: var(--space-lg);
+      display: none;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .adr-card.expanded .adr-body {
+      display: block;
+    }
+
+    .adr-section {
+      margin-bottom: var(--space-lg);
+    }
+
+    .adr-section:last-child {
+      margin-bottom: 0;
     }
 
     .consequences-grid {
@@ -753,11 +895,6 @@
       border: 1px solid var(--accent-error);
     }
 
-    .consequence-box--risk {
-      background: rgba(245, 158, 11, 0.1);
-      border: 1px solid var(--accent-warning);
-    }
-
     .consequence-box h5 {
       font-size: 0.75rem;
       text-transform: uppercase;
@@ -767,10 +904,11 @@
 
     .consequence-box--positive h5 { color: var(--accent-success); }
     .consequence-box--negative h5 { color: var(--accent-error); }
-    .consequence-box--risk h5 { color: var(--accent-warning); }
 
     .consequence-box ul {
       list-style: none;
+      padding: 0;
+      margin: 0;
       color: var(--text-secondary);
     }
 
@@ -787,110 +925,136 @@
     }
 
     /* ========================================
-       METRICS DASHBOARD
+       DESIGN SECTION
        ======================================== */
-    .metrics-grid {
+    .wireframe-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: var(--space-lg);
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--space-md);
     }
 
-    .metrics-panel {
+    .wireframe-card {
       background: var(--bg-secondary);
       border: 1px solid var(--border-subtle);
       border-radius: var(--radius-lg);
-      padding: var(--space-lg);
-    }
-
-    .metrics-panel__title {
-      font-family: var(--font-display);
-      font-size: 0.875rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: var(--space-lg);
-    }
-
-    /* Progress bars */
-    .progress-bar {
-      height: 8px;
-      background: var(--bg-tertiary);
-      border-radius: var(--radius-full);
       overflow: hidden;
-      margin-bottom: var(--space-sm);
     }
 
-    .progress-bar__fill {
-      height: 100%;
-      border-radius: var(--radius-full);
-      transition: width var(--transition-normal);
-    }
-
-    .progress-bar__fill--success { background: var(--accent-success); }
-    .progress-bar__fill--warning { background: var(--accent-warning); }
-    .progress-bar__fill--error { background: var(--accent-error); }
-    .progress-bar__fill--info { background: var(--accent-blue); }
-
-    .progress-label {
+    .wireframe-preview {
+      height: 200px;
+      background: var(--bg-tertiary);
       display: flex;
-      justify-content: space-between;
-      font-size: 0.75rem;
-      color: var(--text-muted);
-    }
-
-    /* Stat rows */
-    .stat-row {
-      display: flex;
-      justify-content: space-between;
       align-items: center;
-      padding: var(--space-sm) 0;
+      justify-content: center;
+      font-size: 3rem;
+      color: var(--text-muted);
       border-bottom: 1px solid var(--border-subtle);
     }
 
-    .stat-row:last-child {
-      border-bottom: none;
+    .wireframe-info {
+      padding: var(--space-md);
     }
 
-    .stat-row__label {
+    .wireframe-name {
+      font-family: var(--font-display);
+      font-weight: 600;
+      margin-bottom: var(--space-xs);
+    }
+
+    .wireframe-desc {
       font-size: 0.875rem;
       color: var(--text-secondary);
     }
 
-    .stat-row__value {
-      font-family: var(--font-mono);
+    /* ========================================
+       TIMELINE
+       ======================================== */
+    .timeline {
+      position: relative;
+      padding-left: var(--space-2xl);
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 11px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(180deg, var(--accent-blue) 0%, var(--accent-purple) 50%, var(--bg-tertiary) 100%);
+    }
+
+    .timeline-item {
+      position: relative;
+      padding-bottom: var(--space-lg);
+    }
+
+    .timeline-item:last-child {
+      padding-bottom: 0;
+    }
+
+    .timeline-marker {
+      position: absolute;
+      left: calc(-1 * var(--space-2xl) + 4px);
+      width: 16px;
+      height: 16px;
+      border-radius: var(--radius-full);
+      background: var(--bg-primary);
+      border: 3px solid var(--accent-blue);
+      z-index: 1;
+    }
+
+    .timeline-marker--gate {
+      width: 24px;
+      height: 24px;
+      left: calc(-1 * var(--space-2xl));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.625rem;
+      font-weight: 700;
+    }
+
+    .timeline-marker--passed {
+      background: var(--accent-success);
+      border-color: var(--accent-success);
+      color: var(--text-inverse);
+    }
+
+    .timeline-marker--failed {
+      background: var(--accent-error);
+      border-color: var(--accent-error);
+      color: var(--text-inverse);
+    }
+
+    .timeline-content {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: var(--space-md) var(--space-lg);
+    }
+
+    .timeline-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: var(--space-xs);
+    }
+
+    .timeline-title {
+      font-family: var(--font-display);
       font-size: 0.875rem;
       font-weight: 600;
     }
 
-    /* Severity badges */
-    .severity-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: var(--space-xs);
-      padding: 2px var(--space-sm);
-      border-radius: var(--radius-sm);
+    .timeline-date {
+      font-family: var(--font-mono);
       font-size: 0.75rem;
-      font-weight: 600;
+      color: var(--text-muted);
     }
 
-    .severity-badge--critical {
-      background: var(--accent-error-dim);
-      color: var(--accent-error);
-    }
-
-    .severity-badge--high {
-      background: rgba(239, 68, 68, 0.2);
-      color: #fca5a5;
-    }
-
-    .severity-badge--medium {
-      background: var(--accent-warning-dim);
-      color: var(--accent-warning);
-    }
-
-    .severity-badge--low {
-      background: var(--bg-tertiary);
+    .timeline-desc {
+      font-size: 0.875rem;
       color: var(--text-secondary);
     }
 
@@ -906,18 +1070,18 @@
     }
 
     .diagram-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
       padding: var(--space-md) var(--space-lg);
       background: var(--bg-tertiary);
       border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
-    .diagram-header h4 {
+    .diagram-title {
       font-family: var(--font-display);
-      font-size: 0.875rem;
       font-weight: 600;
+      font-size: 0.875rem;
     }
 
     .diagram-source {
@@ -940,41 +1104,44 @@
     }
 
     /* ========================================
-       WORKFLOW
+       QA / DEFECTS
        ======================================== */
-    .workflow-container {
-      background: var(--bg-secondary);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-lg);
-      padding: var(--space-xl);
+    .defect-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
     }
 
-    .workflow-legend {
-      display: flex;
-      flex-wrap: wrap;
-      gap: var(--space-lg);
-      margin-bottom: var(--space-xl);
-      padding-bottom: var(--space-lg);
+    .defect-table th,
+    .defect-table td {
+      padding: var(--space-sm) var(--space-md);
+      text-align: left;
       border-bottom: 1px solid var(--border-subtle);
     }
 
-    .legend-item {
-      display: flex;
-      align-items: center;
-      gap: var(--space-sm);
-      font-size: 0.875rem;
-      color: var(--text-secondary);
+    .defect-table th {
+      background: var(--bg-tertiary);
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
     }
 
-    .legend-dot {
-      width: 12px;
-      height: 12px;
-      border-radius: var(--radius-full);
+    .defect-id {
+      font-family: var(--font-mono);
+      color: var(--accent-error);
     }
 
-    .legend-dot--completed { background: var(--accent-success); }
-    .legend-dot--active { background: var(--accent-blue); }
-    .legend-dot--pending { background: var(--bg-tertiary); }
+    .severity-critical { color: var(--accent-error); font-weight: 600; }
+    .severity-high { color: var(--accent-orange); }
+    .severity-medium { color: var(--accent-warning); }
+    .severity-low { color: var(--text-muted); }
+
+    .status-open { color: var(--accent-error); }
+    .status-fixed { color: var(--accent-success); }
+    .status-wontfix { color: var(--text-muted); }
 
     /* ========================================
        FOOTER
@@ -982,13 +1149,11 @@
     .chronicle-footer {
       background: var(--bg-primary);
       border-top: 1px solid var(--border-subtle);
-      padding: var(--space-xl) var(--space-lg);
+      padding: var(--space-xl);
       margin-top: var(--space-2xl);
     }
 
     .footer-content {
-      max-width: 1400px;
-      margin: 0 auto;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -1015,435 +1180,754 @@
     }
 
     /* ========================================
-       UTILITIES
-       ======================================== */
-    .text-success { color: var(--accent-success); }
-    .text-warning { color: var(--accent-warning); }
-    .text-error { color: var(--accent-error); }
-    .text-info { color: var(--accent-blue); }
-    .text-muted { color: var(--text-muted); }
-
-    .flex { display: flex; }
-    .flex-col { flex-direction: column; }
-    .items-center { align-items: center; }
-    .justify-between { justify-content: space-between; }
-    .gap-sm { gap: var(--space-sm); }
-    .gap-md { gap: var(--space-md); }
-
-    /* ========================================
        PRINT STYLES
        ======================================== */
     @media print {
-      :root {
-        --bg-void: #ffffff;
-        --bg-primary: #ffffff;
-        --bg-secondary: #f8fafc;
-        --bg-tertiary: #e2e8f0;
-        --text-primary: #000000;
-        --text-secondary: #374151;
-        --border-color: #d1d5db;
-      }
-
-      body {
-        font-size: 12pt;
-        line-height: 1.4;
-      }
-
-      .chronicle-header {
-        position: relative;
-        background: white;
-        border-bottom: 2px solid #000;
-      }
-
-      .chronicle-nav,
-      .header-actions,
+      .chronicle-sidebar,
+      .main-header,
       .btn {
         display: none !important;
       }
 
-      .section {
-        page-break-inside: avoid;
-        margin-bottom: 24pt;
+      .chronicle-main {
+        margin-left: 0;
       }
 
-      .artifact-card__body,
-      .decision-item__body {
+      .content-block-body,
+      .adr-body,
+      .user-story-body {
         display: block !important;
       }
 
-      .timeline::before {
-        background: #000;
-      }
-
-      .diagram-body {
-        min-height: auto;
-        padding: 12pt;
-      }
-
-      a {
-        color: #000;
-        text-decoration: underline;
-      }
-
-      .metric-card,
-      .artifact-card,
-      .decision-item,
-      .metrics-panel,
-      .diagram-container {
-        border: 1px solid #ccc;
-        box-shadow: none;
+      body {
+        background: white;
+        color: black;
       }
     }
 
     /* ========================================
        RESPONSIVE
        ======================================== */
-    @media (max-width: 768px) {
-      h1 { font-size: 1.75rem; }
-      h2 { font-size: 1.25rem; }
-
-      .chronicle-header {
-        padding: var(--space-md);
+    @media (max-width: 1024px) {
+      .chronicle-sidebar {
+        transform: translateX(-100%);
+        transition: transform var(--transition-normal);
       }
 
-      .header-content {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .header-meta {
-        flex-direction: column;
-        gap: var(--space-xs);
+      .chronicle-sidebar.open {
+        transform: translateX(0);
       }
 
       .chronicle-main {
-        padding: var(--space-lg) var(--space-md);
+        margin-left: 0;
       }
 
-      .overview-grid {
-        grid-template-columns: 1fr 1fr;
+      .mobile-menu-btn {
+        display: flex !important;
       }
+    }
 
-      .artifact-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .timeline {
-        padding-left: var(--space-xl);
-      }
-
-      .timeline-marker {
-        left: calc(-1 * var(--space-xl) + 4px);
-      }
-
-      .timeline-marker--gate {
-        left: calc(-1 * var(--space-xl));
-      }
+    .mobile-menu-btn {
+      display: none;
     }
   </style>
 </head>
 <body>
-  <!-- ========================================
-       HEADER
-       ======================================== -->
-  <header class="chronicle-header">
-    <div class="header-content">
-      <div class="header-title">
-        <h1>{{PROJECT_NAME}}</h1>
-        <div class="header-meta">
-          <span>
-            <span class="status-badge status-badge--active">{{CURRENT_PHASE}}</span>
-          </span>
-          <span>Generated: <strong>{{GENERATION_DATE}}</strong></span>
-          <span>Version: <strong>{{CHRONICLE_VERSION}}</strong></span>
+  <div class="chronicle-layout">
+    <!-- ========================================
+         SIDEBAR
+         ======================================== -->
+    <aside class="chronicle-sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">
+          <span>📜</span>
+          <span>Project Chronicle</span>
+        </div>
+        <div class="sidebar-title">{{PROJECT_NAME}}</div>
+        <div class="sidebar-meta">
+          <span class="badge badge--{{STATUS_COLOR}}">{{CURRENT_PHASE}}</span>
         </div>
       </div>
-      <div class="header-actions">
-        <button class="btn btn-icon" id="theme-toggle" title="Toggle theme">
+
+      <nav class="sidebar-nav">
+        <!-- Overview -->
+        <div class="nav-section">
+          <div class="nav-section-title">Overview</div>
+          <a href="#overview" class="nav-item active">
+            <span class="nav-item-icon">📊</span>
+            Dashboard
+          </a>
+          <a href="#timeline" class="nav-item">
+            <span class="nav-item-icon">📅</span>
+            Timeline
+          </a>
+        </div>
+
+        <!-- Discovery -->
+        <div class="nav-section">
+          <div class="nav-section-title">Discovery</div>
+          <a href="#brief" class="nav-item">
+            <span class="nav-item-icon">📋</span>
+            Project Brief
+          </a>
+          <a href="#personas" class="nav-item">
+            <span class="nav-item-icon">👥</span>
+            Personas
+            <span class="nav-item-badge">{{PERSONA_COUNT}}</span>
+          </a>
+          <a href="#market" class="nav-item">
+            <span class="nav-item-icon">📈</span>
+            Market Analysis
+          </a>
+        </div>
+
+        <!-- Requirements -->
+        <div class="nav-section">
+          <div class="nav-section-title">Requirements</div>
+          <a href="#requirements" class="nav-item">
+            <span class="nav-item-icon">📝</span>
+            Requirements
+            <span class="nav-item-badge">{{REQ_COUNT}}</span>
+          </a>
+          <a href="#user-stories" class="nav-item">
+            <span class="nav-item-icon">📖</span>
+            User Stories
+            <span class="nav-item-badge">{{US_COUNT}}</span>
+          </a>
+        </div>
+
+        <!-- Architecture -->
+        <div class="nav-section">
+          <div class="nav-section-title">Architecture</div>
+          <a href="#architecture" class="nav-item">
+            <span class="nav-item-icon">🏗️</span>
+            System Design
+          </a>
+          <a href="#decisions" class="nav-item">
+            <span class="nav-item-icon">⚖️</span>
+            Decisions (ADR)
+            <span class="nav-item-badge">{{ADR_COUNT}}</span>
+          </a>
+          <a href="#data-model" class="nav-item">
+            <span class="nav-item-icon">🗄️</span>
+            Data Model
+          </a>
+          <a href="#api" class="nav-item">
+            <span class="nav-item-icon">🔌</span>
+            API Design
+          </a>
+        </div>
+
+        <!-- Design -->
+        <div class="nav-section">
+          <div class="nav-section-title">Design</div>
+          <a href="#user-flows" class="nav-item">
+            <span class="nav-item-icon">🔀</span>
+            User Flows
+          </a>
+          <a href="#wireframes" class="nav-item">
+            <span class="nav-item-icon">📐</span>
+            Wireframes
+          </a>
+          <a href="#ui-specs" class="nav-item">
+            <span class="nav-item-icon">🎨</span>
+            UI Specifications
+          </a>
+        </div>
+
+        <!-- Quality -->
+        <div class="nav-section">
+          <div class="nav-section-title">Quality</div>
+          <a href="#test-plan" class="nav-item">
+            <span class="nav-item-icon">🧪</span>
+            Test Plan
+          </a>
+          <a href="#defects" class="nav-item">
+            <span class="nav-item-icon">🐛</span>
+            Defects
+            <span class="nav-item-badge nav-item-badge--warning">{{OPEN_DEFECTS}}</span>
+          </a>
+          <a href="#security" class="nav-item">
+            <span class="nav-item-icon">🔒</span>
+            Security Review
+          </a>
+          <a href="#bat" class="nav-item">
+            <span class="nav-item-icon">✅</span>
+            Acceptance Testing
+          </a>
+        </div>
+
+        <!-- Metrics -->
+        <div class="nav-section">
+          <div class="nav-section-title">Metrics</div>
+          <a href="#gates" class="nav-item">
+            <span class="nav-item-icon">🚦</span>
+            Quality Gates
+            <span class="nav-item-badge nav-item-badge--success">{{GATES_PASSED}}/{{TOTAL_GATES}}</span>
+          </a>
+        </div>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button class="btn btn-sm btn-icon" id="theme-toggle" title="Toggle theme">
           <span id="theme-icon">🌙</span>
         </button>
-        <button class="btn btn-icon" onclick="window.print()" title="Print chronicle">
+        <button class="btn btn-sm btn-icon" onclick="window.print()" title="Print">
           🖨️
         </button>
       </div>
-    </div>
-  </header>
+    </aside>
 
-  <!-- ========================================
-       NAVIGATION
-       ======================================== -->
-  <nav class="chronicle-nav">
-    <div class="nav-content">
-      <a href="#overview" class="nav-link active">Overview</a>
-      <a href="#timeline" class="nav-link">Timeline</a>
-      <a href="#artifacts" class="nav-link">Artifacts</a>
-      <a href="#decisions" class="nav-link">Decisions</a>
-      <a href="#metrics" class="nav-link">Metrics</a>
-      <a href="#diagrams" class="nav-link">Diagrams</a>
-      <a href="#workflow" class="nav-link">Workflow</a>
-    </div>
-  </nav>
+    <!-- ========================================
+         MAIN CONTENT
+         ======================================== -->
+    <main class="chronicle-main">
+      <header class="main-header">
+        <button class="btn btn-icon mobile-menu-btn" onclick="toggleSidebar()">☰</button>
+        <div class="breadcrumb">
+          <span>Chronicle</span>
+          <span class="breadcrumb-sep">/</span>
+          <span class="breadcrumb-current" id="current-section">Dashboard</span>
+        </div>
+        <div class="main-actions">
+          <span class="badge badge--muted">Generated: {{GENERATION_DATE}}</span>
+        </div>
+      </header>
 
-  <!-- ========================================
-       MAIN CONTENT
-       ======================================== -->
-  <main class="chronicle-main">
+      <div class="main-content">
 
-    <!-- OVERVIEW SECTION -->
-    <section id="overview" class="section">
-      <div class="section-header">
-        <h2>
-          <span class="section-icon">📊</span>
-          Project Overview
-        </h2>
+        <!-- ==================== OVERVIEW ==================== -->
+        <section id="overview" class="section">
+          <div class="section-header">
+            <div class="section-title">
+              <span class="section-icon">📊</span>
+              <h1>Project Dashboard</h1>
+            </div>
+          </div>
+
+          <div class="metrics-grid">
+            <div class="metric-card metric-card--blue">
+              <div class="metric-label">Current Phase</div>
+              <div class="metric-value">{{PHASE_NUMBER}}</div>
+              <div class="metric-subtext">of {{TOTAL_PHASES}} phases</div>
+            </div>
+            <div class="metric-card metric-card--success">
+              <div class="metric-label">Gates Passed</div>
+              <div class="metric-value">{{GATES_PASSED}}</div>
+              <div class="metric-subtext">of {{TOTAL_GATES}} gates</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Days Elapsed</div>
+              <div class="metric-value">{{DAYS_ELAPSED}}</div>
+              <div class="metric-subtext">since {{START_DATE}}</div>
+            </div>
+            <div class="metric-card metric-card--purple">
+              <div class="metric-label">Requirements</div>
+              <div class="metric-value">{{REQ_COUNT}}</div>
+              <div class="metric-subtext">documented</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">User Stories</div>
+              <div class="metric-value">{{US_COUNT}}</div>
+              <div class="metric-subtext">defined</div>
+            </div>
+            <div class="metric-card metric-card--warning">
+              <div class="metric-label">Open Defects</div>
+              <div class="metric-value">{{OPEN_DEFECTS}}</div>
+              <div class="metric-subtext">to resolve</div>
+            </div>
+          </div>
+
+          <!-- Quick Summary -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">📋 Executive Summary</span>
+            </div>
+            <div class="card-body">
+              <div class="content-subsection">
+                <div class="content-subsection-label">Problem Statement</div>
+                <div class="content-subsection-text">{{PROBLEM_STATEMENT}}</div>
+              </div>
+              <div class="content-subsection">
+                <div class="content-subsection-label">Solution</div>
+                <div class="content-subsection-text">{{SOLUTION_SUMMARY}}</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== TIMELINE ==================== -->
+        <section id="timeline" class="section">
+          <div class="section-header">
+            <div class="section-title">
+              <span class="section-icon">📅</span>
+              <h2>Project Timeline</h2>
+            </div>
+          </div>
+
+          <div class="timeline">
+            {{TIMELINE_ITEMS}}
+          </div>
+        </section>
+
+        <!-- ==================== PROJECT BRIEF ==================== -->
+        <section id="brief" class="section">
+          <div class="section-header">
+            <div class="section-title">
+              <span class="section-icon">📋</span>
+              <h2>Project Brief</h2>
+            </div>
+            <span class="badge badge--muted">From: Product Strategist</span>
+          </div>
+
+          <div class="content-block always-open">
+            <div class="content-block-body">
+              <div class="content-subsection">
+                <div class="content-subsection-label">Problem Statement</div>
+                <div class="content-subsection-text">{{PROBLEM_STATEMENT}}</div>
+              </div>
+              <div class="content-subsection">
+                <div class="content-subsection-label">Target Users</div>
+                <div class="content-subsection-text">{{TARGET_USERS}}</div>
+              </div>
+              <div class="content-subsection">
+                <div class="content-subsection-label">Scope</div>
+                <div class="content-subsection-text">{{PROJECT_SCOPE}}</div>
+              </div>
+              <div class="content-subsection">
+                <div class="content-subsection-label">Constraints</div>
+                <div class="content-subsection-text">{{CONSTRAINTS}}</div>
+              </div>
+              <div class="content-subsection">
+                <div class="content-subsection-label">Success Metrics</div>
+                <div class="content-subsection-text">{{SUCCESS_METRICS}}</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== PERSONAS ==================== -->
+        <section id="personas" class="section">
+          <div class="section-header">
+            <div class="section-title">
+              <span class="section-icon">👥</span>
+              <h2>User Personas</h2>
+            </div>
+            <span class="badge badge--muted">From: UX Researcher</span>
+          </div>
+
+          <div class="persona-grid">
+            {{PERSONA_CARDS}}
+          </div>
+        </section>
+
+        <!-- ==================== MARKET ANALYSIS ==================== -->
+        <section id="market" class="section">
+          <div class="section-header">
+            <div class="section-title">
+              <span class="section-icon">📈</span>
+              <h2>Market Analysis</h2>
+            </div>
+            <span class="badge badge--muted">From: Product Strategist</span>
+          </div>
+
+          <div class="content-block always-open">
+            <div class="content-block-body">
+              <div class="content-subsection">
+                <div class="content-subsection-label">Market Size (TAM/SAM/SOM)</div>
+                <div class="content-subsection-text">{{MARKET_SIZE}}</div>
+              </div>
+              <div class="content-subsection">
+                <div class="content-subsection-label">Competitive Landscape</div>
+                <div class="content-subsection-text">{{COMPETITIVE_ANALYSIS}}</div>
+              </div>
+              <div class="content-subsection">
+                <div class="content-subsection-label">Value Proposition</div>
+                <div class="content-subsection-text">{{VALUE_PROPOSITION}}</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== REQUIREMENTS ==================== -->
+        <section id="requirements" class="section">
+          <div class="section-header">
+            <div class="section-title">
+              <span class="section-icon">📝</span>
+              <h2>Requirements Catalogue</h2>
+            </div>
+            <span class="badge badge--muted">From: Business Analyst</span>
+          </div>
+
+          <div class="card">
+            <div class="card-body" style="overflow-x: auto;">
+              <table class="requirements-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Requirement</th>
+                    <th>Priority</th>
+                    <th>Status</th>
+                    <th>Acceptance Criteria</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {{REQUIREMENTS_ROWS}}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== USER STORIES ==================== -->
+        <section id="user-stories" class="section">
+          <div class="section-header">
+            <div class="section-title">
+              <span class="section-icon">📖</span>
+              <h2>User Stories</h2>
+            </div>
+            <span class="badge badge--muted">From: Business Analyst</span>
+          </div>
+
+          {{USER_STORY_CARDS}}
+        </section>
+
+        <!-- ==================== ARCHITECTURE ==================== -->
+        <section id="architecture" class="section">
+          <div class="section-header">
+            <div class="section-title">
+              <span class="section-icon">🏗️</span>
+              <h2>System Architecture</h2>
+            </div>
+            <span class="badge badge--muted">From: Solution Architect</span>
+          </div>
+
+          <div class="content-block always-open">
+            <div class="content-block-body">
+              <div class="content-subsection">
+                <div class="content-subsection-label">Architecture Overview</div>
+                <div class="content-subsection-text">{{ARCHITECTURE_OVERVIEW}}</div>
+              </div>
+              <div class="content-subsection">
+                <div class="content-subsection-label">Technology Stack</div>
+                <div class="content-subsection-text">{{TECH_STACK}}</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="diagram-container">
+            <div class="diagram-header">
+              <span class="diagram-title">System Architecture Diagram</span>
+              <span class="diagram-source">Solution Architect</span>
+            </div>
+            <div class="diagram-body">
+              <pre class="mermaid">{{ARCHITECTURE_DIAGRAM}}</pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== ADR DECISIONS ==================== -->
+        <section id="decisions" class="section">
+          <div class="section-header">
+            <div class="section-title">
+              <span class="section-icon">⚖️</span>
+              <h2>Architecture Decision Records</h2>
+            </div>
+            <span class="badge badge--muted">From: Solution Architect</span>
+          </div>
+
+          {{ADR_CARDS}}
+        </section>
+
+        <!-- ==================== DATA MODEL ==================== -->
+        <section id="data-model" class="section">
+          <div class="section-header">
+            <div class="section-title">
+              <span class="section-icon">🗄️</span>
+              <h2>Data Model</h2>
+            </div>
+            <span class="badge badge--muted">From: Data Architect</span>
+          </div>
+
+          <div class="content-block always-open">
+            <div class="content-block-body">
+              <div class="content-subsection">
+                <div class="content-subsection-label">Data Model Overview</div>
+                <div class="content-subsection-text">{{DATA_MODEL_OVERVIEW}}</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="diagram-container">
+            <div class="diagram-header">
+              <span class="diagram-title">Entity Relationship Diagram</span>
+              <span class="diagram-source">Data Architect</span>
+            </div>
+            <div class="diagram-body">
+              <pre class="mermaid">{{DATA_MODEL_DIAGRAM}}</pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== API DESIGN ==================== -->
+        <section id="api" class="section">
+          <div class="section-header">
+            <div class="section-title">
+              <span class="section-icon">🔌</span>
+              <h2>API Design</h2>
+            </div>
+            <span class="badge badge--muted">From: API Designer</span>
+          </div>
+
+          <div class="content-block always-open">
+            <div class="content-block-body">
+              <div class="content-subsection">
+                <div class="content-subsection-label">API Overview</div>
+                <div class="content-subsection-text">{{API_OVERVIEW}}</div>
+              </div>
+              <div class="content-subsection">
+                <div class="content-subsection-label">Endpoints Summary</div>
+                <div class="content-subsection-text">{{API_ENDPOINTS}}</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== USER FLOWS ==================== -->
+        <section id="user-flows" class="section">
+          <div class="section-header">
+            <div class="section-title">
+              <span class="section-icon">🔀</span>
+              <h2>User Flows</h2>
+            </div>
+            <span class="badge badge--muted">From: UX Designer</span>
+          </div>
+
+          <div class="content-block always-open">
+            <div class="content-block-body">
+              <div class="content-subsection">
+                <div class="content-subsection-label">Key User Flows</div>
+                <div class="content-subsection-text">{{USER_FLOWS_DESCRIPTION}}</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="diagram-container">
+            <div class="diagram-header">
+              <span class="diagram-title">Primary User Flow</span>
+              <span class="diagram-source">UX Designer</span>
+            </div>
+            <div class="diagram-body">
+              <pre class="mermaid">{{USER_FLOW_DIAGRAM}}</pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== WIREFRAMES ==================== -->
+        <section id="wireframes" class="section">
+          <div class="section-header">
+            <div class="section-title">
+              <span class="section-icon">📐</span>
+              <h2>Wireframes</h2>
+            </div>
+            <span class="badge badge--muted">From: UX Designer</span>
+          </div>
+
+          <div class="wireframe-grid">
+            {{WIREFRAME_CARDS}}
+          </div>
+        </section>
+
+        <!-- ==================== UI SPECIFICATIONS ==================== -->
+        <section id="ui-specs" class="section">
+          <div class="section-header">
+            <div class="section-title">
+              <span class="section-icon">🎨</span>
+              <h2>UI Specifications</h2>
+            </div>
+            <span class="badge badge--muted">From: UI Designer</span>
+          </div>
+
+          <div class="content-block always-open">
+            <div class="content-block-body">
+              <div class="content-subsection">
+                <div class="content-subsection-label">Design System</div>
+                <div class="content-subsection-text">{{DESIGN_SYSTEM}}</div>
+              </div>
+              <div class="content-subsection">
+                <div class="content-subsection-label">Color Palette</div>
+                <div class="content-subsection-text">{{COLOR_PALETTE}}</div>
+              </div>
+              <div class="content-subsection">
+                <div class="content-subsection-label">Typography</div>
+                <div class="content-subsection-text">{{TYPOGRAPHY}}</div>
+              </div>
+              <div class="content-subsection">
+                <div class="content-subsection-label">Component Library</div>
+                <div class="content-subsection-text">{{COMPONENT_LIBRARY}}</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== TEST PLAN ==================== -->
+        <section id="test-plan" class="section">
+          <div class="section-header">
+            <div class="section-title">
+              <span class="section-icon">🧪</span>
+              <h2>Test Plan</h2>
+            </div>
+            <span class="badge badge--muted">From: QA Engineer</span>
+          </div>
+
+          <div class="content-block always-open">
+            <div class="content-block-body">
+              <div class="content-subsection">
+                <div class="content-subsection-label">Test Strategy</div>
+                <div class="content-subsection-text">{{TEST_STRATEGY}}</div>
+              </div>
+              <div class="content-subsection">
+                <div class="content-subsection-label">Test Coverage</div>
+                <div class="content-subsection-text">{{TEST_COVERAGE}}</div>
+              </div>
+              <div class="content-subsection">
+                <div class="content-subsection-label">Test Cases Summary</div>
+                <div class="content-subsection-text">{{TEST_CASES_SUMMARY}}</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== DEFECTS ==================== -->
+        <section id="defects" class="section">
+          <div class="section-header">
+            <div class="section-title">
+              <span class="section-icon">🐛</span>
+              <h2>Defect Log</h2>
+            </div>
+            <span class="badge badge--muted">From: QA Engineer</span>
+          </div>
+
+          <div class="card">
+            <div class="card-body" style="overflow-x: auto;">
+              <table class="defect-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Severity</th>
+                    <th>Status</th>
+                    <th>Requirement</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {{DEFECT_ROWS}}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== SECURITY ==================== -->
+        <section id="security" class="section">
+          <div class="section-header">
+            <div class="section-title">
+              <span class="section-icon">🔒</span>
+              <h2>Security Review</h2>
+            </div>
+            <span class="badge badge--muted">From: Security Engineer</span>
+          </div>
+
+          <div class="content-block always-open">
+            <div class="content-block-body">
+              <div class="content-subsection">
+                <div class="content-subsection-label">Security Assessment</div>
+                <div class="content-subsection-text">{{SECURITY_ASSESSMENT}}</div>
+              </div>
+              <div class="content-subsection">
+                <div class="content-subsection-label">Vulnerabilities Found</div>
+                <div class="content-subsection-text">{{VULNERABILITIES}}</div>
+              </div>
+              <div class="content-subsection">
+                <div class="content-subsection-label">Recommendations</div>
+                <div class="content-subsection-text">{{SECURITY_RECOMMENDATIONS}}</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== BAT ==================== -->
+        <section id="bat" class="section">
+          <div class="section-header">
+            <div class="section-title">
+              <span class="section-icon">✅</span>
+              <h2>Business Acceptance Testing</h2>
+            </div>
+            <span class="badge badge--muted">From: Business Analyst</span>
+          </div>
+
+          <div class="content-block always-open">
+            <div class="content-block-body">
+              <div class="content-subsection">
+                <div class="content-subsection-label">Recommendation</div>
+                <div class="content-subsection-text">{{BAT_RECOMMENDATION}}</div>
+              </div>
+              <div class="content-subsection">
+                <div class="content-subsection-label">First Impressions</div>
+                <div class="content-subsection-text">{{BAT_FIRST_IMPRESSIONS}}</div>
+              </div>
+              <div class="content-subsection">
+                <div class="content-subsection-label">User Story Validation Summary</div>
+                <div class="content-subsection-text">{{BAT_US_VALIDATION}}</div>
+              </div>
+              <div class="content-subsection">
+                <div class="content-subsection-label">Problem-Solution Fit</div>
+                <div class="content-subsection-text">{{BAT_PROBLEM_FIT}}</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== QUALITY GATES ==================== -->
+        <section id="gates" class="section">
+          <div class="section-header">
+            <div class="section-title">
+              <span class="section-icon">🚦</span>
+              <h2>Quality Gates</h2>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-body">
+              {{GATE_STATUS_LIST}}
+            </div>
+          </div>
+        </section>
+
       </div>
 
-      <div class="overview-grid">
-        <div class="metric-card metric-card--info">
-          <div class="metric-card__label">Current Phase</div>
-          <div class="metric-card__value">{{PHASE_NUMBER}}</div>
-          <div class="metric-card__subtext">of {{TOTAL_PHASES}} phases</div>
-        </div>
-        <div class="metric-card metric-card--success">
-          <div class="metric-card__label">Gates Passed</div>
-          <div class="metric-card__value">{{GATES_PASSED}}</div>
-          <div class="metric-card__subtext">of {{TOTAL_GATES}} gates</div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-card__label">Days Elapsed</div>
-          <div class="metric-card__value">{{DAYS_ELAPSED}}</div>
-          <div class="metric-card__subtext">since {{START_DATE}}</div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-card__label">Artifacts</div>
-          <div class="metric-card__value">{{ARTIFACT_COUNT}}</div>
-          <div class="metric-card__subtext">documents created</div>
-        </div>
-        <div class="metric-card metric-card--warning">
-          <div class="metric-card__label">Open Issues</div>
-          <div class="metric-card__value">{{OPEN_ISSUES}}</div>
-          <div class="metric-card__subtext">requiring attention</div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-card__label">Decisions Made</div>
-          <div class="metric-card__value">{{DECISION_COUNT}}</div>
-          <div class="metric-card__subtext">ADRs documented</div>
-        </div>
-      </div>
-
-      <!-- Project Brief Summary -->
-      <div class="artifact-card expanded">
-        <div class="artifact-card__header">
-          <div class="artifact-card__icon">📋</div>
-          <div class="artifact-card__title">
-            <h4>Project Brief</h4>
-            <span class="artifact-card__id">Discovery Phase Output</span>
+      <!-- Footer -->
+      <footer class="chronicle-footer">
+        <div class="footer-content">
+          <div class="footer-meta">
+            <span>Generated: {{GENERATION_DATETIME}}</span>
+            <span>Schema: v2.0</span>
+            <span>Generator: project-chronicler</span>
+          </div>
+          <div class="footer-brand">
+            <span>📜</span>
+            <span>Project Chronicle</span>
           </div>
         </div>
-        <div class="artifact-card__body">
-          <div class="decision-section">
-            <div class="decision-section__label">Problem Statement</div>
-            <div class="decision-section__content">{{PROBLEM_STATEMENT}}</div>
-          </div>
-          <div class="decision-section">
-            <div class="decision-section__label">Target Users</div>
-            <div class="decision-section__content">{{TARGET_USERS}}</div>
-          </div>
-          <div class="decision-section">
-            <div class="decision-section__label">Scope</div>
-            <div class="decision-section__content">{{PROJECT_SCOPE}}</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- TIMELINE SECTION -->
-    <section id="timeline" class="section">
-      <div class="section-header">
-        <h2>
-          <span class="section-icon">📅</span>
-          Journey Timeline
-        </h2>
-      </div>
-
-      <div class="timeline">
-        <!-- Timeline items will be injected here -->
-        {{TIMELINE_ITEMS}}
-      </div>
-    </section>
-
-    <!-- ARTIFACTS SECTION -->
-    <section id="artifacts" class="section">
-      <div class="section-header">
-        <h2>
-          <span class="section-icon">📁</span>
-          Artifact Gallery
-        </h2>
-      </div>
-
-      <div class="artifact-grid">
-        <!-- Artifact cards will be injected here -->
-        {{ARTIFACT_CARDS}}
-      </div>
-    </section>
-
-    <!-- DECISIONS SECTION -->
-    <section id="decisions" class="section">
-      <div class="section-header">
-        <h2>
-          <span class="section-icon">⚖️</span>
-          Decision Log
-        </h2>
-      </div>
-
-      <div class="decision-list">
-        <!-- Decision items will be injected here -->
-        {{DECISION_ITEMS}}
-      </div>
-    </section>
-
-    <!-- METRICS SECTION -->
-    <section id="metrics" class="section">
-      <div class="section-header">
-        <h2>
-          <span class="section-icon">📈</span>
-          Metrics Dashboard
-        </h2>
-      </div>
-
-      <div class="metrics-grid">
-        <!-- Gate Progress -->
-        <div class="metrics-panel">
-          <h4 class="metrics-panel__title">Gate Progress</h4>
-          {{GATE_METRICS}}
-        </div>
-
-        <!-- Issue Statistics -->
-        <div class="metrics-panel">
-          <h4 class="metrics-panel__title">Issue Statistics</h4>
-          {{ISSUE_METRICS}}
-        </div>
-
-        <!-- Test Results -->
-        <div class="metrics-panel">
-          <h4 class="metrics-panel__title">Test Results</h4>
-          {{TEST_METRICS}}
-        </div>
-
-        <!-- Phase Duration -->
-        <div class="metrics-panel">
-          <h4 class="metrics-panel__title">Phase Duration</h4>
-          {{PHASE_METRICS}}
-        </div>
-      </div>
-    </section>
-
-    <!-- DIAGRAMS SECTION -->
-    <section id="diagrams" class="section">
-      <div class="section-header">
-        <h2>
-          <span class="section-icon">🗺️</span>
-          Architecture & Diagrams
-        </h2>
-      </div>
-
-      <!-- System Architecture -->
-      <div class="diagram-container">
-        <div class="diagram-header">
-          <h4>System Architecture</h4>
-          <span class="diagram-source">Source: Solution Architect</span>
-        </div>
-        <div class="diagram-body">
-          <pre class="mermaid">
-{{ARCHITECTURE_DIAGRAM}}
-          </pre>
-        </div>
-      </div>
-
-      <!-- Data Model -->
-      <div class="diagram-container">
-        <div class="diagram-header">
-          <h4>Entity Relationship</h4>
-          <span class="diagram-source">Source: Data Architect</span>
-        </div>
-        <div class="diagram-body">
-          <pre class="mermaid">
-{{DATA_MODEL_DIAGRAM}}
-          </pre>
-        </div>
-      </div>
-
-      <!-- Sequence Diagram -->
-      <div class="diagram-container">
-        <div class="diagram-header">
-          <h4>Key User Flow</h4>
-          <span class="diagram-source">Source: UX Designer</span>
-        </div>
-        <div class="diagram-body">
-          <pre class="mermaid">
-{{SEQUENCE_DIAGRAM}}
-          </pre>
-        </div>
-      </div>
-    </section>
-
-    <!-- WORKFLOW SECTION -->
-    <section id="workflow" class="section">
-      <div class="section-header">
-        <h2>
-          <span class="section-icon">🔄</span>
-          Development Workflow
-        </h2>
-      </div>
-
-      <div class="workflow-container">
-        <div class="workflow-legend">
-          <div class="legend-item">
-            <span class="legend-dot legend-dot--completed"></span>
-            <span>Completed</span>
-          </div>
-          <div class="legend-item">
-            <span class="legend-dot legend-dot--active"></span>
-            <span>In Progress</span>
-          </div>
-          <div class="legend-item">
-            <span class="legend-dot legend-dot--pending"></span>
-            <span>Pending</span>
-          </div>
-        </div>
-
-        <div class="diagram-body">
-          <pre class="mermaid">
-{{WORKFLOW_DIAGRAM}}
-          </pre>
-        </div>
-      </div>
-    </section>
-
-  </main>
-
-  <!-- ========================================
-       FOOTER
-       ======================================== -->
-  <footer class="chronicle-footer">
-    <div class="footer-content">
-      <div class="footer-meta">
-        <span>Generated: {{GENERATION_DATETIME}}</span>
-        <span>Schema: v1.0</span>
-        <span>Generator: project-chronicler</span>
-      </div>
-      <div class="footer-brand">
-        <span>📜</span>
-        <span>Project Chronicle</span>
-      </div>
-    </div>
-  </footer>
+      </footer>
+    </main>
+  </div>
 
   <!-- ========================================
        JAVASCRIPT
        ======================================== -->
   <script>
-    // Initialize Mermaid with custom theme
+    // Initialize Mermaid
     mermaid.initialize({
       startOnLoad: true,
       theme: 'dark',
@@ -1456,22 +1940,11 @@
         tertiaryColor: '#334155',
         background: '#0f172a',
         mainBkg: '#1e293b',
-        secondBkg: '#334155',
         fontFamily: 'IBM Plex Sans, system-ui, sans-serif'
       },
-      flowchart: {
-        useMaxWidth: true,
-        htmlLabels: true,
-        curve: 'basis'
-      },
-      sequence: {
-        useMaxWidth: true,
-        diagramMarginX: 50,
-        diagramMarginY: 10
-      },
-      er: {
-        useMaxWidth: true
-      }
+      flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis' },
+      sequence: { useMaxWidth: true },
+      er: { useMaxWidth: true }
     });
 
     // Theme Toggle
@@ -1479,7 +1952,6 @@
     const themeIcon = document.getElementById('theme-icon');
     const html = document.documentElement;
 
-    // Check for saved theme preference or default to dark
     const savedTheme = localStorage.getItem('chronicle-theme') || 'dark';
     html.setAttribute('data-theme', savedTheme);
     updateThemeIcon(savedTheme);
@@ -1487,12 +1959,9 @@
     themeToggle.addEventListener('click', () => {
       const currentTheme = html.getAttribute('data-theme');
       const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-
       html.setAttribute('data-theme', newTheme);
       localStorage.setItem('chronicle-theme', newTheme);
       updateThemeIcon(newTheme);
-
-      // Re-render mermaid diagrams with new theme
       updateMermaidTheme(newTheme);
     });
 
@@ -1510,8 +1979,6 @@
           primaryTextColor: '#f1f5f9',
           primaryBorderColor: '#475569',
           lineColor: '#64748b',
-          secondaryColor: '#1e293b',
-          tertiaryColor: '#334155',
           background: '#0f172a',
           mainBkg: '#1e293b'
         } : {
@@ -1519,14 +1986,11 @@
           primaryTextColor: '#0f172a',
           primaryBorderColor: '#cbd5e1',
           lineColor: '#64748b',
-          secondaryColor: '#f1f5f9',
-          tertiaryColor: '#e2e8f0',
           background: '#ffffff',
           mainBkg: '#f8fafc'
         }
       });
 
-      // Re-render all diagrams
       document.querySelectorAll('.mermaid').forEach(el => {
         const code = el.getAttribute('data-original') || el.textContent;
         el.setAttribute('data-original', code);
@@ -1536,9 +2000,10 @@
       mermaid.init(undefined, '.mermaid');
     }
 
-    // Navigation Scrollspy
-    const navLinks = document.querySelectorAll('.nav-link');
+    // Sidebar Navigation
+    const navItems = document.querySelectorAll('.nav-item');
     const sections = document.querySelectorAll('.section');
+    const currentSectionEl = document.getElementById('current-section');
 
     const observerOptions = {
       root: null,
@@ -1550,10 +2015,11 @@
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           const id = entry.target.getAttribute('id');
-          navLinks.forEach(link => {
-            link.classList.remove('active');
-            if (link.getAttribute('href') === `#${id}`) {
-              link.classList.add('active');
+          navItems.forEach(item => {
+            item.classList.remove('active');
+            if (item.getAttribute('href') === `#${id}`) {
+              item.classList.add('active');
+              currentSectionEl.textContent = item.textContent.trim();
             }
           });
         }
@@ -1562,30 +2028,45 @@
 
     sections.forEach(section => observer.observe(section));
 
-    // Collapsible Cards
-    document.querySelectorAll('.artifact-card__header').forEach(header => {
-      header.addEventListener('click', () => {
-        header.closest('.artifact-card').classList.toggle('expanded');
-      });
-    });
-
-    document.querySelectorAll('.decision-item__header').forEach(header => {
-      header.addEventListener('click', () => {
-        header.closest('.decision-item').classList.toggle('expanded');
-      });
-    });
-
-    // Smooth scroll for navigation
-    navLinks.forEach(link => {
-      link.addEventListener('click', (e) => {
+    // Smooth scroll navigation
+    navItems.forEach(item => {
+      item.addEventListener('click', (e) => {
         e.preventDefault();
-        const targetId = link.getAttribute('href');
-        const target = document.querySelector(targetId);
+        const target = document.querySelector(item.getAttribute('href'));
         if (target) {
           target.scrollIntoView({ behavior: 'smooth' });
         }
+        // Close sidebar on mobile
+        document.getElementById('sidebar').classList.remove('open');
       });
     });
+
+    // Collapsible blocks
+    document.querySelectorAll('.content-block-header').forEach(header => {
+      header.addEventListener('click', () => {
+        const block = header.closest('.content-block');
+        if (!block.classList.contains('always-open')) {
+          block.classList.toggle('expanded');
+        }
+      });
+    });
+
+    document.querySelectorAll('.adr-header').forEach(header => {
+      header.addEventListener('click', () => {
+        header.closest('.adr-card').classList.toggle('expanded');
+      });
+    });
+
+    document.querySelectorAll('.user-story-header').forEach(header => {
+      header.addEventListener('click', () => {
+        header.closest('.user-story').classList.toggle('expanded');
+      });
+    });
+
+    // Mobile sidebar toggle
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+    }
   </script>
 </body>
 </html>

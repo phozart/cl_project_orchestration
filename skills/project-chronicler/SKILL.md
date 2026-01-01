@@ -37,6 +37,7 @@ Generate a static HTML file that captures the complete project journey from idea
 | Project Brief | Yes | Discovery phase output |
 | Artifacts List | Yes | All generated documents (BRD, ADRs, specs, etc.) |
 | Gate History | Yes | Pass/fail records with dates |
+| **Requirements Traceability Matrix** | Yes | `docs/traceability/RTM.md` |
 | Feedback Logs | If Any | FEEDBACK-XXX documents |
 | Test Results | If QA Complete | From qa-engineer |
 | Security Review | If Complete | From security-engineer |
@@ -96,7 +97,47 @@ Each card displays:
 - Summary/preview (expandable)
 - Related artifacts as linked chips
 
-### 5. Decision Log
+### 5. Requirements Traceability
+
+**CRITICAL SECTION - Shows if the project delivered what was promised.**
+
+Visual representation of the Requirements Traceability Matrix:
+
+#### Coverage Summary
+```
+┌─────────────────────────────────────────────────────────────┐
+│                  REQUIREMENTS COVERAGE                       │
+├─────────────────────────────────────────────────────────────┤
+│  Total Requirements: 50                                      │
+│                                                              │
+│  Must-Have:   25/25 (100%) ████████████████████████ ✅      │
+│  Should-Have: 14/15 (93%)  █████████████████████░░░ ✅      │
+│  Could-Have:  5/10  (50%)  ████████████░░░░░░░░░░░░ ⚠️      │
+│                                                              │
+│  Status: READY FOR RELEASE                                   │
+└─────────────────────────────────────────────────────────────┘
+```
+
+#### Traceability Table
+For each requirement, show:
+- REQ-ID and description
+- Linked User Story (US-XXX)
+- Implementation status (✅/❌)
+- File reference
+- Test case (TC-XXX)
+- Test result
+- BA validation status
+
+#### Gap Analysis
+Highlight any gaps:
+- Requirements without implementation
+- Requirements without tests
+- Requirements not validated
+- Descoped items with approval status
+
+**This section answers:** "Did we build what we said we would build?"
+
+### 6. Decision Log
 Chronological list of all decisions:
 - ADR entries with full context, decision, and consequences
 - Feedback loop resolutions (FEEDBACK-XXX → resolution)
@@ -147,46 +188,59 @@ The chronicle consumes artifacts from the `docs/` folder structure created by ea
 ```
 project-root/
 ├── docs/
-│   ├── discovery/
-│   │   └── PROJECT-BRIEF.md
-│   ├── requirements/
-│   │   ├── BRD.md
-│   │   ├── REQUIREMENTS-CATALOGUE.md
-│   │   └── USER-STORIES.md
-│   ├── architecture/
-│   │   ├── SYSTEM-DESIGN.md
-│   │   ├── ADR/
-│   │   │   ├── ADR-001-*.md
-│   │   │   ├── ADR-002-*.md
-│   │   │   └── ...
-│   │   └── TECH-STACK.md
-│   ├── data/
-│   │   ├── DATA-MODEL.md
-│   │   ├── ERD.md
-│   │   └── SCHEMA.sql
-│   ├── api/
-│   │   ├── API-SPECIFICATION.yaml (OpenAPI)
-│   │   └── API-CONTRACTS.md
-│   ├── design/
-│   │   ├── USER-FLOWS.md
-│   │   ├── WIREFRAMES.md
-│   │   ├── UI-DESIGN-SYSTEM.md
-│   │   └── INTERACTION-SPECS.md
-│   ├── qa/
-│   │   ├── TEST-PLAN.md
-│   │   ├── TEST-RESULTS.md
-│   │   └── DEFECTS.md
-│   ├── security/
-│   │   ├── SECURITY-REVIEW.md
-│   │   └── VULNERABILITY-REPORT.md
-│   └── devops/
-│       ├── DEPLOYMENT-CONFIG.md
-│       └── INFRASTRUCTURE.md
-├── PROJECT-STATUS.md              # Orchestrator tracking document
+│   ├── product/                    # Product Strategist outputs
+│   │   ├── Product_Vision_Strategy.md
+│   │   ├── User_Segments.md        # Personas and segments
+│   │   ├── JTBD_Framework.md       # Jobs to be done
+│   │   ├── MVP_Decision_Package.md
+│   │   ├── Product_Capabilities.md
+│   │   ├── Success_Metrics.md
+│   │   ├── Problem_Opportunity_Backlog.md
+│   │   ├── Product_Principles.md
+│   │   └── Product_Decision_Log.md
+│   ├── requirements/               # Business Analyst outputs
+│   │   ├── Business_Requirements_Document.md
+│   │   ├── Requirements_Catalogue.md
+│   │   ├── User_Stories.md
+│   │   └── Non_Functional_Requirements.md
+│   ├── architecture/               # Solution Architect outputs
+│   │   ├── System_Design.md
+│   │   ├── Tech_Stack.md
+│   │   ├── Data_Model.md
+│   │   └── adrs/
+│   │       ├── ADR-001-*.md
+│   │       ├── ADR-002-*.md
+│   │       └── ...
+│   ├── api/                        # API Designer outputs
+│   │   └── API_Reference.md
+│   ├── ux/                         # UX Designer outputs
+│   │   ├── User_Flows.md
+│   │   ├── Wireframes.md
+│   │   ├── Information_Architecture.md
+│   │   ├── Interaction_Patterns.md
+│   │   └── Accessibility.md
+│   ├── ui/                         # UI Designer outputs
+│   │   ├── Design_System.md
+│   │   ├── Component_Library.md
+│   │   ├── Visual_Mockups.md
+│   │   └── UI_Developer_Handoff.md
+│   ├── testing/                    # QA/BA outputs
+│   │   └── BAT_Report.md           # Business Acceptance Testing
+│   ├── handoffs/                   # Handoff documents
+│   │   ├── Developer_Handoff.md
+│   │   ├── Developer_API_Handoff.md
+│   │   ├── UX_Developer_Handoff.md
+│   │   ├── BA_Handoff.md
+│   │   └── Architect_Handoff.md
+│   ├── security/                   # Security outputs
+│   │   └── SECURITY-REVIEW.md
+│   └── devops/                     # DevOps outputs
+│       └── DEPLOYMENT-CONFIG.md
+├── PROJECT-STATUS.md               # Orchestrator tracking document
 ├── FEEDBACK/
 │   ├── FEEDBACK-001.md
 │   └── ...
-└── chronicles/                    # Chronicle output directory
+└── chronicles/                     # Chronicle output directory
 ```
 
 ### Skill-to-Document Mapping
@@ -194,18 +248,18 @@ project-root/
 | Skill | Output Location | Files to Parse |
 |-------|-----------------|----------------|
 | **project-orchestrator** | `./PROJECT-STATUS.md` | Phase status, gate history, issues, risks |
-| **product-strategist** | `docs/discovery/` | Market analysis, business model |
-| **business-analyst** | `docs/requirements/` | BRD.md, REQUIREMENTS-CATALOGUE.md, USER-STORIES.md |
-| **solution-architect** | `docs/architecture/` | SYSTEM-DESIGN.md, ADR/*.md, TECH-STACK.md |
-| **data-architect** | `docs/data/` | DATA-MODEL.md, ERD.md |
-| **api-designer** | `docs/api/` | API-SPECIFICATION.yaml, API-CONTRACTS.md |
-| **ux-designer** | `docs/design/` | USER-FLOWS.md |
-| **ui-designer** | `docs/design/` | UI-DESIGN-SYSTEM.md, WIREFRAMES.md |
-| **interaction-designer** | `docs/design/` | INTERACTION-SPECS.md |
-| **qa-engineer** | `docs/qa/` | TEST-PLAN.md, TEST-RESULTS.md, DEFECTS.md |
-| **security-engineer** | `docs/security/` | SECURITY-REVIEW.md, VULNERABILITY-REPORT.md |
-| **devops-engineer** | `docs/devops/` | DEPLOYMENT-CONFIG.md, INFRASTRUCTURE.md |
-| **technical-writer** | `docs/` | Any additional documentation |
+| **product-strategist** | `docs/product/` | Product_Vision_Strategy.md, User_Segments.md, MVP_Decision_Package.md, Success_Metrics.md |
+| **business-analyst** | `docs/requirements/` | Business_Requirements_Document.md, Requirements_Catalogue.md, User_Stories.md, Non_Functional_Requirements.md |
+| **business-analyst (BAT)** | `docs/testing/` | BAT_Report.md |
+| **solution-architect** | `docs/architecture/` | System_Design.md, Tech_Stack.md, Data_Model.md, adrs/*.md |
+| **api-designer** | `docs/api/` | API_Reference.md |
+| **ux-designer** | `docs/ux/` | User_Flows.md, Wireframes.md, Information_Architecture.md, Accessibility.md |
+| **ui-designer** | `docs/ui/` | Design_System.md, Component_Library.md, Visual_Mockups.md |
+| **interaction-designer** | `docs/ux/` | Interaction_Patterns.md |
+| **qa-engineer** | `docs/testing/` | TEST-PLAN.md, TEST-RESULTS.md, DEFECTS.md |
+| **security-engineer** | `docs/security/` | SECURITY-REVIEW.md |
+| **devops-engineer** | `docs/devops/` | DEPLOYMENT-CONFIG.md |
+| **handoffs** | `docs/handoffs/` | *_Handoff.md files |
 | *Feedback loops* | `./FEEDBACK/` | FEEDBACK-*.md |
 
 ### Detailed Extraction Rules
@@ -765,6 +819,266 @@ Add to Project Status tracking:
 | Version | Phase | Date | Status | Link |
 |---------|-------|------|--------|------|
 | 1 | Discovery | 2024-01-15 | Complete | [View](chronicles/...) |
+```
+
+## Template Placeholders Reference
+
+The `chronicle-template.html` uses these placeholders that must be replaced during generation:
+
+### Header & Overview
+| Placeholder | Source | Example |
+|-------------|--------|---------|
+| `{{PROJECT_NAME}}` | Product Vision or BRD title | "StudyFlow" |
+| `{{CURRENT_PHASE}}` | PROJECT-STATUS.md | "Architecture" |
+| `{{STATUS_COLOR}}` | Phase status | "blue", "success", "warning" |
+| `{{GENERATION_DATE}}` | Current date | "Jan 25, 2024" |
+| `{{GENERATION_DATETIME}}` | Full timestamp | "2024-01-25 14:30:00" |
+| `{{PHASE_NUMBER}}` | Current phase index | "3" |
+| `{{TOTAL_PHASES}}` | Total phases | "7" |
+| `{{GATES_PASSED}}` | Completed gates count | "2" |
+| `{{TOTAL_GATES}}` | Total gates | "7" |
+| `{{DAYS_ELAPSED}}` | Days since start | "12" |
+| `{{START_DATE}}` | Project start date | "Jan 15" |
+
+### Content Counts (for sidebar badges)
+| Placeholder | Source | Description |
+|-------------|--------|-------------|
+| `{{PERSONA_COUNT}}` | User_Segments.md | Number of personas defined |
+| `{{REQ_COUNT}}` | Requirements_Catalogue.md | Total requirements |
+| `{{US_COUNT}}` | User_Stories.md | Total user stories |
+| `{{ADR_COUNT}}` | adrs/*.md | Total ADR files |
+| `{{OPEN_DEFECTS}}` | DEFECTS.md | Open defect count |
+
+### Project Brief Section
+| Placeholder | Source File | Section to Extract |
+|-------------|-------------|-------------------|
+| `{{PROBLEM_STATEMENT}}` | Product_Vision_Strategy.md | "Problem Statement" or "Problem" section |
+| `{{TARGET_USERS}}` | User_Segments.md | Segment overview summary |
+| `{{PROJECT_SCOPE}}` | MVP_Decision_Package.md | "In Scope" section |
+| `{{CONSTRAINTS}}` | Product_Vision_Strategy.md | "Constraints" section |
+| `{{SUCCESS_METRICS}}` | Success_Metrics.md | Key metrics table |
+| `{{SOLUTION_SUMMARY}}` | Product_Vision_Strategy.md | "Solution" or "Vision" section |
+
+### Personas Section
+| Placeholder | Source | Format |
+|-------------|--------|--------|
+| `{{PERSONA_CARDS}}` | User_Segments.md | Generate HTML for each persona |
+
+**Persona Card HTML Structure:**
+```html
+<div class="persona-card">
+  <div class="persona-header">
+    <div class="persona-avatar">[emoji]</div>
+    <div>
+      <div class="persona-name">[Name]</div>
+      <div class="persona-role">[Segment Name]</div>
+    </div>
+  </div>
+  <div class="persona-section">
+    <div class="persona-section-title">Context</div>
+    <p>[Context from persona]</p>
+  </div>
+  <div class="persona-section">
+    <div class="persona-section-title">Goals</div>
+    <ul>[Goals list]</ul>
+  </div>
+  <div class="persona-section">
+    <div class="persona-section-title">Frustrations</div>
+    <ul>[Frustrations list]</ul>
+  </div>
+</div>
+```
+
+### Market Analysis Section
+| Placeholder | Source | Section |
+|-------------|--------|---------|
+| `{{MARKET_SIZE}}` | Product_Vision_Strategy.md | TAM/SAM/SOM if present |
+| `{{COMPETITIVE_ANALYSIS}}` | Product_Vision_Strategy.md | Competition section |
+| `{{VALUE_PROPOSITION}}` | Product_Vision_Strategy.md | Value proposition |
+
+### Requirements Section
+| Placeholder | Source | Format |
+|-------------|--------|--------|
+| `{{REQUIREMENTS_ROWS}}` | Requirements_Catalogue.md | Table rows HTML |
+
+**Requirements Row HTML:**
+```html
+<tr>
+  <td class="req-id">REQ-001</td>
+  <td>[Requirement description]</td>
+  <td class="priority-must">Must</td>
+  <td>[Status]</td>
+  <td>[Acceptance criteria summary]</td>
+</tr>
+```
+
+### User Stories Section
+| Placeholder | Source | Format |
+|-------------|--------|--------|
+| `{{USER_STORY_CARDS}}` | User_Stories.md | Expandable story cards |
+
+**User Story Card HTML:**
+```html
+<div class="user-story">
+  <div class="user-story-header">
+    <span class="user-story-id">US-001</span>
+    <span class="user-story-title">[Title]</span>
+    <span class="badge badge--must">Must</span>
+  </div>
+  <div class="user-story-body">
+    <div class="user-story-statement">
+      As a [role], I want [goal], so that [benefit]
+    </div>
+    <div class="acceptance-criteria">
+      <h5>Acceptance Criteria</h5>
+      <ul>
+        <li>[Criterion 1]</li>
+        <li>[Criterion 2]</li>
+      </ul>
+    </div>
+  </div>
+</div>
+```
+
+### Architecture Section
+| Placeholder | Source | Description |
+|-------------|--------|-------------|
+| `{{ARCHITECTURE_OVERVIEW}}` | System_Design.md | Overview section text |
+| `{{TECH_STACK}}` | Tech_Stack.md | Full tech stack details |
+| `{{ARCHITECTURE_DIAGRAM}}` | System_Design.md | Mermaid diagram code |
+| `{{ADR_CARDS}}` | adrs/*.md | ADR expandable cards |
+
+**ADR Card HTML:**
+```html
+<div class="adr-card">
+  <div class="adr-header">
+    <span class="adr-id">ADR-001</span>
+    <span class="adr-title">[Decision Title]</span>
+    <span class="badge badge--success">Accepted</span>
+  </div>
+  <div class="adr-body">
+    <div class="adr-section">
+      <div class="content-subsection-label">Context</div>
+      <p>[Context text]</p>
+    </div>
+    <div class="adr-section">
+      <div class="content-subsection-label">Decision</div>
+      <p>[Decision text]</p>
+    </div>
+    <div class="consequences-grid">
+      <div class="consequence-box consequence-box--positive">
+        <h5>Positive</h5>
+        <ul>[Benefits]</ul>
+      </div>
+      <div class="consequence-box consequence-box--negative">
+        <h5>Negative</h5>
+        <ul>[Drawbacks]</ul>
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+### Data Model Section
+| Placeholder | Source | Description |
+|-------------|--------|-------------|
+| `{{DATA_MODEL_OVERVIEW}}` | Data_Model.md | Overview text |
+| `{{DATA_MODEL_DIAGRAM}}` | Data_Model.md | erDiagram Mermaid code |
+
+### API Section
+| Placeholder | Source | Description |
+|-------------|--------|-------------|
+| `{{API_OVERVIEW}}` | API_Reference.md | Overview/intro text |
+| `{{API_ENDPOINTS}}` | API_Reference.md | Endpoint summary list |
+
+### Design Sections
+| Placeholder | Source | Description |
+|-------------|--------|-------------|
+| `{{USER_FLOWS_DESCRIPTION}}` | User_Flows.md | Flow descriptions |
+| `{{USER_FLOW_DIAGRAM}}` | User_Flows.md | Mermaid flowchart |
+| `{{WIREFRAME_CARDS}}` | Wireframes.md | Wireframe gallery cards |
+| `{{DESIGN_SYSTEM}}` | Design_System.md | Design system overview |
+| `{{COLOR_PALETTE}}` | Design_System.md | Colors section |
+| `{{TYPOGRAPHY}}` | Design_System.md | Typography section |
+| `{{COMPONENT_LIBRARY}}` | Component_Library.md | Component list |
+
+**Wireframe Card HTML:**
+```html
+<div class="wireframe-card">
+  <div class="wireframe-preview">[icon or placeholder]</div>
+  <div class="wireframe-info">
+    <div class="wireframe-name">[Screen Name]</div>
+    <div class="wireframe-desc">[Description]</div>
+  </div>
+</div>
+```
+
+### QA Section
+| Placeholder | Source | Description |
+|-------------|--------|-------------|
+| `{{TEST_STRATEGY}}` | TEST-PLAN.md | Strategy section |
+| `{{TEST_COVERAGE}}` | TEST-RESULTS.md | Coverage stats |
+| `{{TEST_CASES_SUMMARY}}` | TEST-PLAN.md | Test case overview |
+| `{{DEFECT_ROWS}}` | DEFECTS.md | Defect table rows |
+
+**Defect Row HTML:**
+```html
+<tr>
+  <td class="defect-id">DEF-001</td>
+  <td>[Title]</td>
+  <td class="severity-critical">Critical</td>
+  <td class="status-open">Open</td>
+  <td>REQ-005</td>
+</tr>
+```
+
+### Security Section
+| Placeholder | Source | Description |
+|-------------|--------|-------------|
+| `{{SECURITY_ASSESSMENT}}` | SECURITY-REVIEW.md | Assessment summary |
+| `{{VULNERABILITIES}}` | SECURITY-REVIEW.md | Vulnerability list |
+| `{{SECURITY_RECOMMENDATIONS}}` | SECURITY-REVIEW.md | Recommendations |
+
+### Business Acceptance Testing Section
+| Placeholder | Source | Description |
+|-------------|--------|-------------|
+| `{{BAT_RECOMMENDATION}}` | BAT_Report.md | ACCEPT/REJECT/CONDITIONAL |
+| `{{BAT_FIRST_IMPRESSIONS}}` | BAT_Report.md | First impressions results |
+| `{{BAT_US_VALIDATION}}` | BAT_Report.md | User story validation summary |
+| `{{BAT_PROBLEM_FIT}}` | BAT_Report.md | Problem-solution fit assessment |
+
+### Timeline Section
+| Placeholder | Format | Description |
+|-------------|--------|-------------|
+| `{{TIMELINE_ITEMS}}` | HTML | Timeline event items |
+
+**Timeline Item HTML:**
+```html
+<div class="timeline-item">
+  <div class="timeline-marker timeline-marker--passed">✓</div>
+  <div class="timeline-content">
+    <div class="timeline-header">
+      <span class="timeline-title">[Event Title]</span>
+      <span class="timeline-date">[Date]</span>
+    </div>
+    <div class="timeline-desc">[Description]</div>
+  </div>
+</div>
+```
+
+### Quality Gates Section
+| Placeholder | Format | Description |
+|-------------|--------|-------------|
+| `{{GATE_STATUS_LIST}}` | HTML | Gate status items |
+
+**Gate Status HTML:**
+```html
+<div class="gate-item">
+  <span class="gate-icon gate-icon--passed">✓</span>
+  <span class="gate-name">Requirements Gate</span>
+  <span class="badge badge--success">Passed</span>
+  <span class="gate-date">Jan 18, 2024</span>
+</div>
 ```
 
 ## Example Output
