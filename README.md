@@ -1,6 +1,11 @@
 # Development Workflow Plugin
 
-A comprehensive Claude Code plugin providing 34+ specialized skills for end-to-end product development. Covers strategy, **product design**, architecture, infrastructure, implementation, **observability**, verification, testing, validation, security, **legal compliance**, and **release management** with **12 quality gates**, **requirements traceability**, **parallel work streams**, and **blocking/restart protocols**.
+A comprehensive Claude Code plugin providing 48+ specialized skills for end-to-end product development. Covers strategy, **product design**, architecture, infrastructure, implementation, **observability**, **operations** (SRE, backup, incident management), verification, testing, validation, security, **legal compliance**, **payments**, **notifications**, **search**, **i18n**, **feature flags**, **SVG design**, **project intake**, and **release management** with **12 quality gates**, **requirements traceability**, **project analysis**, **continuous flow (Kanban)**, **work item tracking**, **parallel work streams**, **blocking/restart protocols**, and **developer entertainment mode**.
+
+**Three modes of operation:**
+- **Full Project Mode** - End-to-end orchestration from idea to production
+- **Continuous Flow Mode** - Kanban-style parallel item processing for larger projects
+- **Standalone Mode** - Call individual skills directly for specific tasks
 
 ## Installation
 
@@ -43,29 +48,82 @@ claude --plugin-dir ./development-workflow-plugin
 
 ## Quick Start
 
-Start any project with:
+### Full Project Mode (Recommended for New Projects)
+
+Start any project with proper intake:
 
 ```
-I want to build [your project description].
+/init-project
+```
 
-Please use the /project-orchestrator skill to guide me through the entire development process.
+This walks you through structured questions and then:
+
+```
+/start
 ```
 
 The orchestrator will:
 
-1. Ask discovery questions to understand your needs
-2. Create a skill execution plan
-3. Invoke skills in the correct order
-4. Validate outputs at each quality gate
-5. Route feedback between skills
-6. Track progress to completion
-7. Generate project chronicle documentation
+1. Conduct multi-angle project analysis
+2. Determine which skills and agents are needed
+3. Create a skill execution plan
+4. Enable continuous flow (items progress independently)
+5. Validate outputs at each quality gate
+6. Route feedback between skills
+7. Track progress to completion
+8. Generate project chronicle documentation
+
+### Standalone Mode (For Specific Tasks)
+
+**You don't need to run a full project to use individual skills.** Call any skill directly for specific tasks:
+
+```
+Use the qa-engineer skill to create a test plan for my login feature.
+```
+
+```
+Use the svg-designer skill to create icons for my navigation menu.
+```
+
+```
+Use the security-engineer skill to review my authentication code.
+```
+
+```
+Use the data-architect skill to design a schema for user subscriptions.
+```
+
+#### Common Standalone Use Cases
+
+| Task | Skill to Use | Example Prompt |
+|------|--------------|----------------|
+| **Create icons/logos** | `svg-designer` | "Create a logo for my app called TaskFlow" |
+| **Design database** | `data-architect` | "Design a schema for an e-commerce product catalog" |
+| **Write tests** | `qa-engineer` | "Create test cases for user registration" |
+| **Review security** | `security-engineer` | "Review this API for security vulnerabilities" |
+| **Design API** | `api-designer` | "Design REST endpoints for a booking system" |
+| **Create UI specs** | `ui-designer` | "Create a design system for a fintech app" |
+| **Write user stories** | `business-analyst` | "Write user stories for a password reset feature" |
+| **Plan monitoring** | `site-reliability-engineer` | "Design SLOs for my API" |
+| **Create email templates** | `email-designer` | "Create a welcome email template" |
+| **Setup notifications** | `notification-designer` | "Design push notification strategy for my app" |
+
+#### Skill Chaining (Manual Pipeline)
+
+You can also chain skills manually for a focused workflow:
+
+```
+1. Use the ux-designer skill to create user flows for checkout
+2. Use the ui-designer skill to create wireframes based on those flows
+3. Use the svg-designer skill to create icons needed in the wireframes
+```
 
 ## Commands
 
 | Command | Purpose |
 | ------- | ------- |
-| `/start` | Start project orchestration |
+| `/init-project` | **Start a new project with structured intake form** |
+| `/start` | Start project orchestration (after intake) |
 | `/project-chronicle` | Generate project documentation |
 | `/project-chronicle --full` | Include all artifact content |
 | `/project-chronicle --minimal` | Summary only |
@@ -75,14 +133,16 @@ The orchestrator will:
 | `/plan-next-release --minor` | Plan feature release |
 | `/plan-next-release --major` | Plan major version release |
 
-## Skills (34 Total)
+## Skills (48+ Total)
 
 ### Meta/Management
 
 | Skill                  | Purpose                                        |
 | ---------------------- | ---------------------------------------------- |
-| `project-orchestrator` | Coordinates entire workflow, enforces 12 gates |
+| `project-orchestrator` | Coordinates entire workflow, enforces 12 gates, **multi-angle project analysis**, **continuous flow mode** |
 | `project-chronicler`   | Generates HTML documentation of project journey |
+| `project-intake`       | **Structured project initiation form, kickoff questions** |
+| `work-item-tracker`    | **Kanban board, WIP limits, item-level tracking, bottleneck detection** |
 | `requirements-tracker` | RTM maintenance, coverage reports, traceability |
 | `release-manager`      | Versioning, changelog, release notes           |
 
@@ -109,6 +169,7 @@ The orchestrator will:
 | `ux-designer`          | User flows, wireframes, IA    |
 | `ui-designer`          | Visual design, design system  |
 | `interaction-designer` | Micro-interactions, animation |
+| `svg-designer`         | **Icons, logos, illustrations, visual assets** |
 
 ### Data & API
 
@@ -127,13 +188,22 @@ The orchestrator will:
 | `technical-writer`   | Documentation, API docs, guides    |
 | `demo-data-designer` | Realistic test/demo data           |
 
-### Infrastructure & Operations
+### Infrastructure & Platform
 
 | Skill                     | Purpose                                      |
 | ------------------------- | -------------------------------------------- |
 | `platform-engineer`       | Docker, database setup, environment config   |
 | `implementation-verifier` | Smoke test before QA (does it actually run?) |
 | `observability-engineer`  | Logging, error tracking (Sentry), health checks |
+
+### Operations & Reliability (NEW)
+
+| Skill                     | Purpose                                           |
+| ------------------------- | ------------------------------------------------- |
+| `site-reliability-engineer` | **SLOs, monitoring, alerting, on-call** |
+| `backup-recovery-engineer` | **Backup strategies, disaster recovery, RTO/RPO** |
+| `incident-manager`         | **Runbooks, incident response, post-mortems** |
+| `audit-logging-engineer`   | **Audit trails, compliance logging, data tracking** |
 
 ### Implementation
 
@@ -159,11 +229,22 @@ The orchestrator will:
 | `legal-advisor`      | Privacy policy, terms of service, GDPR/CCPA |
 | `compliance-analyst` | Privacy, regulatory compliance               |
 
-### Communications
+### Communications & Notifications
 
-| Skill            | Purpose                               |
-| ---------------- | ------------------------------------- |
-| `email-designer` | Transactional email templates (React Email) |
+| Skill                 | Purpose                                   |
+| --------------------- | ----------------------------------------- |
+| `email-designer`      | Transactional email templates (React Email) |
+| `notification-designer` | **Push, in-app, SMS notification systems** |
+
+### Production Features (NEW)
+
+| Skill                       | Purpose                                           |
+| --------------------------- | ------------------------------------------------- |
+| `file-media-handler`        | **File uploads, media processing, CDN** |
+| `search-engineer`           | **Full-text search, faceted navigation, relevance** |
+| `payment-integration-engineer` | **Payment flows, PCI compliance, subscriptions** |
+| `feature-flag-manager`      | **A/B testing, progressive rollouts, experiments** |
+| `i18n-designer`             | **Internationalization, localization, RTL support** |
 
 ## Agents
 
@@ -504,6 +585,102 @@ The `project-chronicler` skill generates a self-contained HTML file documenting 
 - **Workflow Visualization**: Skill invocation sequence
 
 Generated automatically at phase completion or manually via `/project-chronicle`.
+
+## Continuous Flow Mode (Kanban)
+
+For larger projects (30+ requirements), enable **continuous flow** where individual requirements progress through the pipeline independently:
+
+```
+┌──────────────────────────────────────────────────────────────────────────┐
+│                     CONTINUOUS FLOW PIPELINE                               │
+├──────────────────────────────────────────────────────────────────────────┤
+│  BACKLOG    ANALYSIS    ARCHITECTURE    DESIGN    DEV    QA              │
+│  ───────    ────────    ────────────    ──────    ───    ──              │
+│  │WI-010│   │WI-007│    │ WI-005 │     │WI-003│  │WI-002│ │WI-001│       │
+│  │WI-011│   │WI-008│    │ WI-006 │     │WI-004│  │      │ │      │       │
+│  │ ...  │   │      │    │        │     │      │  │      │ │      │       │
+│  └──────┘   └──────┘    └────────┘     └──────┘  └──────┘ └──────┘       │
+│                                                                           │
+│  WI-001 is in QA while WI-010 is still in backlog                        │
+│  Each item progresses at its own pace                                    │
+│  WIP limits prevent overloading any stage                                │
+└──────────────────────────────────────────────────────────────────────────┘
+```
+
+### Benefits
+
+- **Faster time-to-value**: Finished items ship sooner
+- **Better visibility**: See bottlenecks immediately
+- **Efficient resources**: No waiting for batch completion
+- **Independent progress**: Items move at their own pace
+
+### WIP Limits (Recommended)
+
+| Stage | Limit | Why |
+|-------|-------|-----|
+| Analysis | 5 | BA can handle ~5 at once |
+| Architecture | 3 | Complex, needs focus |
+| Design | 5 | UX + UI can parallel |
+| Development | 8 | Multiple devs possible |
+| QA | 5 | Testing takes time |
+| Review | 3 | Should be fast |
+
+### Enabling Continuous Flow
+
+The orchestrator automatically suggests continuous flow for projects with 30+ requirements. Or enable manually:
+
+```
+Use continuous flow mode for this project.
+```
+
+The `work-item-tracker` skill manages the Kanban board and tracks each work item (WI-XXX) through the pipeline.
+
+## Developer Entertainment Mode
+
+**Long implementations can be tedious. Stay engaged with fun interactions!**
+
+The plugin includes an entertainment system to keep developers engaged during long-running operations:
+
+### Features
+
+| Feature | Description |
+|---------|-------------|
+| **Fun Facts** | Tech history, coding trivia during waits |
+| **Achievements** | Celebrate milestones ("Gate Crusher!", "Zero Defects!") |
+| **Developer Jokes** | Clean humor for coffee breaks |
+| **Progress Celebrations** | Phase completion announcements |
+| **Patience Rewards** | Stretch reminders, wisdom quotes |
+| **Mini-Games** | Code golf challenges during very long waits |
+
+### Configuration
+
+```
+/config entertainment --level fun    # Default - occasional fun facts
+/config entertainment --level jokes  # Add developer jokes
+/config entertainment --level full   # Maximum engagement
+/config entertainment --off          # Serious mode only
+```
+
+### Example Achievement
+
+```
+🏆 **Achievement Unlocked: Gate Crusher!**
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+You passed the Requirements Gate on the first attempt!
+Only 34% of projects achieve this. Excellent planning!
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+### Example Fun Fact
+
+```
+💡 **Did You Know?**
+The first computer bug was an actual bug - a moth found in a Harvard Mark II
+computer in 1947. Grace Hopper taped it to the log book, noting "First actual
+case of bug being found."
+```
+
+The entertainment system is non-blocking, respects preferences, and can be disabled for serious/client-visible sessions.
 
 ## Feedback Loops
 

@@ -396,9 +396,322 @@ After implementing requirements, update `docs/traceability/RTM.md`:
 
 **Do it right the first time.**
 
+## Code Review Protocol (MANDATORY)
+
+**Every piece of code must be reviewed before handoff to QA.** This includes self-review and peer review for critical paths.
+
+### Review Areas Summary
+
+| Area | What It Reviews | Section |
+|------|-----------------|---------|
+| **Correctness** | Edge cases, error handling, null safety, race conditions | 1 |
+| **Security** | Input validation, auth checks, injection risks, OWASP Top 10 | 2 |
+| **Performance** | N+1 queries, memory leaks, unnecessary renders, caching | 3 |
+| **Code Quality** | Readability, maintainability, naming conventions | 4 |
+| **Best Practices** | SOLID principles, DRY, KISS, YAGNI, design patterns | 5 |
+| **Documentation** | Comments where needed, API docs, README, ADRs | 6 |
+| **Testing** | Test coverage, test quality, missing tests | 7 |
+| **Standards** | Linting compliance, TypeScript strictness, formatting | 4 |
+
+### When to Review
+
+| Situation | Review Type | Reviewer |
+|-----------|-------------|----------|
+| Any new code | Self-review | Developer (you) |
+| Critical paths (auth, payments) | Peer + Security | Another dev + security-engineer |
+| Complex logic | Peer review | Another dev or architect |
+| Hotfixes | Expedited review | Quick self-review, document tradeoffs |
+
+### Code Review Checklist
+
+**Run this checklist on ALL code before marking implementation complete:**
+
+#### 1. Correctness & Logic
+
+```markdown
+## Correctness Check
+
+- [ ] **Happy path works** - Primary use case functions correctly
+- [ ] **Edge cases handled** - Empty inputs, nulls, boundaries
+- [ ] **Error states** - What happens when things fail?
+- [ ] **Race conditions** - Concurrent access handled?
+- [ ] **Off-by-one errors** - Loop boundaries, array indices
+- [ ] **Type safety** - No `any`, no type assertions without reason
+- [ ] **Null safety** - Optional chaining, null checks where needed
+```
+
+#### 2. Security Review
+
+```markdown
+## Security Check
+
+### Input Validation
+- [ ] All user inputs validated (length, format, type)
+- [ ] SQL queries use parameterized statements (no string concat)
+- [ ] No eval(), innerHTML with user data, or dynamic code execution
+- [ ] File uploads validated (type, size, name sanitization)
+
+### Authentication & Authorization
+- [ ] Auth checks on ALL protected routes
+- [ ] Role checks before privileged operations
+- [ ] Session/token handling is secure
+- [ ] Password hashing uses bcrypt/argon2 (not MD5/SHA1)
+
+### Data Protection
+- [ ] Sensitive data not logged (passwords, tokens, PII)
+- [ ] API responses don't leak internal details
+- [ ] Secrets in env vars, not hardcoded
+- [ ] HTTPS enforced for sensitive operations
+
+### Common Vulnerabilities (OWASP Top 10)
+- [ ] No SQL injection vectors
+- [ ] No XSS vectors (output encoding)
+- [ ] No CSRF vulnerabilities (tokens used)
+- [ ] No insecure deserialization
+- [ ] No sensitive data exposure in errors
+```
+
+#### 3. Performance Review
+
+```markdown
+## Performance Check
+
+### Database
+- [ ] No N+1 queries (use includes/joins)
+- [ ] Indexes on frequently queried columns
+- [ ] Pagination for list endpoints
+- [ ] No SELECT * (only needed columns)
+
+### Frontend
+- [ ] No unnecessary re-renders (memo, useMemo, useCallback)
+- [ ] Images optimized (next/image, lazy loading)
+- [ ] Bundle size reasonable (code splitting if large)
+- [ ] No memory leaks (cleanup in useEffect)
+
+### API
+- [ ] Response times acceptable (<500ms typical)
+- [ ] Proper caching headers where applicable
+- [ ] Async operations don't block
+- [ ] Timeouts set for external calls
+```
+
+#### 4. Code Quality Review
+
+```markdown
+## Code Quality Check
+
+### Readability
+- [ ] Clear, descriptive variable/function names
+- [ ] Functions do one thing (single responsibility)
+- [ ] No magic numbers (use constants)
+- [ ] Complex logic has comments explaining WHY
+- [ ] Consistent code style throughout
+- [ ] No overly clever/obscure code
+
+### Maintainability
+- [ ] DRY - No copy-pasted code blocks
+- [ ] Consistent patterns with rest of codebase
+- [ ] No deeply nested callbacks (use async/await)
+- [ ] Error messages are helpful (for debugging)
+- [ ] Easy to understand without author explanation
+- [ ] Changes are isolated (low coupling)
+
+### Standards Compliance
+- [ ] Linting passes (no warnings suppressed without reason)
+- [ ] TypeScript strict mode satisfied
+- [ ] Consistent formatting (Prettier/ESLint)
+- [ ] No TODO/FIXME left without ticket reference
+- [ ] File/folder naming conventions followed
+- [ ] Import order consistent
+```
+
+#### 5. Best Practices Review
+
+```markdown
+## Best Practices Check
+
+### SOLID Principles
+- [ ] **Single Responsibility** - Each class/function has one reason to change
+- [ ] **Open/Closed** - Open for extension, closed for modification
+- [ ] **Liskov Substitution** - Subtypes are substitutable for base types
+- [ ] **Interface Segregation** - No forced dependencies on unused methods
+- [ ] **Dependency Inversion** - Depend on abstractions, not concretions
+
+### Design Patterns (where applicable)
+- [ ] Appropriate patterns used (not forced)
+- [ ] Patterns implemented correctly
+- [ ] No anti-patterns (god objects, spaghetti, etc.)
+
+### DRY (Don't Repeat Yourself)
+- [ ] No duplicated logic (extract to shared function)
+- [ ] No copy-pasted code blocks
+- [ ] Configuration over hardcoding
+- [ ] Shared constants/enums for repeated values
+
+### KISS (Keep It Simple)
+- [ ] Simplest solution that works
+- [ ] No premature optimization
+- [ ] No over-engineering for hypothetical futures
+- [ ] Abstractions are justified by actual use
+
+### YAGNI (You Aren't Gonna Need It)
+- [ ] No unused code or dead branches
+- [ ] No features built "just in case"
+- [ ] No excessive configurability
+```
+
+#### 6. Documentation Review
+
+```markdown
+## Documentation Check
+
+### Code Comments
+- [ ] Complex algorithms explained (the WHY, not the WHAT)
+- [ ] Non-obvious business logic documented
+- [ ] Workarounds have ticket references
+- [ ] No commented-out code (delete it)
+- [ ] No obvious comments (// increment i)
+
+### Function/Method Documentation
+- [ ] Public APIs have JSDoc/docstrings
+- [ ] Parameters documented with types and purpose
+- [ ] Return values documented
+- [ ] Exceptions/errors documented
+- [ ] Examples provided for complex functions
+
+### API Documentation
+- [ ] All endpoints documented (OpenAPI/Swagger)
+- [ ] Request/response schemas complete
+- [ ] Error responses documented
+- [ ] Authentication requirements noted
+- [ ] Rate limits documented (if applicable)
+
+### README & Guides
+- [ ] Setup instructions current
+- [ ] Environment variables documented
+- [ ] Common tasks explained
+- [ ] Troubleshooting section for known issues
+
+### Architecture Documentation
+- [ ] Major design decisions recorded (ADRs)
+- [ ] System diagrams current
+- [ ] Data flow documented
+- [ ] Integration points explained
+```
+
+#### 7. Testing Review
+
+```markdown
+## Testing Check
+
+### Coverage
+- [ ] Unit tests for business logic functions
+- [ ] Integration tests for API endpoints
+- [ ] Edge cases have test coverage
+- [ ] Error paths tested (not just happy path)
+- [ ] Critical paths have 80%+ coverage
+
+### Test Quality
+- [ ] Tests actually assert behavior (not just "no errors")
+- [ ] Tests are independent (no order dependency)
+- [ ] Test names describe what they test
+- [ ] No flaky tests (random failures)
+- [ ] Tests run fast (mock external dependencies)
+- [ ] Meaningful assertions (not just "truthy")
+```
+
+### Code Review Report Template
+
+Generate this report after reviewing code:
+
+```markdown
+## Code Review Report: [Feature/REQ-XXX]
+
+**Reviewed By:** [Developer]
+**Date:** [Date]
+**Files Reviewed:** [count]
+
+### Summary
+- Total Issues Found: [count]
+- Critical: [count] - Must fix before merge
+- Major: [count] - Should fix before merge
+- Minor: [count] - Nice to fix
+- Suggestions: [count] - Future improvements
+
+### Critical Issues (MUST FIX)
+
+| # | File:Line | Issue | Severity | Fix |
+|---|-----------|-------|----------|-----|
+| 1 | auth.ts:45 | SQL injection in query | Critical | Use parameterized query |
+| 2 | api.ts:120 | No auth check on delete | Critical | Add requireRole middleware |
+
+### Major Issues (SHOULD FIX)
+
+| # | File:Line | Issue | Severity | Fix |
+|---|-----------|-------|----------|-----|
+| 1 | users.ts:30 | N+1 query in loop | Major | Use include/join |
+
+### Minor Issues
+
+| # | File:Line | Issue | Suggestion |
+|---|-----------|-------|------------|
+| 1 | utils.ts:15 | Magic number 86400 | Use SECONDS_PER_DAY constant |
+
+### Positive Observations
+- [What was done well - reinforce good practices]
+
+### Review Result
+- [ ] **APPROVED** - No critical/major issues, ready for QA
+- [ ] **CHANGES REQUIRED** - Must address issues before proceeding
+- [ ] **RE-REVIEW NEEDED** - Significant changes, review again after fixes
+```
+
+### Self-Review Workflow
+
+**Before marking any feature complete:**
+
+```
+1. STOP coding - take a 5-minute break
+2. Run the full checklist above
+3. Fix any Critical/Major issues found
+4. Generate Code Review Report
+5. For critical paths: request peer review
+6. Only THEN mark as ready for QA
+```
+
+### Peer Review Request Template
+
+When requesting peer review:
+
+```markdown
+## Peer Review Request
+
+**Feature:** [Description]
+**Files Changed:** [list or PR link]
+**Self-Review:** Complete (report attached)
+**Why Peer Review:** [Critical path / Complex logic / New pattern]
+
+### What to Focus On
+- [Specific areas of concern]
+- [Questions for reviewer]
+
+### Context
+- [Brief explanation of approach taken]
+- [Any tradeoffs made]
+```
+
+---
+
 ## Handoff Checklist
 
 Before passing to QA:
+
+### Code Review (MANDATORY)
+- [ ] **Self-review completed using checklist above**
+- [ ] **Code Review Report generated**
+- [ ] **All Critical issues fixed**
+- [ ] **All Major issues fixed or documented with justification**
+- [ ] **Peer review completed (for critical paths)**
 
 ### Code Quality
 - [ ] All features implemented per requirements

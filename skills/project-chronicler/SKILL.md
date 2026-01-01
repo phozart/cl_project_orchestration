@@ -81,13 +81,25 @@ Visual vertical timeline showing:
 
 ### 4. Artifact Gallery
 Collapsible cards organized by category:
-- **Requirements**: BRD, Requirements Catalogue, User Stories
+- **Product**: Product Vision, Feature Inventory, MVP Scope, R&D Findings
+- **Requirements**: BRD, Requirements Catalogue, User Stories, RTM
 - **Architecture**: ADRs, System Design, Tech Stack Spec
 - **Data & API**: Data Model, API Specifications (OpenAPI)
 - **Design**: User Flows, Wireframes, UI Specs, Design System
+- **Notifications**: Notification Strategy, Templates, Preferences
+- **Payments**: Payment Architecture, Checkout Flow, PCI Compliance
+- **Search**: Search Architecture, Index Design, Relevance Config
+- **Files**: File Type Matrix, CDN Strategy, Processing Pipeline
+- **i18n**: Language Matrix, String Management, Translation Workflow
+- **Feature Flags**: Flag Design, Targeting Rules, Experiment Framework
+- **Operations**: SLOs, Monitoring Strategy, Alerting Rules, Runbooks
+- **Backup & DR**: Recovery Objectives, Backup Strategy, DR Plan
+- **Incident Management**: Incident Response Plan, Post-Mortem Templates
+- **Audit & Compliance**: Audit Event Catalogue, Retention Policy, Access Control
 - **Quality**: Test Plans, Test Reports, Defect Summary
 - **Security**: Security Review, Vulnerability Report
-- **Deployment**: CI/CD Config, Infrastructure Spec
+- **Legal**: Privacy Policy, Terms of Service, Cookie Consent
+- **Deployment**: CI/CD Config, Infrastructure Spec, Release Notes
 
 Each card displays:
 - Artifact ID and title
@@ -188,21 +200,26 @@ The chronicle consumes artifacts from the `docs/` folder structure created by ea
 ```
 project-root/
 ├── docs/
-│   ├── product/                    # Product Strategist outputs
+│   ├── discovery/                  # Discovery phase outputs
+│   │   └── PROJECT-BRIEF.md
+│   ├── product/                    # Product Strategist & Product Design outputs
 │   │   ├── Product_Vision_Strategy.md
 │   │   ├── User_Segments.md        # Personas and segments
 │   │   ├── JTBD_Framework.md       # Jobs to be done
 │   │   ├── MVP_Decision_Package.md
 │   │   ├── Product_Capabilities.md
+│   │   ├── Feature_Inventory.md    # F-XXX features
+│   │   ├── System_Checklist.md     # Completeness check
 │   │   ├── Success_Metrics.md
-│   │   ├── Problem_Opportunity_Backlog.md
-│   │   ├── Product_Principles.md
+│   │   ├── RD_Findings.md          # R&D research
 │   │   └── Product_Decision_Log.md
 │   ├── requirements/               # Business Analyst outputs
 │   │   ├── Business_Requirements_Document.md
 │   │   ├── Requirements_Catalogue.md
 │   │   ├── User_Stories.md
 │   │   └── Non_Functional_Requirements.md
+│   ├── traceability/               # Requirements Tracker outputs
+│   │   └── RTM.md                  # Requirements Traceability Matrix
 │   ├── architecture/               # Solution Architect outputs
 │   │   ├── System_Design.md
 │   │   ├── Tech_Stack.md
@@ -211,8 +228,13 @@ project-root/
 │   │       ├── ADR-001-*.md
 │   │       ├── ADR-002-*.md
 │   │       └── ...
+│   ├── data/                       # Data Architect outputs
+│   │   ├── DATA-MODEL.md
+│   │   ├── ERD.md
+│   │   └── Data_Dictionary.md
 │   ├── api/                        # API Designer outputs
-│   │   └── API_Reference.md
+│   │   ├── API_Reference.md
+│   │   └── API_SPECIFICATION.yaml
 │   ├── ux/                         # UX Designer outputs
 │   │   ├── User_Flows.md
 │   │   ├── Wireframes.md
@@ -224,19 +246,90 @@ project-root/
 │   │   ├── Component_Library.md
 │   │   ├── Visual_Mockups.md
 │   │   └── UI_Developer_Handoff.md
+│   ├── notifications/              # Notification Designer outputs
+│   │   ├── catalogue.md            # Notification types
+│   │   ├── channels.md             # Channel strategy
+│   │   ├── templates.md            # Message templates
+│   │   ├── preferences.md          # User preference schema
+│   │   └── architecture.md         # Delivery infrastructure
+│   ├── payments/                   # Payment Integration outputs
+│   │   ├── architecture.md         # Payment flow design
+│   │   ├── checkout.md             # Checkout implementation
+│   │   ├── pci-compliance.md       # PCI-DSS compliance
+│   │   ├── subscriptions.md        # Subscription management
+│   │   └── error-handling.md       # Payment error handling
+│   ├── search/                     # Search Engineer outputs
+│   │   ├── scope.md                # Search scope definition
+│   │   ├── index-design.md         # Index architecture
+│   │   ├── query-processing.md     # Query pipeline
+│   │   ├── relevance.md            # Ranking configuration
+│   │   └── api-spec.md             # Search API
+│   ├── files/                      # File Media Handler outputs
+│   │   ├── supported-types.md      # File type matrix
+│   │   ├── upload-flow.md          # Upload architecture
+│   │   ├── processing.md           # Image/video processing
+│   │   ├── cdn-strategy.md         # CDN configuration
+│   │   └── security.md             # File security
+│   ├── i18n/                       # i18n Designer outputs
+│   │   ├── languages.md            # Language support matrix
+│   │   ├── string-management.md    # Key organization
+│   │   ├── formatting.md           # Locale formatting
+│   │   ├── rtl-support.md          # RTL implementation
+│   │   └── translation-workflow.md # Translation process
+│   ├── feature-flags/              # Feature Flag Manager outputs
+│   │   ├── design.md               # Flag design document
+│   │   ├── targeting.md            # Targeting rules
+│   │   ├── experiments.md          # A/B testing framework
+│   │   ├── rollout.md              # Rollout playbook
+│   │   └── sdk.md                  # SDK integration
+│   ├── operations/                 # SRE outputs
+│   │   ├── SLOs.md                 # Service level objectives
+│   │   ├── monitoring.md           # Monitoring strategy
+│   │   ├── alerting.md             # Alert rules
+│   │   ├── on-call.md              # On-call procedures
+│   │   ├── dashboards.md           # Dashboard specs
+│   │   ├── recovery-objectives.md  # RTO/RPO
+│   │   ├── backup-strategy.md      # Backup plan
+│   │   ├── disaster-recovery.md    # DR plan
+│   │   ├── dr-testing.md           # DR test schedule
+│   │   ├── incident-response.md    # Response procedures
+│   │   ├── runbooks/               # Operational runbooks
+│   │   │   └── *.md
+│   │   ├── comms-templates.md      # Incident communication
+│   │   ├── post-mortem-template.md # Post-mortem template
+│   │   └── incident-metrics.md     # Incident KPIs
+│   ├── compliance/                 # Audit Logging outputs
+│   │   ├── audit-events.md         # Event catalogue
+│   │   ├── audit-schema.md         # Log format
+│   │   ├── retention-policy.md     # Data retention
+│   │   ├── audit-access.md         # Access control matrix
+│   │   └── audit-implementation.md # Implementation guide
+│   ├── legal/                      # Legal Advisor outputs
+│   │   ├── privacy-policy.md
+│   │   ├── terms-of-service.md
+│   │   └── cookie-policy.md
 │   ├── testing/                    # QA/BA outputs
+│   │   ├── TEST-PLAN.md
+│   │   ├── TEST-RESULTS.md
+│   │   ├── DEFECTS.md
 │   │   └── BAT_Report.md           # Business Acceptance Testing
-│   ├── handoffs/                   # Handoff documents
-│   │   ├── Developer_Handoff.md
-│   │   ├── Developer_API_Handoff.md
-│   │   ├── UX_Developer_Handoff.md
-│   │   ├── BA_Handoff.md
-│   │   └── Architect_Handoff.md
 │   ├── security/                   # Security outputs
 │   │   └── SECURITY-REVIEW.md
-│   └── devops/                     # DevOps outputs
-│       └── DEPLOYMENT-CONFIG.md
+│   ├── devops/                     # DevOps outputs
+│   │   ├── DEPLOYMENT-CONFIG.md
+│   │   └── CI-CD.md
+│   ├── release/                    # Release Manager outputs
+│   │   ├── CHANGELOG.md
+│   │   └── RELEASE-NOTES.md
+│   └── handoffs/                   # Handoff documents
+│       ├── Developer_Handoff.md
+│       ├── Developer_API_Handoff.md
+│       ├── UX_Developer_Handoff.md
+│       ├── BA_Handoff.md
+│       └── Architect_Handoff.md
 ├── PROJECT-STATUS.md               # Orchestrator tracking document
+├── PROJECT-ANALYSIS.md             # Project analysis from orchestrator
+├── PROJECT-PROFILE.md              # Skill/agent requirements
 ├── FEEDBACK/
 │   ├── FEEDBACK-001.md
 │   └── ...
@@ -247,18 +340,33 @@ project-root/
 
 | Skill | Output Location | Files to Parse |
 |-------|-----------------|----------------|
-| **project-orchestrator** | `./PROJECT-STATUS.md` | Phase status, gate history, issues, risks |
+| **project-orchestrator** | `./PROJECT-STATUS.md`, `./PROJECT-ANALYSIS.md`, `./PROJECT-PROFILE.md` | Phase status, gate history, issues, risks, analysis, skill requirements |
 | **product-strategist** | `docs/product/` | Product_Vision_Strategy.md, User_Segments.md, MVP_Decision_Package.md, Success_Metrics.md |
+| **product-design** | `docs/product/` | Feature_Inventory.md, System_Checklist.md, RD_Findings.md |
 | **business-analyst** | `docs/requirements/` | Business_Requirements_Document.md, Requirements_Catalogue.md, User_Stories.md, Non_Functional_Requirements.md |
 | **business-analyst (BAT)** | `docs/testing/` | BAT_Report.md |
+| **requirements-tracker** | `docs/traceability/` | RTM.md |
 | **solution-architect** | `docs/architecture/` | System_Design.md, Tech_Stack.md, Data_Model.md, adrs/*.md |
-| **api-designer** | `docs/api/` | API_Reference.md |
+| **data-architect** | `docs/data/` | DATA-MODEL.md, ERD.md, Data_Dictionary.md |
+| **api-designer** | `docs/api/` | API_Reference.md, API_SPECIFICATION.yaml |
 | **ux-designer** | `docs/ux/` | User_Flows.md, Wireframes.md, Information_Architecture.md, Accessibility.md |
 | **ui-designer** | `docs/ui/` | Design_System.md, Component_Library.md, Visual_Mockups.md |
 | **interaction-designer** | `docs/ux/` | Interaction_Patterns.md |
+| **notification-designer** | `docs/notifications/` | catalogue.md, channels.md, templates.md, preferences.md, architecture.md |
+| **payment-integration-engineer** | `docs/payments/` | architecture.md, checkout.md, pci-compliance.md, subscriptions.md, error-handling.md |
+| **search-engineer** | `docs/search/` | scope.md, index-design.md, query-processing.md, relevance.md, api-spec.md |
+| **file-media-handler** | `docs/files/` | supported-types.md, upload-flow.md, processing.md, cdn-strategy.md, security.md |
+| **i18n-designer** | `docs/i18n/` | languages.md, string-management.md, formatting.md, rtl-support.md, translation-workflow.md |
+| **feature-flag-manager** | `docs/feature-flags/` | design.md, targeting.md, experiments.md, rollout.md, sdk.md |
+| **site-reliability-engineer** | `docs/operations/` | SLOs.md, monitoring.md, alerting.md, on-call.md, dashboards.md |
+| **backup-recovery-engineer** | `docs/operations/` | recovery-objectives.md, backup-strategy.md, disaster-recovery.md, dr-testing.md |
+| **incident-manager** | `docs/operations/` | incident-response.md, runbooks/*.md, comms-templates.md, post-mortem-template.md, incident-metrics.md |
+| **audit-logging-engineer** | `docs/compliance/` | audit-events.md, audit-schema.md, retention-policy.md, audit-access.md, audit-implementation.md |
+| **legal-advisor** | `docs/legal/` | privacy-policy.md, terms-of-service.md, cookie-policy.md |
 | **qa-engineer** | `docs/testing/` | TEST-PLAN.md, TEST-RESULTS.md, DEFECTS.md |
 | **security-engineer** | `docs/security/` | SECURITY-REVIEW.md |
-| **devops-engineer** | `docs/devops/` | DEPLOYMENT-CONFIG.md |
+| **devops-engineer** | `docs/devops/` | DEPLOYMENT-CONFIG.md, CI-CD.md |
+| **release-manager** | `docs/release/` | CHANGELOG.md, RELEASE-NOTES.md |
 | **handoffs** | `docs/handoffs/` | *_Handoff.md files |
 | *Feedback loops* | `./FEEDBACK/` | FEEDBACK-*.md |
 

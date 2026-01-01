@@ -766,9 +766,355 @@ At EVERY phase transition, the orchestrator must:
 | [Metric] | [Baseline] | [Goal] |
 ```
 
-## Phase 2: Skill Selection
+## Phase 2: Project Analysis (CRITICAL - Act as Reviewer)
 
-Based on project type, determine required skills:
+**BEFORE selecting skills, conduct comprehensive analysis from multiple angles.**
+
+The orchestrator must act as an analyst/reviewer, gathering input systematically to understand the FULL scope of what's needed. You cannot define what's needed without proper analysis.
+
+### 2.1 Multi-Angle Analysis Framework
+
+Analyze the project from EACH of these perspectives:
+
+```markdown
+## Project Analysis: [Project Name]
+
+### Analysis Date: [Date]
+### Analyst: Project Orchestrator
+
+---
+
+## A. Business Analysis Angle
+
+### Problem Domain
+- What business problem does this solve?
+- Who are the stakeholders?
+- What's the business value?
+- What are the success metrics?
+
+### User Segments
+| Segment | Needs | Priority |
+|---------|-------|----------|
+| [Segment] | [Needs] | [High/Med/Low] |
+
+### Business Constraints
+- Budget: [if known]
+- Timeline: [critical dates]
+- Regulatory: [compliance needs]
+- Competitive: [market pressure]
+
+---
+
+## B. Technical Architecture Angle
+
+### System Complexity Assessment
+
+| Factor | Level | Notes |
+|--------|-------|-------|
+| Data complexity | Simple/Medium/Complex | |
+| Integration needs | None/Few/Many | |
+| Real-time requirements | No/Partial/Full | |
+| Scalability needs | Low/Medium/High | |
+| Security sensitivity | Low/Medium/High/Critical | |
+
+### Infrastructure Needs
+- [ ] Database required? Type: [SQL/NoSQL/Both]
+- [ ] Caching layer needed?
+- [ ] Message queue needed?
+- [ ] File storage needed?
+- [ ] CDN needed?
+- [ ] Search engine needed?
+- [ ] Background jobs needed?
+
+### Integration Analysis
+| External System | Integration Type | Priority |
+|-----------------|------------------|----------|
+| [System] | [API/Webhook/etc] | [Must/Should/Could] |
+
+---
+
+## C. User Experience Angle
+
+### User Journey Complexity
+- Number of distinct user journeys: [count]
+- Authentication required: [Yes/No]
+- User roles needed: [count and list]
+- Mobile support: [Required/Nice-to-have/No]
+
+### UX Challenges
+| Challenge | Complexity | Notes |
+|-----------|------------|-------|
+| Form-heavy? | [Yes/No] | |
+| Real-time updates? | [Yes/No] | |
+| Offline support? | [Yes/No] | |
+| Accessibility critical? | [Yes/No] | |
+
+---
+
+## D. Data & Content Angle
+
+### Data Types
+| Data Type | Volume | Sensitivity | Retention |
+|-----------|--------|-------------|-----------|
+| [Type] | [Est. size] | [PII/Sensitive/Public] | [Duration] |
+
+### Content Needs
+- [ ] User-generated content?
+- [ ] File uploads?
+- [ ] Rich media (images, video)?
+- [ ] Localization/i18n?
+- [ ] Search functionality?
+
+---
+
+## E. Operations Angle
+
+### Production Requirements
+| Requirement | Level | Notes |
+|-------------|-------|-------|
+| Uptime SLA | [99%/99.9%/99.99%] | |
+| Disaster recovery | [Required/Nice-to-have] | |
+| Monitoring | [Basic/Full] | |
+| Audit logging | [Required/Not needed] | |
+
+### Operational Complexity
+- Deployment frequency: [Daily/Weekly/Monthly]
+- Rollback capability: [Required/Nice-to-have]
+- Feature flags: [Yes/No]
+- A/B testing: [Yes/No]
+
+---
+
+## F. Security & Compliance Angle
+
+### Security Assessment
+
+| Area | Requirement | Notes |
+|------|-------------|-------|
+| Authentication | [Type needed] | |
+| Authorization | [RBAC/ABAC/Simple] | |
+| Data encryption | [At-rest/In-transit/Both] | |
+| PCI compliance | [Yes/No] | |
+| HIPAA compliance | [Yes/No] | |
+| GDPR compliance | [Yes/No] | |
+
+### Legal Requirements
+- [ ] Privacy policy needed?
+- [ ] Terms of service needed?
+- [ ] Cookie consent needed?
+- [ ] Data processing agreement needed?
+
+---
+
+## G. Communication Angle
+
+### Notification Needs
+
+| Type | Required | Priority |
+|------|----------|----------|
+| Email transactional | [Yes/No] | |
+| Email marketing | [Yes/No] | |
+| Push notifications | [Yes/No] | |
+| SMS | [Yes/No] | |
+| In-app notifications | [Yes/No] | |
+
+---
+
+## H. Growth & Scale Angle
+
+### Future Considerations
+- Expected user growth: [estimate]
+- Expected data growth: [estimate]
+- Planned features (post-MVP): [list]
+- Platform expansion: [mobile app, API, etc.]
+```
+
+### 2.2 Skill Requirements Matrix
+
+Based on analysis, map project needs to skills:
+
+```markdown
+## Skill Requirements Matrix
+
+### Core Skills (Always Required)
+| Skill | Reason | Notes |
+|-------|--------|-------|
+| product-design | Scope completeness | |
+| business-analyst | Requirements | |
+| solution-architect | Technical design | |
+| fullstack-developer | Implementation | |
+| qa-engineer | Quality assurance | |
+
+### Conditional Skills (Based on Analysis)
+
+#### If Authentication Required:
+- [x] security-engineer (auth design, review)
+- [x] data-architect (user schema)
+- [x] api-designer (auth endpoints)
+
+#### If Database Required:
+- [x] data-architect (schema design)
+- [x] backup-recovery-engineer (data protection)
+
+#### If UI Required:
+- [x] ux-designer (user flows)
+- [x] ui-designer (visual design)
+- [x] interaction-designer (micro-interactions)
+
+#### If Email/Notifications Required:
+- [x] email-designer (templates)
+- [x] notification-designer (strategy)
+
+#### If File Uploads Required:
+- [x] file-media-handler (storage, processing)
+
+#### If Search Required:
+- [x] search-engineer (search architecture)
+
+#### If Payments Required:
+- [x] payment-integration-engineer (checkout, compliance)
+
+#### If Multi-Language Required:
+- [x] i18n-designer (internationalization)
+
+#### If Production-Grade Required:
+- [x] platform-engineer (infrastructure)
+- [x] devops-engineer (deployment)
+- [x] site-reliability-engineer (monitoring, SLOs)
+- [x] incident-manager (runbooks)
+- [x] audit-logging-engineer (compliance)
+
+#### If Feature Rollouts Required:
+- [x] feature-flag-manager (progressive rollout)
+- [x] release-manager (versioning)
+
+#### If Legal/Compliance Required:
+- [x] legal-advisor (policies, terms)
+- [x] audit-logging-engineer (audit trails)
+```
+
+### 2.3 Agent Requirements Matrix
+
+Based on analysis, determine coordination agents needed:
+
+```markdown
+## Agent Requirements Matrix
+
+### Always Required Agents
+| Agent | Role | Trigger |
+|-------|------|---------|
+| project-lead | Coordinate overall workflow | Project start |
+
+### Conditional Agents
+
+#### If Complex Design (3+ design skills):
+- [x] design-coordinator (UX+UI+Interaction alignment)
+
+#### If Complex Architecture (security + performance concerns):
+- [x] technical-reviewer (architecture + security review)
+
+#### If Production Deployment:
+- [x] release-coordinator (release + devops coordination)
+
+#### If Multiple Developers:
+- [x] code-developer (coding tasks)
+- [x] qa-reviewer (code quality)
+```
+
+### 2.4 Documentation Requirements Matrix
+
+Based on analysis, determine what documentation is needed:
+
+```markdown
+## Documentation Requirements
+
+### Required Artifacts
+
+| Phase | Document | Template | Required If |
+|-------|----------|----------|-------------|
+| Discovery | Project Brief | Brief template | Always |
+| Strategy | Product Strategy | Strategy template | New product |
+| Product Design | Feature Inventory | F-XXX template | Always |
+| Product Design | System Checklist | Checklist template | Always |
+| Requirements | BRD | BRD template | Always |
+| Requirements | User Stories | US-XXX template | Always |
+| Requirements | RTM | RTM template | Always |
+| Architecture | System Design | Architecture template | Always |
+| Architecture | ADRs | ADR-XXX template | Technical decisions |
+| Data | ERD | ERD template | Has database |
+| Data | Data Dictionary | Dictionary template | Has database |
+| API | API Spec | OpenAPI template | Has API |
+| UX | User Flows | Flow template | Has UI |
+| UX | Wireframes | Wireframe template | Has UI |
+| UI | Design System | Design system template | Has UI |
+| UI | Component Specs | Component template | Has UI |
+| Email | Email Templates | Email template | Sends emails |
+| Legal | Privacy Policy | Privacy template | Collects user data |
+| Legal | Terms of Service | ToS template | User-facing product |
+| Platform | Docker Config | docker-compose.yml | Has infrastructure |
+| Platform | Environment Docs | .env.example | Always |
+| Operations | SLO Document | SLO template | Production |
+| Operations | Runbooks | Runbook template | Production |
+| Operations | DR Plan | DR template | Critical system |
+| Security | Security Review | Security template | Always |
+| QA | Test Plan | Test plan template | Always |
+| QA | Test Results | Results template | Always |
+| Release | Changelog | CHANGELOG.md | Always |
+| Release | Release Notes | Release template | Each release |
+```
+
+### 2.5 Analysis Output: Project Profile
+
+```markdown
+## Project Profile: [Name]
+
+### Classification
+- **Type**: [New Product / New Feature / Bug Fix / Redesign / API / etc.]
+- **Complexity**: [Simple / Medium / Complex / Enterprise]
+- **Risk Level**: [Low / Medium / High / Critical]
+
+### Scope Summary
+- Estimated features: [count]
+- User roles: [count]
+- Integrations: [count]
+- Compliance requirements: [list]
+
+### Required Skills
+| Skill | Phase | Priority | Notes |
+|-------|-------|----------|-------|
+| [skill] | [when] | [Must/Should/Could] | [notes] |
+
+### Required Agents
+| Agent | Role | When Invoked |
+|-------|------|--------------|
+| [agent] | [role] | [trigger] |
+
+### Required Documentation
+| Document | Owner | Template |
+|----------|-------|----------|
+| [doc] | [skill] | [template] |
+
+### Analysis Confidence
+- [ ] **HIGH** - Clear requirements, proceed with planning
+- [ ] **MEDIUM** - Some uncertainty, document assumptions
+- [ ] **LOW** - Need more information before proceeding
+
+### Open Questions (Must Resolve Before Starting)
+| Question | Who Can Answer | Blocking? |
+|----------|----------------|-----------|
+| [question] | [stakeholder] | [Yes/No] |
+
+### Assumptions Made
+| Assumption | Risk If Wrong | Mitigation |
+|------------|---------------|------------|
+| [assumption] | [impact] | [action] |
+```
+
+---
+
+## Phase 3: Skill Selection
+
+Based on project type AND analysis profile, determine required skills:
 
 | Project Type | Skills to Invoke | Order |
 |--------------|------------------|-------|
@@ -2194,3 +2540,401 @@ The orchestrator will:
 4. Lock scope for next release
 5. Select appropriate workflow
 6. Begin execution
+
+---
+
+## Continuous Flow Mode (Kanban)
+
+**For larger projects, enable continuous flow where individual requirements progress through the pipeline independently.**
+
+Instead of waiting for ALL requirements to complete each phase before moving forward, continuous flow allows:
+- REQ-001 to be in QA while REQ-005 is still in Design
+- Faster time-to-value for individual features
+- Better bottleneck visibility
+- More efficient resource utilization
+
+### When to Use Continuous Flow
+
+| Project Size | Recommendation |
+|--------------|----------------|
+| Small (< 10 requirements) | Batch mode (default) |
+| Medium (10-30 requirements) | Optional continuous flow |
+| Large (30+ requirements) | **Strongly recommended** |
+
+### Enabling Continuous Flow
+
+```markdown
+## Continuous Flow Configuration
+
+### Mode: CONTINUOUS (vs BATCH)
+
+### Work Item Tracking
+- Tracker: work-item-tracker skill
+- Board: docs/tracking/KANBAN-BOARD.md
+- Items: docs/tracking/WORK-ITEMS.md
+
+### WIP Limits
+| Stage | Limit |
+|-------|-------|
+| Analysis | 5 |
+| Architecture | 3 |
+| Design | 5 |
+| Development | 8 |
+| QA | 5 |
+| Review | 3 |
+
+### Sync Points (Quality Gates)
+Even with continuous flow, these gates synchronize work:
+- Architecture Gate: All items analyzed before any dev starts
+- Integration Gate: Major integration points sync
+- Release Gate: All items complete before release
+```
+
+### Continuous Flow Pipeline
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                     CONTINUOUS FLOW PIPELINE                                  │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                               │
+│  BACKLOG      ANALYSIS    ARCHITECTURE    DESIGN    DEVELOPMENT    QA        │
+│  ───────      ────────    ────────────    ──────    ───────────    ──        │
+│  │ WI-010 │   │ WI-007 │   │ WI-005 │    │ WI-003│   │ WI-002 │   │ WI-001│  │
+│  │ WI-011 │   │ WI-008 │   │ WI-006 │    │ WI-004│   │        │   │       │  │
+│  │ WI-012 │   │        │   │        │    │       │   │        │   │       │  │
+│  │ ...    │   │        │   │        │    │       │   │        │   │       │  │
+│  └────────┘   └────────┘   └────────┘    └───────┘   └────────┘   └───────┘  │
+│                                                                               │
+│  ←─────────────────── Items flow left to right ────────────────────────────→ │
+│                                                                               │
+│  LEGEND:                                                                      │
+│  WI-001 is in QA while WI-010 is still in backlog                           │
+│  Each item progresses at its own pace                                         │
+│  WIP limits prevent overloading any stage                                    │
+│                                                                               │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+### Work Item Lifecycle
+
+When a requirement passes analysis:
+
+```markdown
+## Work Item Created: WI-XXX
+
+**Source**: REQ-XXX: [Requirement Title]
+**Created**: [Date]
+**Priority**: [Critical/High/Medium/Low]
+**Size**: [XS/S/M/L/XL]
+
+### Current Stage
+- Stage: Analysis
+- Status: In Progress
+- Assigned: business-analyst
+
+### Flow History
+| Timestamp | Stage | Skill | Notes |
+|-----------|-------|-------|-------|
+| [Date] | Backlog → Analysis | orchestrator | Prioritized |
+
+### Dependencies
+- Depends on: [WI-XXX]
+- Blocks: [WI-XXX]
+```
+
+### Orchestrator Actions for Continuous Flow
+
+| Trigger | Orchestrator Action |
+|---------|---------------------|
+| New requirement created | Create WI-XXX, add to backlog |
+| Item ready for next stage | Check WIP limit, move if space |
+| WIP limit exceeded | STOP new items, help clear bottleneck |
+| Item blocked | Identify blocker, route to appropriate skill |
+| Dependency resolved | Unblock waiting items, update priorities |
+| Gate checkpoint | Sync all items at gate stage |
+
+### Daily Flow Management
+
+```markdown
+## Daily Flow Status
+
+### Flow Health
+- Total WIP: [count] (limit: [max])
+- Blocked items: [count]
+- Bottleneck: [stage if any]
+- Throughput (7-day avg): [items/day]
+
+### Today's Focus
+Items ready to progress:
+| WI | Current Stage | Ready For | Blocker? |
+|----|---------------|-----------|----------|
+| WI-003 | Design | Development | None |
+| WI-005 | Architecture | Design | WI-002 |
+
+### Bottleneck Alert
+[Stage] is at WIP limit ([count]/[limit])
+- Action: Help clear before starting new items
+- Items stuck: [WI-XXX, WI-XXX]
+- Root cause: [reason]
+```
+
+### Integration with work-item-tracker Skill
+
+The orchestrator invokes work-item-tracker for:
+
+```markdown
+## Invoke: work-item-tracker
+
+### Context
+Mode: CONTINUOUS_FLOW
+Project: [Project Name]
+
+### Request
+- Action: [create_item | move_item | report_status | identify_bottleneck]
+- Item: [WI-XXX if applicable]
+- Details: [specifics]
+
+### Expected Output
+- Updated KANBAN-BOARD.md
+- Updated WORK-ITEMS.md
+- Flow metrics report
+```
+
+---
+
+## Developer Entertainment Mode
+
+**Long implementations can be tedious. Keep developers engaged with fun interactions!**
+
+The orchestrator provides optional entertainment during long-running operations to maintain morale and engagement.
+
+### Activation
+
+Entertainment mode is enabled by default. Users can configure in their preferences:
+
+```
+/config entertainment --level fun    # Default - occasional fun facts
+/config entertainment --level jokes  # Add developer jokes
+/config entertainment --level full   # Maximum engagement
+/config entertainment --off          # Serious mode only
+```
+
+### Entertainment Triggers
+
+| Situation | Entertainment Type |
+|-----------|-------------------|
+| Waiting for gate review | Progress celebration |
+| Long implementation phase | Coding fun facts |
+| Test suite running | Testing trivia |
+| Deployment in progress | Deployment wisdom |
+| Milestone completed | Achievement unlocked! |
+| Blocked waiting | Patience rewards |
+
+### Fun Facts Library
+
+**During Code Generation:**
+```markdown
+💡 **Did You Know?**
+The first computer bug was an actual bug - a moth found in a Harvard Mark II
+computer in 1947. Grace Hopper taped it to the log book, noting "First actual
+case of bug being found."
+```
+
+**During Testing:**
+```markdown
+🧪 **Testing Trivia**
+The term "smoke test" comes from hardware testing - if you plug in a new board
+and smoke comes out, it fails the smoke test! In software, it means basic
+functionality checks.
+```
+
+**During Database Work:**
+```markdown
+📊 **Data Fact**
+The world's largest database? The World Data Centre for Climate in Germany
+stores 220 petabytes of climate data - that's about 220 million gigabytes!
+```
+
+### Achievement System
+
+Celebrate milestones with achievement badges:
+
+```markdown
+🏆 **Achievement Unlocked: Gate Crusher!**
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+You passed the Requirements Gate on the first attempt!
+Only 34% of projects achieve this. Excellent planning!
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+```markdown
+🎯 **Achievement Unlocked: Zero Defects!**
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+QA found no Critical or High severity defects!
+Your code quality is in the top 10% of projects.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+```markdown
+⚡ **Achievement Unlocked: Speed Demon!**
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Implementation completed ahead of schedule!
+Time to grab a coffee while others catch up.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+### Developer Jokes (--level jokes)
+
+**Clean developer humor for waiting moments:**
+
+```markdown
+😄 **While you wait...**
+Why do programmers prefer dark mode?
+Because light attracts bugs! 🐛
+```
+
+```markdown
+😄 **Coffee break thought...**
+A SQL query walks into a bar, walks up to two tables and asks...
+"Can I join you?"
+```
+
+```markdown
+😄 **Debugging wisdom...**
+99 little bugs in the code, 99 little bugs...
+Take one down, patch it around...
+127 little bugs in the code! 🐞
+```
+
+### Progress Celebrations
+
+**Phase Completion:**
+```markdown
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎉 REQUIREMENTS PHASE COMPLETE!
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📋 Requirements documented: 47
+✅ Acceptance criteria defined: 142
+🎯 Clear scope achieved!
+
+"Good requirements are like good coffee -
+ they keep everyone awake and focused!"
+
+Next up: Architecture Phase 🏗️
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+**Build Success:**
+```markdown
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ BUILD SUCCESSFUL!
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⏱️  Build time: 2m 34s
+📦 Bundle size: 245KB (gzipped)
+🧪 Tests passed: 127/127
+
+Fun fact: The average developer spends 35% of their time
+waiting for builds. You just saved 2 minutes of your life! 🎊
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+### Patience Rewards
+
+When users have been waiting:
+
+```markdown
+⏳ **Patience Milestone: 5 minutes**
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Good things come to those who wait!
+
+Here's a quick stretch reminder:
+1. 🙆 Shoulder rolls (10 each direction)
+2. 👀 Look away from screen (20-20-20 rule)
+3. 🧘 Deep breath in... and out...
+
+Still working: [current task]
+Estimated: [time remaining if known]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+### Wisdom Quotes
+
+Inspirational quotes for long operations:
+
+```markdown
+💭 **Developer Wisdom**
+"First, solve the problem. Then, write the code."
+— John Johnson
+```
+
+```markdown
+💭 **Architecture Thought**
+"Perfection is achieved not when there is nothing more to add,
+but when there is nothing left to take away."
+— Antoine de Saint-Exupéry
+```
+
+```markdown
+💭 **Quality Reminder**
+"Quality is not an act, it is a habit."
+— Aristotle
+```
+
+### Mini-Games (--level full)
+
+For very long waits, offer simple diversions:
+
+```markdown
+🎮 **Quick Challenge: Code Golf!**
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Write the shortest function to reverse a string:
+
+Your answer: _______________
+
+(This won't affect your build - just for fun!)
+
+Hint: In JS, one solution is just 35 characters!
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+### Mood Detection & Response
+
+Adapt entertainment to project state:
+
+| Project State | Entertainment Mood |
+|---------------|-------------------|
+| On track, gates passing | Celebratory, upbeat |
+| Blocked, issues found | Encouraging, supportive |
+| Long delays | Patience rewards, breaks |
+| Near completion | Excitement, anticipation |
+| Bug fixing | Empathetic, motivating |
+
+### Implementation Notes
+
+The entertainment system:
+- Is non-blocking (shows while work continues)
+- Respects user preferences
+- Varies content (no repeats in same session)
+- Is culturally neutral and work-appropriate
+- Can be disabled for serious/client-visible sessions
+
+```markdown
+## Entertainment Config
+
+### User Preference: [fun | jokes | full | off]
+
+### Session Stats
+- Facts shown: [count]
+- Achievements earned: [count]
+- Jokes told: [count]
+- Stretch breaks: [count]
+
+### Content Rotation
+- Last fact category: [category]
+- Jokes remaining: [count]
+- Next achievement at: [milestone]
+```

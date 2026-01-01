@@ -1,7 +1,7 @@
 {
   "name": "development-workflow",
-  "version": "1.0.0",
-  "description": "Complete development workflow orchestration with 15+ specialized skills for end-to-end product development. Covers strategy, design, architecture, implementation, testing, and security.",
+  "version": "2.1.0",
+  "description": "Complete development workflow orchestration with 48+ specialized skills for end-to-end product development. Features continuous flow (Kanban) mode for parallel item processing, structured project intake, SVG design capabilities, and developer entertainment during long operations. Covers strategy, product design, architecture, infrastructure, implementation, observability, operations (SRE, backup, incident management), testing, security, legal compliance, payments, notifications, search, i18n, feature flags, and release management with 12 quality gates, requirements traceability, multi-angle project analysis, and agile feedback loops.",
   "author": {
     "name": "Agent Workflow Studio",
     "url": "https://github.com/agent-workflow-studio"
@@ -15,7 +15,20 @@
     "design",
     "architecture",
     "testing",
-    "security"
+    "security",
+    "operations",
+    "sre",
+    "payments",
+    "i18n",
+    "feature-flags",
+    "notifications",
+    "search",
+    "agile",
+    "kanban",
+    "continuous-flow",
+    "svg",
+    "icons",
+    "project-intake"
   ],
   "agents": "./agents/",
   "skills": "./skills/",
