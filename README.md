@@ -1,6 +1,14 @@
 # Development Workflow Plugin
 
-A comprehensive Claude Code plugin providing 48+ specialized skills for end-to-end product development. Covers strategy, **product design**, architecture, infrastructure, implementation, **observability**, **operations** (SRE, backup, incident management), verification, testing, validation, security, **legal compliance**, **payments**, **notifications**, **search**, **i18n**, **feature flags**, **SVG design**, **project intake**, and **release management** with **12 quality gates**, **requirements traceability**, **project analysis**, **continuous flow (Kanban)**, **work item tracking**, **parallel work streams**, **blocking/restart protocols**, and **developer entertainment mode**.
+A comprehensive Claude Code plugin providing **34 specialized skills** for end-to-end product development. Features a streamlined workflow: **Product Intake → Product Design (Strategy→CX→Design) → BA → Architecture → Automated Implementation → QA → Product Validation → Deploy**.
+
+**Key Features:**
+- **Product Design as Central Authority** - Contains Strategy, CX, and Design phases internally; validates implementation before deploy
+- **Automated Implementation Phase** - Dev iterations flow without manual gate checks between each fix
+- **Combined Skills** - Reduced from 46+ to 34 by combining related skills (data-engineer, legal-compliance, project-tracker, etc.)
+- **10 Quality Gates** - From Product Design through Production Verification
+- **Requirements Traceability** - RTM tracks every requirement from design to production
+- **Project Chronicles** - Auto-generated HTML documentation at each milestone
 
 **Three modes of operation:**
 - **Full Project Mode** - End-to-end orchestration from idea to production
@@ -90,7 +98,7 @@ Use the security-engineer skill to review my authentication code.
 ```
 
 ```
-Use the data-architect skill to design a schema for user subscriptions.
+Use the data-engineer skill to design a schema for user subscriptions.
 ```
 
 #### Common Standalone Use Cases
@@ -98,13 +106,13 @@ Use the data-architect skill to design a schema for user subscriptions.
 | Task | Skill to Use | Example Prompt |
 |------|--------------|----------------|
 | **Create icons/logos** | `svg-designer` | "Create a logo for my app called TaskFlow" |
-| **Design database** | `data-architect` | "Design a schema for an e-commerce product catalog" |
+| **Design database** | `data-engineer` | "Design a schema for an e-commerce product catalog" |
 | **Write tests** | `qa-engineer` | "Create test cases for user registration" |
 | **Review security** | `security-engineer` | "Review this API for security vulnerabilities" |
 | **Design API** | `api-designer` | "Design REST endpoints for a booking system" |
-| **Create UI specs** | `ui-designer` | "Create a design system for a fintech app" |
+| **Design UI/UX** | `designer` | "Create user flows and design system for a fintech app" |
 | **Write user stories** | `business-analyst` | "Write user stories for a password reset feature" |
-| **Plan monitoring** | `site-reliability-engineer` | "Design SLOs for my API" |
+| **Plan reliability** | `reliability-engineer` | "Design SLOs and monitoring for my API" |
 | **Create email templates** | `email-designer` | "Create a welcome email template" |
 | **Setup notifications** | `notification-designer` | "Design push notification strategy for my app" |
 
@@ -113,9 +121,9 @@ Use the data-architect skill to design a schema for user subscriptions.
 You can also chain skills manually for a focused workflow:
 
 ```
-1. Use the ux-designer skill to create user flows for checkout
-2. Use the ui-designer skill to create wireframes based on those flows
-3. Use the svg-designer skill to create icons needed in the wireframes
+1. Use the designer skill to create user flows and wireframes for checkout
+2. Use the svg-designer skill to create icons needed in the wireframes
+3. Use the fullstack-developer skill to implement the designs
 ```
 
 ## Commands
@@ -133,27 +141,24 @@ You can also chain skills manually for a focused workflow:
 | `/plan-next-release --minor` | Plan feature release |
 | `/plan-next-release --major` | Plan major version release |
 
-## Skills (48+ Total)
+## Skills (34 Total)
 
 ### Meta/Management
 
 | Skill                  | Purpose                                        |
 | ---------------------- | ---------------------------------------------- |
-| `project-orchestrator` | Coordinates entire workflow, enforces 12 gates, **multi-angle project analysis**, **continuous flow mode** |
+| `project-orchestrator` | Coordinates entire workflow, enforces gates, calls product-intake first |
 | `project-chronicler`   | Generates HTML documentation of project journey |
-| `project-intake`       | **Structured project initiation form, kickoff questions** |
-| `work-item-tracker`    | **Kanban board, WIP limits, item-level tracking, bottleneck detection** |
-| `requirements-tracker` | RTM maintenance, coverage reports, traceability |
+| `product-intake`       | **First step** - Structured intake form, gathers all essential info |
+| `project-tracker`      | **Combined** - RTM + Kanban board + WIP limits + flow metrics |
 | `release-manager`      | Versioning, changelog, release notes           |
 
-### Strategy & Product Design
+### Product Design (Central Authority)
 
 | Skill                | Purpose                                           |
 | -------------------- | ------------------------------------------------- |
-| `product-strategist` | Market research, business model, validation       |
-| `product-design`     | **Feature discovery, MVP scope, R&D, completeness** |
+| `product-design`     | **3-phase flow**: Strategy → CX → Design. Validates implementation at end |
 | `ux-researcher`      | User interviews, usability testing                |
-| `cx-strategist`      | Customer journey, touchpoints, NPS                |
 
 ### Requirements & Architecture
 
@@ -164,21 +169,18 @@ You can also chain skills manually for a focused workflow:
 
 ### Design
 
-| Skill                  | Purpose                       |
-| ---------------------- | ----------------------------- |
-| `ux-designer`          | User flows, wireframes, IA    |
-| `ui-designer`          | Visual design, design system  |
-| `interaction-designer` | Micro-interactions, animation |
-| `svg-designer`         | **Icons, logos, illustrations, visual assets** |
+| Skill          | Purpose                                              |
+| -------------- | ---------------------------------------------------- |
+| `designer`     | **Complete UX/UI/Interaction design** - flows, wireframes, visual design, design system, animations |
+| `svg-designer` | Icons, logos, illustrations, visual assets           |
 
 ### Data & API
 
 | Skill            | Purpose                          |
 | ---------------- | -------------------------------- |
-| `data-architect` | Database schemas, data models    |
+| `data-engineer`  | **Combined** - Database schemas, data models, ETL, data warehouse |
 | `api-designer`   | REST/GraphQL APIs, OpenAPI specs |
 | `data-analyst`   | Metrics, dashboards, insights    |
-| `bi-engineer`    | ETL, data warehouse, reporting   |
 
 ### Content & Documentation
 
@@ -196,14 +198,11 @@ You can also chain skills manually for a focused workflow:
 | `implementation-verifier` | Smoke test before QA (does it actually run?) |
 | `observability-engineer`  | Logging, error tracking (Sentry), health checks |
 
-### Operations & Reliability (NEW)
+### Operations & Reliability
 
 | Skill                     | Purpose                                           |
 | ------------------------- | ------------------------------------------------- |
-| `site-reliability-engineer` | **SLOs, monitoring, alerting, on-call** |
-| `backup-recovery-engineer` | **Backup strategies, disaster recovery, RTO/RPO** |
-| `incident-manager`         | **Runbooks, incident response, post-mortems** |
-| `audit-logging-engineer`   | **Audit trails, compliance logging, data tracking** |
+| `reliability-engineer`    | **Combined** - SLOs, monitoring, backup/DR, incident management, audit logging |
 
 ### Implementation
 
@@ -216,18 +215,15 @@ You can also chain skills manually for a focused workflow:
 
 | Skill                      | Purpose                               |
 | -------------------------- | ------------------------------------- |
-| `qa-engineer`              | Testing, defect reports, sign-off     |
+| `qa-engineer`              | **Combined** - Testing, automation, performance, defect reports |
 | `security-engineer`        | Security review, vulnerability checks |
 | `accessibility-specialist` | WCAG compliance, a11y audit           |
-| `test-automation-engineer` | CI/CD test pipelines                  |
-| `performance-engineer`     | Load testing, optimization            |
 
 ### Legal & Compliance
 
 | Skill                | Purpose                                      |
 | -------------------- | -------------------------------------------- |
-| `legal-advisor`      | Privacy policy, terms of service, GDPR/CCPA |
-| `compliance-analyst` | Privacy, regulatory compliance               |
+| `legal-compliance`   | **Combined** - Privacy policy, terms, GDPR/CCPA, cookie consent |
 
 ### Communications & Notifications
 
@@ -275,70 +271,85 @@ Pre-configured agents for common workflows:
 
 ```
 ┌────────────────────────────────────────────────────────────────────────────┐
-│                  project-orchestrator (12 Gates + AGILE)                    │
+│                  project-orchestrator (10 Gates + AGILE)                    │
 │                                                                             │
 │   ◄─────────────────── UPSTREAM FEEDBACK FLOWS ─────────────────────►      │
 │   (Any skill can trigger changes to any earlier phase via UPFB-XXX)        │
 ├────────────────────────────────────────────────────────────────────────────┤
 │                                                                             │
-│   [START] ◄──► [DISCOVERY] ◄──► [STRATEGY] ◄──► [PRODUCT DESIGN]          │
-│                                                        ▼                    │
-│                           ┌─────────────────────────────────┐              │
-│                           │ COLLAB: Product + BA + UX       │              │
-│                           └─────────────────────────────────┘              │
-│                                        ▼                                    │
-│   [REQUIREMENTS] ──────────────────────────────────────┐                   │
-│        ▼                                               │ Feedback          │
-│   ┌────────────────────────────────────────┐          │ Loops             │
-│   │ COLLAB: BA + Architect + Data + API    │          │                   │
-│   └────────────────────────────────────────┘          │                   │
-│        ▼                                               │                   │
-│   [ARCHITECTURE] ◄─────────────────────────────────────┤                   │
-│        ▼                                               │                   │
-│   [DATA + API] + [LEGAL] (parallel)                   │                   │
-│        ▼                                               │                   │
-│   ┌────────────────────────────────────────┐          │                   │
-│   │ COLLAB: UX + UI + Dev                  │          │                   │
-│   └────────────────────────────────────────┘          │                   │
-│        ▼                                               │                   │
-│   [UX] ◄──► [UI] ◄──► [EMAIL DESIGNER]               │                   │
-│        ▼                                               │                   │
-│   [PLATFORM ENGINEER] ─────────────────────────────────┤                   │
-│        ▼                                               │                   │
-│   ┌────────────────────────────────────────┐          │                   │
-│   │ COLLAB: Dev + QA + Security            │          │                   │
-│   └────────────────────────────────────────┘          │                   │
-│        ▼                                               │                   │
-│   [IMPLEMENTATION] ◄──► [CODE REVIEW] ─────────────────┤                   │
-│        ▼                                               │                   │
-│   [OBSERVABILITY] ──► [VERIFIER] ──────────────────────┤                   │
-│        ▼                                               │                   │
-│   ┌────────────────────────────────────────┐          │                   │
-│   │ COLLAB: QA + Dev + BA (Defect Triage)  │          │                   │
-│   └────────────────────────────────────────┘          │                   │
-│        ▼                                               │                   │
-│   [QA TESTING] ◄──► [DEVELOPER] (Bug Fixes) ───────────┤                   │
-│        ▼                                               │                   │
-│   [BUSINESS ACCEPTANCE] ◄──► [UX] (Usability) ─────────┤                   │
-│        ▼                                               │                   │
-│   [SECURITY REVIEW] ◄──► [DEVELOPER] (Vuln Fixes) ─────┘                   │
-│        ▼                                                                    │
-│   [RELEASE MANAGER] ──► [DEVOPS] ──► [DEPLOY]                              │
-│        ▼                                                                    │
-│   [PRODUCTION VERIFICATION] ──► [CHRONICLE] ──► [DONE]                     │
+│   ╔═══════════════════════════════════════════════════════════════════╗    │
+│   ║                    PRODUCT DEFINITION PHASE                        ║    │
+│   ║   ┌────────────────┐    ┌─────────────────────────────────────┐   ║    │
+│   ║   │ PRODUCT INTAKE │ ─► │ PRODUCT DESIGN (3-Phase Flow)       │   ║    │
+│   ║   │ (Gather info)  │    │  Strategy → CX → Design             │   ║    │
+│   ║   └────────────────┘    └─────────────────────────────────────┘   ║    │
+│   ╚═══════════════════════════════════════════════════════════════════╝    │
+│                               ▼ [GATE 0: Product Design Complete?]         │
 │                                                                             │
-│   LEGEND:  ──►  Forward flow       ◄──►  Bidirectional collaboration       │
-│            ◄──  Upstream feedback  [COLLAB]  Cross-skill session           │
+│   ╔═══════════════════════════════════════════════════════════════════╗    │
+│   ║                    REQUIREMENTS & ARCHITECTURE                     ║    │
+│   ║   BUSINESS ANALYST ──► SOLUTION ARCHITECT ──► DATA-ENGINEER       ║    │
+│   ║                                              + API-DESIGNER        ║    │
+│   ║                                              + LEGAL-COMPLIANCE    ║    │
+│   ╚═══════════════════════════════════════════════════════════════════╝    │
+│                               ▼ [GATE 1-2: Requirements + Arch OK?]        │
+│                                                                             │
+│   ╔═══════════════════════════════════════════════════════════════════╗    │
+│   ║                    DESIGN PHASE                                    ║    │
+│   ║   DESIGNER ──► PLATFORM-ENGINEER ──► COLLAB: Design+Dev           ║    │
+│   ╚═══════════════════════════════════════════════════════════════════╝    │
+│                               ▼ [GATE 3: Design + Infrastructure Ready?]   │
+│                                                                             │
+│   ╔═══════════════════════════════════════════════════════════════════╗    │
+│   ║              ⚡ AUTOMATED IMPLEMENTATION PHASE ⚡                   ║    │
+│   ║   FULLSTACK-DEVELOPER ───► CODE REVIEW ───► VERIFICATION          ║    │
+│   ║        ▲                                         │                 ║    │
+│   ║        └─────── Bug Fix Loop (automated) ────────┘                 ║    │
+│   ║   PROJECT-TRACKER monitors RTM coverage throughout                 ║    │
+│   ╚═══════════════════════════════════════════════════════════════════╝    │
+│                               ▼ [GATE 4: Auto-pass if tests pass]          │
+│                                                                             │
+│   ╔═══════════════════════════════════════════════════════════════════╗    │
+│   ║                    QA PHASE                                        ║    │
+│   ║   QA-ENGINEER ◄──► DEVELOPER (Bug fixes, auto-routed)             ║    │
+│   ╚═══════════════════════════════════════════════════════════════════╝    │
+│                               ▼ [GATE 5: QA Complete?]                     │
+│                                                                             │
+│   ╔═══════════════════════════════════════════════════════════════════╗    │
+│   ║                    RELEASE PHASE (Required Gates)                  ║    │
+│   ║   BUSINESS ACCEPTANCE ──► SECURITY REVIEW ──► PRODUCT VALIDATION  ║    │
+│   ║        (BA)                 (Security)          (Product Design)  ║    │
+│   ╚═══════════════════════════════════════════════════════════════════╝    │
+│                               ▼ [GATES 6-8: Cannot Skip]                   │
+│                                                                             │
+│   ╔═══════════════════════════════════════════════════════════════════╗    │
+│   ║                    DEPLOY                                          ║    │
+│   ║   RELEASE-MANAGER ──► PLATFORM-ENGINEER ──► DEPLOY ──► CHRONICLE  ║    │
+│   ╚═══════════════════════════════════════════════════════════════════╝    │
+│                               ▼ [GATE 9: Production OK?]                   │
+│                                                                             │
+│   LEGEND:  ──►  Forward flow    ⚡ Automated phase                          │
+│            ╔═══╗ Phase boundary                                             │
 └────────────────────────────────────────────────────────────────────────────┘
 ```
+
+### Key Workflow Changes
+
+| Change | Description |
+|--------|-------------|
+| **Product Intake First** | Orchestrator calls `product-intake` before anything else |
+| **Product Design 3-Phase** | Strategy → CX → Design all within `product-design` skill |
+| **Automated Implementation** | Dev iterations flow without manual gate checks |
+| **Product Validation Gate** | `product-design` validates implementation before deploy |
+| **Combined Skills** | Fewer skills, same coverage (data-engineer, legal-compliance, etc.) |
 
 ### Collaboration Sessions (Mandatory)
 
 | Phase | Skills Involved | Purpose |
 |-------|-----------------|---------|
-| After Product Design | Product + BA + UX | Align on scope before requirements |
+| After Product Design | Product + BA + Designer | Align on scope before requirements |
 | After Requirements | BA + Architect + Data + API | Technical feasibility check |
-| During Design | UX + UI + Interaction + Dev | Design-dev alignment |
+| During Design | Designer + Dev | Design-dev alignment |
 | Before Implementation | Dev + QA + Security | Test planning and security by design |
 | During QA | QA + Dev + BA | Defect triage and priority |
 
@@ -366,23 +377,32 @@ Every skill MUST critically review inputs before proceeding:
 
 ## Quality Gates
 
-Each phase must pass validation before proceeding (12 gates total):
+Each phase must pass validation before proceeding (10 gates total):
 
 | # | Gate | Pass Criteria |
 | - | ---- | ------------- |
-| **0** | **Product Design** | **50-100 features, all journeys mapped, R&D complete** |
+| **0** | **Product Design** | **50-100 features, all journeys mapped, MVP scope locked** |
 | 1 | Requirements | All requirements have IDs, are testable, prioritized, RTM initialized |
-| 2 | Architecture | ADRs documented, no TBDs, security addressed |
-| 3 | Contracts | Database schema + API endpoints fully defined |
-| 4 | Design | All flows covered, accessible, responsive |
-| 5 | Infrastructure | Docker starts, DB accessible, single-command setup works |
-| 6 | Implementation | Tests pass, no linting errors, admin seeded |
-| **6.5** | **Requirements Coverage** | **100% Must-Have implemented, 90%+ Should-Have, RTM signed off** |
-| 7 | Verification | App starts, routes work, auth works, no 500 errors |
-| 8 | QA | No critical defects, all requirements have test cases |
-| 9 | Business Acceptance | User stories validated from real user perspective |
-| 10 | Security | No high/critical vulnerabilities |
-| **11** | **Production Verification** | **Auth works, core journeys pass, health checks OK (on request)** |
+| 2 | Architecture + Contracts | ADRs documented, schema + API defined, legal docs drafted |
+| 3 | Design + Infrastructure | All flows covered, Docker starts, single-command setup works |
+| **4** | **Implementation** | **Auto-pass if: tests pass, RTM 100% coverage** |
+| 5 | QA | No critical defects, all requirements have test cases |
+| **6** | **Business Acceptance** | **User stories validated (REQUIRED - cannot skip)** |
+| **7** | **Security** | **No high/critical vulnerabilities (REQUIRED - cannot skip)** |
+| **8** | **Product Validation** | **Product Design validates implementation matches design (REQUIRED)** |
+| **9** | **Production Verification** | **Auth works, core journeys pass, health checks OK** |
+
+### Automation Rules
+
+| Phase | Automation Level | Manual Intervention |
+|-------|------------------|---------------------|
+| Product Intake | Semi-auto | User answers questions |
+| Product Design | Semi-auto | User approves scope |
+| Requirements | Semi-auto | User confirms requirements |
+| Architecture | Semi-auto | Major decisions only |
+| **Implementation** | **FULL AUTO** | Only if tests fail repeatedly |
+| QA | Semi-auto | Bug triage if ambiguous |
+| Release Gates | **Manual** | Business, Security, Product Validation required |
 
 ## Admin & RBAC (Role-Based Access Control)
 
@@ -396,7 +416,7 @@ Most apps with user accounts need admin functionality. The workflow now captures
 
 **Skills with RBAC guidance**:
 - `business-analyst` - Captures role requirements
-- `data-architect` - Users table with role column, audit log
+- `data-engineer` - Users table with role column, audit log
 - `fullstack-developer` - Authorization middleware, admin routes
 - `implementation-verifier` - Tests admin login works
 
@@ -411,21 +431,33 @@ After technical QA passes, the Business Analyst validates the product from a use
 
 Results: **ACCEPT**, **REJECT**, or **CONDITIONAL** with issues routed to appropriate skills.
 
-## Product Design (NEW - Critical)
+## Product Design (Central Authority)
 
-The `product-design` skill is the most critical skill in the workflow. It ensures:
+The `product-design` skill is the **central authority** for the entire workflow. It:
 
-- **Complete Scope**: 50-100 features for apps with auth (not 15-20)
-- **Context Gathering**: Domain research, competitor analysis, reference products
-- **R&D**: Research best approaches before committing to implementation
-- **No Half-Systems**: A service owner would never approve an incomplete system
+1. **Defines WHAT to build** through three internal phases:
+   - **Phase 1: Strategy** - Market research, competitive analysis, value proposition, business model
+   - **Phase 2: CX** - Customer journey mapping, experience metrics, service blueprint
+   - **Phase 3: Design** - Feature discovery, system completeness, MVP scope
 
-**Why Product Design Matters**:
-- Missing 50% of features = useless MVP
-- Scope too narrow = users can't complete goals
-- No system thinking = forgot auth, admin, emails, legal
+2. **Validates implementation** at the end (Gate 8: Product Validation)
 
-**System Features Checklist** - Product Design reviews ALL categories:
+### Product Design Authority
+
+| Decision Area | Authority Level |
+|---------------|-----------------|
+| Product vision | **Final** |
+| Feature decisions | **Final** |
+| MVP scope | **Final** |
+| User journey completeness | **Final** |
+| System completeness | **Final** |
+| Technology approach | Advisory (architect decides) |
+
+**Critical Rule**: If implementation doesn't match the product design, it's wrong.
+
+### System Features Checklist
+
+Product Design reviews ALL categories (expect 50-100 features for apps with auth):
 - Authentication & Identity (signup, login, reset, logout, verify)
 - Admin & User Management (list, search, edit, roles)
 - Transactional Emails (welcome, verification, reset)
@@ -633,7 +665,7 @@ The orchestrator automatically suggests continuous flow for projects with 30+ re
 Use continuous flow mode for this project.
 ```
 
-The `work-item-tracker` skill manages the Kanban board and tracks each work item (WI-XXX) through the pipeline.
+The `project-tracker` skill manages the Kanban board, RTM, and tracks each work item (WI-XXX) through the pipeline.
 
 ## Developer Entertainment Mode
 
@@ -690,8 +722,8 @@ Skills give feedback to each other:
 QA finds bug              → Routes to Developer
 Developer unclear         → Routes to BA for clarification
 Security finds vuln       → Routes to Developer + Architect
-Design issue found        → Routes to UX/UI Designer
-BA finds UX issue in BAT  → Routes to UX Designer
+Design issue found        → Routes to Designer
+BA finds UX issue in BAT  → Routes to Designer
 Feature doesn't work      → Routes to Developer
 ```
 

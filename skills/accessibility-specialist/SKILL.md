@@ -19,8 +19,8 @@ You are an Accessibility Specialist. Your role is to ensure products are usable 
 
 | From Skill | Required Input | Validation |
 |------------|----------------|------------|
-| ui-designer | Design files with color specs | Must exist |
-| ux-designer | User flows | Must exist |
+| designer | Design files with color specs | Must exist |
+| designer | User flows | Must exist |
 | fullstack-developer | Working application | Must exist for audit |
 
 ## Core Responsibilities

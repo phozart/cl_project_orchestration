@@ -1,123 +1,65 @@
 ---
 name: platform-engineer
-description: Set up local development infrastructure, Docker configuration, database initialization, and environment setup. Use ALWAYS after architecture decisions are made. This skill ensures the project actually runs, not just exists on paper.
+description: Complete platform engineering including local dev setup, Docker configuration, CI/CD pipelines, Infrastructure as Code, and deployment automation. Use when setting up development environments, CI/CD, or cloud infrastructure.
 ---
 
-# Platform Engineer
+You are a Platform Engineer. Your role is to build and automate the complete platform - from local development environments to production deployment pipelines.
 
-Set up the infrastructure that makes the project actually work. While other skills design and document, this skill ensures you can `docker-compose up` and have a working system.
+**Core principle: If you do it twice, automate it.**
 
 ## When to Use This Skill
 
-**ALWAYS use this skill** - it's not optional. Almost every project needs:
-- Local development environment
-- Database setup and migrations
-- Environment configuration
-- Container orchestration (usually Docker)
-
-**Trigger Points:**
-- After Solution Architect defines tech stack
-- After Data Architect defines data model
-- Before Fullstack Developer starts coding
-- When user says "set up the project", "make it run", "initialize database"
+- Setting up local development environment
+- Configuring Docker containers
+- Creating CI/CD pipelines
+- Provisioning cloud infrastructure
+- Automating deployments
+- After architecture decisions are made
+- Before developers start coding
 
 ---
 
-## Input Validation Protocol (AGILE - CRITICAL)
-
-**Before setting up ANY infrastructure, validate all inputs from upstream phases.**
+## Input Validation Protocol
 
 ### Inputs Required
 
-From Solution Architect:
-- [ ] Tech Stack decisions (language, framework, database)
-- [ ] System Design Document (service architecture)
-- [ ] External dependencies (Redis, S3, email service, etc.)
+| From | What | Required |
+|------|------|----------|
+| Solution Architect | Tech stack, system design, deployment target | Yes |
+| Data Architect | Database schema, migrations | Yes |
+| BA | Environment requirements, compliance needs | For prod |
+| Security | Secrets management, scanning requirements | For prod |
 
-From Data Architect:
-- [ ] Database schema
-- [ ] Initial migration files
-- [ ] Seed data requirements
+### Quick Checks
 
-From BA:
-- [ ] Environment requirements (dev, staging, prod)
-- [ ] User roles for initial seeding
+- [ ] Tech stack decided (language, framework, database)?
+- [ ] External dependencies identified (Redis, S3, etc.)?
+- [ ] Environment variables documented?
+- [ ] Deployment target clear (AWS, GCP, Vercel)?
+- [ ] Rollback strategy defined?
 
-### Input Quality Checks
-
-| Check | Status | Issue |
-|-------|--------|-------|
-| Database choice is final (PostgreSQL, MongoDB, etc.)? | ✅/❌ | |
-| All external services identified? | ✅/❌ | |
-| Environment variables documented? | ✅/❌ | |
-| Seed data requirements clear? | ✅/❌ | |
-| Port/network requirements defined? | ✅/❌ | |
-
-### Domain Expertise Check
-
-**As a Platform Engineer, I should ask:**
-- What database version and configuration?
-- Are there external services (Redis, S3, email)?
-- What environment variables are needed?
-- What seed data is required for development?
-- Are there any special networking requirements?
-- What ports need to be exposed?
-- Are there secrets management requirements?
-
-### Decision
-
-- [ ] **ACCEPT** - Architecture clear, proceed with setup
-- [ ] **CLARIFY** - Need answers: [list questions]
-- [ ] **UPSTREAM FEEDBACK** - Architecture has gaps (trigger UPFB)
-- [ ] **BLOCK** - Cannot set up without tech stack decisions
+**Decision:** ACCEPT / CLARIFY / BLOCK
 
 ---
 
-## Upstream Feedback: When to Trigger
+## Platform Engineering Flow
 
-**I should send feedback upstream when:**
-
-| Issue Found | Feedback To | Example |
-|-------------|-------------|---------|
-| Tech stack incompatible | Architect | "Can't run X on Docker ARM" |
-| Missing external service | Architect | "Need Redis for sessions, not specified" |
-| Database config unclear | Data Architect | "What PostgreSQL extensions needed?" |
-| Security concern | Security | "Secrets in .env needs vault integration" |
-| Scale issue | Architect | "This won't run on 1GB RAM" |
-
-**Format**: Use UPFB-XXX template from Orchestrator.
+```
+PHASE 1: LOCAL DEV       PHASE 2: CI/CD          PHASE 3: INFRASTRUCTURE
+────────────────        ────────────────         ─────────────────────────
+Docker Setup       →    Build Pipeline      →    Infrastructure as Code
+Environment Config →    Test Automation     →    Cloud Resources
+Database Init      →    Security Scanning   →    Deployment Config
+Dev Scripts        →    Deploy Pipeline     →    Monitoring Setup
+```
 
 ---
 
-## Downstream Feedback: What I Tell Others
+# PHASE 1: LOCAL DEVELOPMENT SETUP
 
-| To | What I Tell Them | Why |
-|----|------------------|-----|
-| Developer | Environment setup, docker commands | Development workflow |
-| QA | Test environment setup | Testing infrastructure |
-| DevOps | Local config for CI/CD | Pipeline setup |
-
----
-
-## Authority & Decision Rights
-
-| Area | Authority Level |
-|------|-----------------|
-| Docker configuration | Final |
-| Local dev setup | Final |
-| Database initialization | Final |
-| Environment variables | Final |
-| CI/CD integration | Shared with DevOps |
-| Production infrastructure | Advisory (DevOps decides) |
-
-## Core Responsibilities
-
-### 1. Local Development Environment
-
-Create a one-command setup that gets developers productive:
+**Goal: New developer runs one command and has a working environment.**
 
 ```bash
-# Goal: New developer runs this and has working environment
 git clone <repo>
 cd <project>
 cp .env.example .env
@@ -125,9 +67,9 @@ docker-compose up -d
 # → App running, database seeded, ready to develop
 ```
 
-### 2. Docker Configuration
+## Docker Configuration
 
-#### docker-compose.yml (Development)
+### docker-compose.yml (Development)
 
 ```yaml
 # docker-compose.yml
@@ -204,7 +146,7 @@ volumes:
   redis_data:
 ```
 
-#### Dockerfile.dev (Development)
+### Dockerfile.dev (Development)
 
 ```dockerfile
 # Dockerfile.dev
@@ -224,7 +166,7 @@ EXPOSE 3000
 CMD ["npm", "run", "dev"]
 ```
 
-#### Dockerfile (Production)
+### Dockerfile (Production)
 
 ```dockerfile
 # Dockerfile
@@ -258,9 +200,9 @@ EXPOSE 3000
 CMD ["node", "dist/index.js"]
 ```
 
-### 3. Environment Configuration
+## Environment Configuration
 
-#### .env.example
+### .env.example
 
 ```bash
 # ===========================================
@@ -301,88 +243,24 @@ REDIS_URL=redis://${REDIS_HOST}:${REDIS_PORT}
 # STORAGE_BUCKET=
 ```
 
-### 4. Database Setup
+## Database Setup
 
-#### scripts/init-db.sql
+### scripts/init-db.sql
 
 ```sql
 -- Initial database setup
--- This runs automatically when postgres container first starts
+-- Runs automatically when postgres container first starts
 
--- Create extensions
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
-
--- Create schemas if needed
--- CREATE SCHEMA IF NOT EXISTS app;
 
 -- Note: Tables are created by migrations, not here
 -- This file is for extensions and initial setup only
 ```
 
-#### scripts/migrate.sh
+## Development Scripts
 
-```bash
-#!/bin/bash
-set -e
-
-echo "Running database migrations..."
-
-# Wait for database to be ready
-until pg_isready -h ${DB_HOST:-localhost} -p ${DB_PORT:-5432} -U ${DB_USER:-postgres}; do
-  echo "Waiting for database..."
-  sleep 2
-done
-
-# Run migrations (adjust for your migration tool)
-npm run db:migrate
-
-echo "Migrations complete!"
-```
-
-#### scripts/seed.sh
-
-```bash
-#!/bin/bash
-set -e
-
-echo "Seeding database..."
-
-# Run seed script
-npm run db:seed
-
-echo "Database seeded!"
-```
-
-### 5. Development Scripts
-
-#### package.json scripts
-
-```json
-{
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-
-    "db:migrate": "prisma migrate dev",
-    "db:migrate:prod": "prisma migrate deploy",
-    "db:seed": "tsx scripts/seed.ts",
-    "db:reset": "prisma migrate reset --force",
-    "db:studio": "prisma studio",
-
-    "docker:up": "docker-compose up -d",
-    "docker:down": "docker-compose down",
-    "docker:logs": "docker-compose logs -f",
-    "docker:reset": "docker-compose down -v && docker-compose up -d",
-
-    "setup": "npm install && cp -n .env.example .env || true && npm run docker:up && npm run db:migrate && npm run db:seed",
-    "setup:clean": "npm run docker:reset && npm run db:migrate && npm run db:seed"
-  }
-}
-```
-
-### 6. Makefile (Alternative to npm scripts)
+### Makefile
 
 ```makefile
 .PHONY: setup dev build test clean
@@ -444,150 +322,459 @@ shell-app:
 	docker-compose exec app sh
 ```
 
+---
+
+# PHASE 2: CI/CD PIPELINE
+
+**Goal: Every push is tested, every merge to main is deployable.**
+
+## GitHub Actions Workflow
+
+```yaml
+# .github/workflows/ci.yml
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+env:
+  NODE_VERSION: '20'
+  PYTHON_VERSION: '3.12'
+
+jobs:
+  # ========================================
+  # Frontend CI
+  # ========================================
+  frontend-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+          cache-dependency-path: frontend/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+        working-directory: frontend
+      - run: pnpm lint
+        working-directory: frontend
+      - run: pnpm type-check
+        working-directory: frontend
+
+  frontend-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+          cache-dependency-path: frontend/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+        working-directory: frontend
+      - run: pnpm test:coverage
+        working-directory: frontend
+      - uses: codecov/codecov-action@v3
+        with:
+          files: frontend/coverage/lcov.info
+          flags: frontend
+
+  frontend-e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+          cache-dependency-path: frontend/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+        working-directory: frontend
+      - run: npx playwright install --with-deps
+        working-directory: frontend
+      - run: pnpm test:e2e
+        working-directory: frontend
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: frontend/playwright-report
+
+  # ========================================
+  # Backend CI
+  # ========================================
+  backend-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+      - run: uv sync
+        working-directory: backend
+      - run: uv run ruff check .
+        working-directory: backend
+      - run: uv run ruff format --check .
+        working-directory: backend
+      - run: uv run mypy .
+        working-directory: backend
+
+  backend-test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+      - run: uv sync
+        working-directory: backend
+      - run: uv run pytest --cov --cov-report=xml
+        working-directory: backend
+        env:
+          DATABASE_URL: postgresql://postgres:test@localhost:5432/test
+      - uses: codecov/codecov-action@v3
+        with:
+          files: backend/coverage.xml
+          flags: backend
+
+  # ========================================
+  # Security Scanning
+  # ========================================
+  security-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          severity: 'CRITICAL,HIGH'
+          exit-code: '1'
+
+  # ========================================
+  # Build & Deploy
+  # ========================================
+  build-frontend:
+    needs: [frontend-lint, frontend-test, frontend-e2e]
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+          cache-dependency-path: frontend/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+        working-directory: frontend
+      - run: pnpm build
+        working-directory: frontend
+        env:
+          NEXT_PUBLIC_API_URL: ${{ secrets.API_URL }}
+      # Deploy to Vercel/Cloudflare/etc
+
+  build-backend:
+    needs: [backend-lint, backend-test, security-scan]
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          push: true
+          tags: ghcr.io/${{ github.repository }}/backend:${{ github.sha }}
+```
+
+## Backend Dockerfile (Production)
+
+```dockerfile
+# backend/Dockerfile
+FROM python:3.12-slim as builder
+
+WORKDIR /app
+
+# Install uv
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/uv
+
+# Copy dependency files
+COPY pyproject.toml uv.lock ./
+
+# Install dependencies
+RUN uv sync --frozen --no-dev
+
+# Production image
+FROM python:3.12-slim
+
+WORKDIR /app
+
+# Copy virtual environment from builder
+COPY --from=builder /app/.venv /app/.venv
+
+# Copy application code
+COPY . .
+
+# Set environment
+ENV PATH="/app/.venv/bin:$PATH"
+ENV PYTHONUNBUFFERED=1
+
+# Run as non-root user
+RUN useradd -m appuser && chown -R appuser:appuser /app
+USER appuser
+
+EXPOSE 8000
+
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+```
+
+---
+
+# PHASE 3: INFRASTRUCTURE AS CODE
+
+## Terraform Configuration
+
+```hcl
+# infrastructure/main.tf
+
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
+  }
+  backend "s3" {
+    bucket = "terraform-state-bucket"
+    key    = "app/terraform.tfstate"
+    region = "us-east-1"
+  }
+}
+
+# Variables
+variable "environment" {
+  type    = string
+  default = "production"
+}
+
+variable "app_name" {
+  type    = string
+  default = "myapp"
+}
+
+# VPC
+module "vpc" {
+  source  = "terraform-aws-modules/vpc/aws"
+  version = "5.0.0"
+
+  name = "${var.app_name}-vpc"
+  cidr = "10.0.0.0/16"
+
+  azs             = ["us-east-1a", "us-east-1b"]
+  private_subnets = ["10.0.1.0/24", "10.0.2.0/24"]
+  public_subnets  = ["10.0.101.0/24", "10.0.102.0/24"]
+
+  enable_nat_gateway = true
+  single_nat_gateway = var.environment != "production"
+
+  tags = {
+    Environment = var.environment
+  }
+}
+
+# RDS PostgreSQL
+module "db" {
+  source  = "terraform-aws-modules/rds/aws"
+  version = "6.0.0"
+
+  identifier = "${var.app_name}-db"
+
+  engine               = "postgres"
+  engine_version       = "16"
+  family               = "postgres16"
+  major_engine_version = "16"
+  instance_class       = "db.t3.micro"
+
+  allocated_storage = 20
+
+  db_name  = var.app_name
+  username = "admin"
+  port     = 5432
+
+  vpc_security_group_ids = [module.security_group.security_group_id]
+  subnet_ids             = module.vpc.private_subnets
+
+  backup_retention_period = 7
+  deletion_protection     = var.environment == "production"
+}
+
+# ECS Fargate
+module "ecs" {
+  source  = "terraform-aws-modules/ecs/aws"
+  version = "5.0.0"
+
+  cluster_name = "${var.app_name}-cluster"
+
+  fargate_capacity_providers = {
+    FARGATE = {
+      default_capacity_provider_strategy = {
+        weight = 100
+      }
+    }
+  }
+}
+```
+
+## Monitoring & Alerting
+
+### docker-compose.monitoring.yml
+
+```yaml
+version: '3.8'
+
+services:
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3001:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana-data:/var/lib/grafana
+
+  alertmanager:
+    image: prom/alertmanager:latest
+    ports:
+      - "9093:9093"
+    volumes:
+      - ./alertmanager.yml:/etc/alertmanager/alertmanager.yml
+
+volumes:
+  grafana-data:
+```
+
+### prometheus.yml
+
+```yaml
+global:
+  scrape_interval: 15s
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: ['alertmanager:9093']
+
+rule_files:
+  - 'alerts.yml'
+
+scrape_configs:
+  - job_name: 'backend'
+    static_configs:
+      - targets: ['backend:8000']
+    metrics_path: /metrics
+```
+
+### alerts.yml
+
+```yaml
+groups:
+  - name: app
+    rules:
+      - alert: HighErrorRate
+        expr: rate(http_requests_total{status=~"5.."}[5m]) > 0.1
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "High error rate detected"
+
+      - alert: HighLatency
+        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) > 1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High latency detected (p95 > 1s)"
+```
+
+---
+
 ## Infrastructure Checklist
 
-Before handoff to developers:
+### Before Development Handoff
 
-### Environment
 - [ ] `.env.example` exists with all required variables
-- [ ] `.env.example` has comments explaining each variable
-- [ ] `.env` is in `.gitignore`
-- [ ] Default values work for local development
-
-### Docker
 - [ ] `docker-compose.yml` exists and is valid
 - [ ] All services start with `docker-compose up`
 - [ ] Health checks configured for critical services
-- [ ] Volumes persist data correctly
-- [ ] Port conflicts handled (configurable ports)
-
-### Database
 - [ ] Database container starts and is accessible
-- [ ] Migrations run successfully
-- [ ] Seed data populates correctly
-- [ ] Connection string works from app container
+- [ ] Single command setup works (`make setup`)
 
-### Developer Experience
-- [ ] Single command setup works (`npm run setup` or `make setup`)
-- [ ] README has clear setup instructions
-- [ ] Common issues documented with solutions
-- [ ] Development server hot-reloads
+### Before Production
 
-### Verification
-- [ ] App starts without errors
-- [ ] App connects to database
-- [ ] Basic routes respond correctly
-- [ ] No broken links on main pages
+- [ ] CI/CD pipeline running
+- [ ] All tests passing in CI
+- [ ] Docker images building
+- [ ] Infrastructure provisioned
+- [ ] Secrets in vault (not env files)
+- [ ] Monitoring and alerting configured
+- [ ] Backup strategy implemented
+- [ ] Runbooks documented
 
-## Common Configurations
+---
 
-### PostgreSQL + Prisma
+## Upstream Feedback: When to Trigger
 
-```typescript
-// prisma/schema.prisma
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
+| Issue | Feedback To | Example |
+|-------|-------------|---------|
+| Tech stack incompatible | Architect | "Can't run X on Docker ARM" |
+| Build fails | Developer | "Build command fails with error X" |
+| Tests timeout | Developer | "Test suite takes too long for CI" |
+| Security scan fails | Security + Dev | "SAST found critical vulnerability" |
+| Resource constraints | Architect | "App needs more memory than available" |
+| Missing config | Data Architect | "What PostgreSQL extensions needed?" |
 
-generator client {
-  provider = "prisma-client-js"
-}
-```
+---
 
-### PostgreSQL + Raw SQL (with migrations)
-
-```typescript
-// lib/db.ts
-import { Pool } from 'pg';
-
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-});
-
-export const query = (text: string, params?: any[]) => pool.query(text, params);
-```
-
-### MongoDB
-
-```yaml
-# docker-compose.yml addition
-mongodb:
-  image: mongo:7
-  ports:
-    - "${MONGO_PORT:-27017}:27017"
-  environment:
-    MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER:-mongo}
-    MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD:-mongo}
-  volumes:
-    - mongo_data:/data/db
-```
-
-### SQLite (Simple projects)
-
-```yaml
-# No docker needed for database
-# Just ensure volume mount for persistence
-app:
-  volumes:
-    - ./data:/app/data  # SQLite file location
-```
-
-## Handoff Protocol
-
-### Handoff to Fullstack Developer
-
-**Package Contents:**
-1. `docker-compose.yml` - Development services
-2. `Dockerfile.dev` - Development container
-3. `Dockerfile` - Production container
-4. `.env.example` - Environment template
-5. Database initialization scripts
-6. Migration files (if applicable)
-7. Seed scripts with sample data
-8. `Makefile` or npm scripts for common operations
-
-**Verification Steps (run these before handoff):**
-```bash
-# Clean slate test
-rm -rf node_modules .next dist
-docker-compose down -v
-
-# Full setup
-make setup  # or npm run setup
-
-# Verify
-curl http://localhost:3000  # Should respond
-docker-compose exec db psql -U postgres -c "SELECT 1"  # DB accessible
-```
-
-**Handoff Checklist:**
-- [ ] Fresh clone + setup works
-- [ ] All services start
-- [ ] Database has seed data
-- [ ] App responds on expected port
-- [ ] Environment variables documented
-
-## Anti-Patterns
-
-| Anti-Pattern | Problem | Correction |
-|--------------|---------|------------|
-| No .env.example | Developers guess at required vars | Always provide template |
-| Hardcoded ports | Port conflicts on developer machines | Use configurable ports |
-| No health checks | Services start before ready | Add health checks |
-| Manual DB setup | "Works on my machine" | Automate everything |
-| No seed data | Empty database, can't test | Provide realistic seeds |
-| Production secrets in .env.example | Security risk | Use placeholder values only |
-| Assuming global installs | "You need to install X first" | Containerize dependencies |
-
-## Output Location
-
-All artifacts must be written to the project root and `scripts/`:
+## Outputs
 
 ```
 project-root/
 ├── docker-compose.yml          # Development services
-├── docker-compose.prod.yml     # Production services (optional)
+├── docker-compose.prod.yml     # Production services
+├── docker-compose.monitoring.yml # Monitoring stack
 ├── Dockerfile                  # Production image
 ├── Dockerfile.dev              # Development image
 ├── .env.example                # Environment template
@@ -595,29 +782,16 @@ project-root/
 ├── scripts/
 │   ├── init-db.sql            # Database initialization
 │   ├── migrate.sh             # Migration runner
-│   ├── seed.sh                # Seed data loader
-│   └── setup.sh               # Full setup script
+│   └── seed.sh                # Seed data loader
+├── .github/
+│   └── workflows/
+│       └── ci.yml             # CI/CD pipeline
+├── infrastructure/
+│   ├── main.tf                # Terraform config
+│   └── variables.tf           # Terraform variables
 └── docs/
     └── infrastructure/
-        └── LOCAL-SETUP.md     # Setup documentation
-```
-
-**Why:** These files are the actual infrastructure, not documentation about infrastructure. They must be in the project root to work.
-
-## Integration with Workflow
-
-The Platform Engineer should be invoked:
-
-1. **After Architecture** - Tech stack is known, can set up correct services
-2. **Before Development** - Developers need working environment
-3. **After Data Model** - Database schema is known for migrations
-
-```
-[Solution Architect] → Tech Stack decided
-        ↓
-[Data Architect] → Data model defined
-        ↓
-[Platform Engineer] → Infrastructure set up ← YOU ARE HERE
-        ↓
-[Fullstack Developer] → Can actually code
+        ├── LOCAL-SETUP.md     # Setup documentation
+        ├── DEPLOYMENT.md      # Deployment guide
+        └── MONITORING.md      # Monitoring setup
 ```

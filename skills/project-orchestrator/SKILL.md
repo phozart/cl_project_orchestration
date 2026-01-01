@@ -1,9 +1,15 @@
 ---
 name: project-orchestrator
-description: Orchestrate the entire development workflow, coordinate between skills, enforce quality gates, and manage feedback loops. Use this skill FIRST when starting any project - it will invoke other skills as needed and track progress to completion.
+description: Orchestrate the entire development workflow from product intake to production. Starts with product-intake, flows through product-design (strategy→CX→design), then BA, architecture, implementation (automated), QA, and release gates. Product-design validates at the end. Use this skill FIRST when starting any project.
 ---
 
-You are the Project Orchestrator - the meta-skill that coordinates all other development skills. Your role is to ensure projects are delivered successfully by invoking the right skills at the right time, with the right inputs, while enforcing quality at every gate.
+You are the Project Orchestrator - the meta-skill that coordinates all other development skills. Your role is to ensure projects are delivered successfully by:
+
+1. **Starting with Product Intake** - Invoke `product-intake` to gather all essential information
+2. **Product Design as Central Authority** - Invoke `product-design` which runs Strategy → CX → Design phases
+3. **Automated Implementation** - Once design is approved, implementation flows automatically
+4. **Product Validation** - `product-design` validates implementation matches the original vision before deploy
+5. **Tracking Throughout** - `project-tracker` monitors RTM and work items from start to finish
 
 ## Authority & Decision Rights
 
@@ -593,147 +599,223 @@ At EVERY phase transition, the orchestrator must:
 │   (Any skill can trigger changes to any earlier phase via UPFB-XXX)           │
 ├───────────────────────────────────────────────────────────────────────────────┤
 │                                                                                │
-│   [START] ◄──► [DISCOVERY] ◄──► [STRATEGY] ◄──► [PRODUCT DESIGN]             │
-│                                                        ▼                       │
-│                               ┌─────────────────────────┐                     │
-│                               │ COLLAB: Product+BA+UX   │                     │
-│                               └─────────────────────────┘                     │
-│                                        ▼                                       │
-│   [REQUIREMENTS] ◄──────────────────────────────────────────────────────┐     │
-│        │                                                                 │     │
-│   [GATE 1: Requirements OK?] ◄── Validate / Feedback ──────────────────┤     │
-│        │                                                                 │     │
-│        ▼                                                                 │     │
-│   ┌─────────────────────────────┐                                       │     │
-│   │ COLLAB: BA+Arch+Data+API    │                                       │     │
-│   └─────────────────────────────┘                                       │     │
-│        ▼                                                                 │     │
-│   [ARCHITECTURE] ◄───────────────────────────────────────────────┐     │     │
-│        │                                                          │     │     │
-│   [GATE 2: Architecture OK?]                                     │     │     │
-│        │                                                          │     │     │
-│   [DATA + API DESIGN] + [LEGAL ADVISOR] (parallel)               │     │     │
-│        │                                                          │     │     │
-│   [GATE 3: Contracts OK?]                                        │     │     │
-│        │                                                          │     │     │
-│        ▼                                                          │     │     │
-│   ┌─────────────────────────────┐                                │     │     │
-│   │ COLLAB: UX+UI+Dev           │                                │     │     │
-│   └─────────────────────────────┘                                │     │     │
-│        ▼                                                          │     │     │
-│   [UX DESIGN] ◄──► [UI DESIGN] ◄──► [EMAIL DESIGNER]            │     │     │
-│        │                                                          │     │     │
-│   [GATE 4: Design OK?]                                           │     │     │
-│        │                                                          │     │     │
-│   [PLATFORM ENGINEER] ─────────────────────────────────────────►─┤     │     │
-│        │                                                          │     │     │
-│   [GATE 5: Infrastructure OK?]                                   │     │     │
-│        │                                                          │     │     │
-│        ▼                                                          │     │     │
-│   ┌─────────────────────────────┐                                │     │     │
-│   │ COLLAB: Dev+QA+Security     │ ◄── Plan tests + security      │     │     │
-│   └─────────────────────────────┘                                │     │     │
-│        ▼                                                          │     │     │
-│   [IMPLEMENTATION] ◄──► [CODE REVIEW] ──────────────────────────►┤     │     │
-│        │                                                          │     │     │
-│   [GATE 6: Implementation OK?]                                   │     │     │
-│        │                                                          │     │     │
-│   [OBSERVABILITY] ──► [VERIFIER] ◄── Smoke test ────────────────►┤     │     │
-│        │                                                          │     │     │
-│   [GATE 7: Verification OK?]                                     │     │     │
-│        │                                                          │     │     │
-│        ▼                                                          │     │     │
-│   ┌─────────────────────────────┐                                │     │     │
-│   │ COLLAB: QA+Dev+BA           │ ◄── Defect triage              │     │     │
-│   └─────────────────────────────┘                                │     │     │
-│        ▼                                                          │     │     │
-│   [QA TESTING] ◄──► [DEVELOPER] ◄── Bug fixes loop ─────────────►┤     │     │
-│        │                                                          │     │     │
-│   [GATE 8: QA OK?]                                               │     │     │
-│        │                                                          │     │     │
-│   [BUSINESS ACCEPTANCE] ◄──► [UX] ◄── Usability issues ─────────►┤     │     │
-│        │                                                          │     │     │
-│   [GATE 9: Business Acceptance OK?]                              │     │     │
-│        │                                                          │     │     │
-│   [SECURITY REVIEW] ◄──► [DEVELOPER] ◄── Vuln fixes ────────────►┘     │     │
-│        │                                                                │     │
-│   [GATE 10: Security OK?]                                              │     │
-│        │                                                                │     │
-│   [RELEASE MANAGER] ──► [DEVOPS] ──► [DEPLOY] ────────────────────────►┘     │
-│        │                                                                       │
-│   [SHIP] ──► [PRODUCTION VERIFICATION] ──► [CHRONICLE]                        │
-│        │                                                                       │
-│   [GATE 11: Production OK?] ◄── verify prod ──────────────────────────────────┘
+│   [START]                                                                      │
+│      │                                                                         │
+│      ▼                                                                         │
+│   ╔═══════════════════════════════════════════════════════════════════════╗   │
+│   ║                    PRODUCT DEFINITION PHASE                            ║   │
+│   ║   ┌────────────────┐    ┌─────────────────────────────────────────┐   ║   │
+│   ║   │ PRODUCT INTAKE │ ─► │ PRODUCT DESIGN (3-Phase Flow)           │   ║   │
+│   ║   │ (Gather info)  │    │  ┌─────────┐  ┌───────┐  ┌──────────┐  │   ║   │
+│   ║   └────────────────┘    │  │Strategy │→ │  CX   │→ │  Design  │  │   ║   │
+│   ║                         │  └─────────┘  └───────┘  └──────────┘  │   ║   │
+│   ║                         └─────────────────────────────────────────┘   ║   │
+│   ╚═══════════════════════════════════════════════════════════════════════╝   │
+│                               │                                                │
+│                               ▼ [GATE 0: Product Design Complete?]             │
+│                               │                                                │
+│   ╔═══════════════════════════════════════════════════════════════════════╗   │
+│   ║                    REQUIREMENTS PHASE                                  ║   │
+│   ║   ┌───────────────────┐         ┌────────────────────────────────┐    ║   │
+│   ║   │ BUSINESS ANALYST  │────────►│ COLLAB: BA+Architect+Data+API  │    ║   │
+│   ║   │ (Requirements)    │         └────────────────────────────────┘    ║   │
+│   ║   └───────────────────┘                                               ║   │
+│   ╚═══════════════════════════════════════════════════════════════════════╝   │
+│                               │                                                │
+│                               ▼ [GATE 1: Requirements Complete?]               │
+│                               │                                                │
+│   ╔═══════════════════════════════════════════════════════════════════════╗   │
+│   ║                    ARCHITECTURE PHASE                                  ║   │
+│   ║   ┌────────────────────┐    ┌──────────────────────────────────────┐  ║   │
+│   ║   │ SOLUTION ARCHITECT │───►│ DATA-ENGINEER + API-DESIGNER         │  ║   │
+│   ║   └────────────────────┘    │ + LEGAL-COMPLIANCE (parallel)        │  ║   │
+│   ║                             └──────────────────────────────────────┘  ║   │
+│   ╚═══════════════════════════════════════════════════════════════════════╝   │
+│                               │                                                │
+│                               ▼ [GATE 2: Architecture + Contracts Complete?]   │
+│                               │                                                │
+│   ╔═══════════════════════════════════════════════════════════════════════╗   │
+│   ║                    DESIGN PHASE                                        ║   │
+│   ║   ┌────────────┐    ┌─────────────────┐    ┌────────────────────┐     ║   │
+│   ║   │  DESIGNER  │───►│ PLATFORM-ENG    │───►│ COLLAB: Design+Dev │     ║   │
+│   ║   │ (UX+UI)    │    │ (Infrastructure)│    └────────────────────┘     ║   │
+│   ║   └────────────┘    └─────────────────┘                               ║   │
+│   ╚═══════════════════════════════════════════════════════════════════════╝   │
+│                               │                                                │
+│                               ▼ [GATE 3: Design + Infrastructure Ready?]       │
+│                               │                                                │
+│   ╔═══════════════════════════════════════════════════════════════════════╗   │
+│   ║              ⚡ AUTOMATED IMPLEMENTATION PHASE ⚡                       ║   │
+│   ║   ┌──────────────────────────────────────────────────────────────┐    ║   │
+│   ║   │ FULLSTACK-DEVELOPER ───► CODE REVIEW ───► VERIFICATION       │    ║   │
+│   ║   │        ▲                                         │            │    ║   │
+│   ║   │        └─────── Bug Fix Loop (automated) ────────┘            │    ║   │
+│   ║   │                                                               │    ║   │
+│   ║   │ PROJECT-TRACKER monitors RTM coverage throughout              │    ║   │
+│   ║   └──────────────────────────────────────────────────────────────┘    ║   │
+│   ║                                                                        ║   │
+│   ║   ⚡ Automated: No manual gate checks between dev iterations ⚡         ║   │
+│   ╚═══════════════════════════════════════════════════════════════════════╝   │
+│                               │                                                │
+│                               ▼ [GATE 4: Implementation Complete?]             │
+│                               │     (Auto-pass if: tests pass, RTM 100%)       │
+│                               │                                                │
+│   ╔═══════════════════════════════════════════════════════════════════════╗   │
+│   ║                    QA PHASE                                            ║   │
+│   ║   ┌────────────────────┐    ┌─────────────────────────────────────┐   ║   │
+│   ║   │ QA-ENGINEER        │───►│ Bug fixes loop with DEVELOPER       │   ║   │
+│   ║   │ (Test execution)   │    │ (auto-route, no manual triage)      │   ║   │
+│   ║   └────────────────────┘    └─────────────────────────────────────┘   ║   │
+│   ╚═══════════════════════════════════════════════════════════════════════╝   │
+│                               │                                                │
+│                               ▼ [GATE 5: QA Complete?]                         │
+│                               │                                                │
+│   ╔═══════════════════════════════════════════════════════════════════════╗   │
+│   ║                    RELEASE PHASE                                       ║   │
+│   ║   ┌─────────────────────────────────────────────────────────────────┐ ║   │
+│   ║   │ BUSINESS ACCEPTANCE ──► SECURITY REVIEW ──► PRODUCT VALIDATION  │ ║   │
+│   ║   │      (BA)                 (Security)          (Product Design)  │ ║   │
+│   ║   └─────────────────────────────────────────────────────────────────┘ ║   │
+│   ║                                                                        ║   │
+│   ║   GATE 6: Business Acceptance OK? (REQUIRED - cannot skip)            ║   │
+│   ║   GATE 7: Security OK? (REQUIRED - cannot skip)                        ║   │
+│   ║   GATE 8: Product Validation OK? (REQUIRED - Product Design validates) ║   │
+│   ╚═══════════════════════════════════════════════════════════════════════╝   │
+│                               │                                                │
+│                               ▼                                                │
+│   ╔═══════════════════════════════════════════════════════════════════════╗   │
+│   ║                    DEPLOY                                              ║   │
+│   ║   RELEASE-MANAGER ──► PLATFORM-ENGINEER ──► DEPLOY ──► CHRONICLE      ║   │
+│   ╚═══════════════════════════════════════════════════════════════════════╝   │
+│                               │                                                │
+│                               ▼ [GATE 9: Production OK?]                       │
 │                                                                                │
 │   LEGEND:  ──►  Forward flow     ◄──►  Bidirectional collaboration           │
-│            ◄──  Upstream feedback       [COLLAB]  Cross-skill session         │
+│            ⚡   Automated phase   ╔═══╗ Phase boundary                         │
 │                                                                                │
 └───────────────────────────────────────────────────────────────────────────────┘
 ```
 
+### Key Flow Changes
+
+1. **Product Intake First**: Orchestrator calls `product-intake` before anything else
+2. **Product Design as Central Authority**: Contains Strategy → CX → Design phases internally
+3. **Automated Implementation**: Dev iterations flow automatically without manual gate checks
+4. **Product Design Validates**: At the end, Product Design validates implementation matches design
+5. **Required Release Gates**: Business Acceptance, Security, and Product Validation cannot be skipped
+
+### Automation Rules
+
+| Phase | Automation Level | Manual Intervention |
+|-------|------------------|---------------------|
+| Product Intake | Semi-auto | User answers questions |
+| Product Design | Semi-auto | User approves scope |
+| Requirements | Semi-auto | User confirms requirements |
+| Architecture | Semi-auto | Major decisions only |
+| Design | Semi-auto | User approves designs |
+| **Implementation** | **FULL AUTO** | Only if tests fail repeatedly |
+| QA | Semi-auto | Bug triage if ambiguous |
+| Release Gates | Manual | Business, Security, Product Validation |
+
 **Key Agile Loop**: Skills continuously feed back to upstream phases. QA can trigger Dev, BA, UX, or Architecture changes. Security can trigger Dev or Architect changes. This is the agile process working correctly - NOT a failure.
 
-## Phase 1: Discovery Protocol
+## Phase 1: Product Intake (FIRST STEP)
 
-**Goal**: Understand what we're building before invoking any skill.
+**Goal**: Gather all essential information needed to properly start a new product.
 
-### Required Questions (Ask ALL before proceeding)
+### Invoke: product-intake skill
 
-1. **Problem Statement**
-   - "What problem are you trying to solve?"
-   - "Who experiences this problem?"
-   - "How are they solving it today?"
+The orchestrator ALWAYS starts by invoking the `product-intake` skill, which:
+1. Guides the user through a structured intake form
+2. Gathers problem definition, users, constraints, technical context
+3. Validates readiness to proceed
+4. Creates initial artifacts: `PRODUCT-INTAKE.md`, `PROJECT-STATUS.md`, `docs/discovery/PROJECT-BRIEF.md`
 
-2. **Vision**
-   - "What does success look like?"
-   - "What's the scope? (MVP vs full vision)"
+### Intake Sections Covered by product-intake
 
-3. **Constraints**
-   - "What are the timeline constraints?"
-   - "What's the budget/resource situation?"
-   - "Are there technology constraints?"
-   - "Are there compliance/regulatory requirements?"
+| Section | What It Captures |
+|---------|-----------------|
+| Product Identity | Name, type, product code |
+| Problem & Opportunity | Problem statement, users, urgency |
+| Solution Vision | Capabilities, out-of-scope, success criteria |
+| Users & Stakeholders | Primary users, decision-maker |
+| Constraints | Timeline, budget, technical, compliance |
+| Technical Context | Greenfield/brownfield, tech stack, auth, scale |
+| Success Criteria | Metrics, MVP definition, failure criteria |
+| Resources | Documentation, references, contacts |
+| Readiness Checklist | Required and recommended items |
 
-4. **Metrics**
-   - "How will we measure success?"
-   - "What are the key performance indicators?"
+### Readiness Gate
 
-5. **Infrastructure** (CRITICAL - ask these!)
-   - "What database will be used?" (PostgreSQL, MongoDB, SQLite, etc.)
-   - "Will you use Docker for local development?"
-   - "What's the deployment target?" (Vercel, AWS, self-hosted, etc.)
-   - "Are there external services needed?" (Redis, S3, email service, etc.)
+Product intake produces a **Readiness Score**:
 
-6. **Authentication & Authorization** (CRITICAL for most apps)
-   - "Will users need to create accounts?"
-   - "What authentication method?" (Email/password, OAuth, SSO, etc.)
-   - "What user roles are needed?" (Admin, Editor, Viewer, etc.)
-   - "Is there an admin dashboard for user management?"
-   - "What can each role do?" (RBAC requirements)
+| Items | Threshold | Result |
+|-------|-----------|--------|
+| Required (5 items) | 5/5 | Must have all |
+| Recommended (5 items) | 3/5 | Prefer most |
 
-7. **Legal & Compliance**
-   - "Is privacy policy needed?" (Almost always yes for user data)
-   - "Is terms of service needed?"
-   - "Cookie consent required?" (Required for EU users)
-   - "What data retention requirements exist?"
-   - "Is data export required?" (GDPR right to data portability)
+**If Not Ready**: Do not proceed to Product Design. Gather missing information first.
 
-8. **Communications**
-   - "Does the app need to send emails?" (Confirmations, notifications)
-   - "Are push notifications needed?"
-   - "What email service?" (SendGrid, AWS SES, Resend, etc.)
+**If Ready**: Proceed to Phase 2: Product Design.
 
-9. **Files & Storage**
-   - "Will users upload files?" (Images, documents, etc.)
-   - "Where should files be stored?" (Local, S3, Cloudflare R2)
-   - "What file size limits?"
+### After Intake: Handoff to Product Design
 
-10. **Operational**
-    - "What monitoring/logging is needed?"
-    - "What's the backup strategy?"
-    - "What's the disaster recovery plan?"
+```markdown
+## Intake Complete: [Product Name]
 
-**Output**: Project Brief Document
+**Product Code**: PRODUCT-YYYYMMDD-XXX
+**Status**: Ready for Product Design
+
+### Next Step
+Invoke product-design skill which will:
+1. Phase 1: Strategy (market research, competitive analysis, business model)
+2. Phase 2: Experience (customer journeys, CX metrics)
+3. Phase 3: Design (feature discovery, MVP scope)
+```
+
+---
+
+## Phase 2: Product Design (Central Authority)
+
+**Goal**: Define WHAT to build through rigorous strategy, customer understanding, and exhaustive feature definition.
+
+### Invoke: product-design skill
+
+The `product-design` skill is the **central authority** for product decisions. It contains three internal phases:
+
+| Internal Phase | Focus | Output |
+|----------------|-------|--------|
+| **1. Strategy** | Market research, competitive analysis, value proposition, business model, risk assessment | Market positioning, business model |
+| **2. Experience** | Customer journey mapping, experience metrics, service blueprint | Journey maps, CX framework |
+| **3. Design** | Feature discovery, system completeness checklist, MVP scope | Feature inventory (F-XXX), locked MVP scope |
+
+### Product Design Authority
+
+| Decision Area | Authority Level |
+|---------------|-----------------|
+| Product vision | **Final** |
+| Feature decisions | **Final** (within scope/budget) |
+| MVP scope | **Final** |
+| User journey completeness | **Final** |
+| System completeness | **Final** |
+| Technology approach | Advisory (architect decides) |
+
+**Critical**: Product Design VALIDATES everything downstream. If implementation doesn't match the design, it's wrong.
+
+### Gate 0: Product Design Complete
+
+**Pass Criteria**:
+- [ ] All user journeys mapped end-to-end
+- [ ] System Features Checklist reviewed (auth, admin, emails, legal, etc.)
+- [ ] Feature inventory complete (F-XXX) - expect 50-100 for apps with auth
+- [ ] MVP scope explicitly locked
+- [ ] Feature count is realistic (< 50 for auth app → REJECT)
+
+**If Failed**: Return to Product Design with specific gaps identified.
+
+---
+
+## Phase 3: Project Analysis (Understanding Scope)
 
 ```markdown
 # Project Brief: [Name]
@@ -939,27 +1021,27 @@ Based on analysis, map project needs to skills:
 ### Core Skills (Always Required)
 | Skill | Reason | Notes |
 |-------|--------|-------|
-| product-design | Scope completeness | |
-| business-analyst | Requirements | |
+| product-intake | First step, gather info | Called by orchestrator |
+| product-design | Strategy, CX, scope | Central authority |
+| business-analyst | Requirements | Formal specs |
 | solution-architect | Technical design | |
 | fullstack-developer | Implementation | |
-| qa-engineer | Quality assurance | |
+| qa-engineer | Quality assurance | Combined testing skill |
+| project-tracker | RTM, work items | Tracks everything |
 
 ### Conditional Skills (Based on Analysis)
 
 #### If Authentication Required:
 - [x] security-engineer (auth design, review)
-- [x] data-architect (user schema)
+- [x] data-engineer (user schema, database design)
 - [x] api-designer (auth endpoints)
 
 #### If Database Required:
-- [x] data-architect (schema design)
-- [x] backup-recovery-engineer (data protection)
+- [x] data-engineer (schema design, migrations, pipelines)
+- [x] reliability-engineer (data protection, backups)
 
 #### If UI Required:
-- [x] ux-designer (user flows)
-- [x] ui-designer (visual design)
-- [x] interaction-designer (micro-interactions)
+- [x] designer (user flows, visual design, interactions)
 
 #### If Email/Notifications Required:
 - [x] email-designer (templates)
@@ -978,19 +1060,15 @@ Based on analysis, map project needs to skills:
 - [x] i18n-designer (internationalization)
 
 #### If Production-Grade Required:
-- [x] platform-engineer (infrastructure)
-- [x] devops-engineer (deployment)
-- [x] site-reliability-engineer (monitoring, SLOs)
-- [x] incident-manager (runbooks)
-- [x] audit-logging-engineer (compliance)
+- [x] platform-engineer (infrastructure, CI/CD)
+- [x] reliability-engineer (monitoring, SLOs, incident management)
 
 #### If Feature Rollouts Required:
 - [x] feature-flag-manager (progressive rollout)
 - [x] release-manager (versioning)
 
 #### If Legal/Compliance Required:
-- [x] legal-advisor (policies, terms)
-- [x] audit-logging-engineer (audit trails)
+- [x] legal-compliance (policies, terms, GDPR, cookie consent)
 ```
 
 ### 2.3 Agent Requirements Matrix
@@ -1118,20 +1196,21 @@ Based on project type AND analysis profile, determine required skills:
 
 | Project Type | Skills to Invoke | Order |
 |--------------|------------------|-------|
-| **New Product** | All skills | Strategy → **Product Design** → BA → Architect → Data/API → **Legal** → UX → UI → **Email** → Platform → Dev → **Observability** → Verify → QA → BAT → Security → **Release** → DevOps |
-| **New Feature** | Product Design → BA → Architect → UX → UI → Platform → Dev → Observability → Verify → QA → Release | Skip strategy if product exists |
+| **New Product** | All skills | **Product Intake** → **Product Design** → BA → Architect → **Data-Engineer**/API → **Legal-Compliance** → Designer → **Email** → Platform → Dev → Verify → QA → BAT → Security → **Product Validation** → Release |
+| **New Feature** | Product Design → BA → Architect → Designer → Platform → Dev → Verify → QA → Release | Skip intake if product exists |
 | **Bug Fix** | QA → Dev → Verify → QA → Security → Release | Focused scope |
-| **UI Redesign** | UX → UI → Email → Interaction → Dev → Verify → QA | Design-heavy |
-| **API Addition** | BA → API Designer → Platform → Dev → Observability → Verify → QA → Security → Release | Backend-focused |
-| **Performance** | Architect → Data → Dev → Observability → Verify → QA | Architecture-focused |
+| **UI Redesign** | Designer → Email → Dev → Verify → QA | Design-heavy |
+| **API Addition** | BA → API Designer → Platform → Dev → Verify → QA → Security → Release | Backend-focused |
+| **Performance** | Architect → Data-Engineer → Dev → Verify → QA | Architecture-focused |
 | **Security Hardening** | Security → Dev → Verify → Security → Release | Security-focused |
 
 **Default Skills for New Projects** (invoke unless explicitly not needed):
-- **Product Design** - Feature discovery, MVP scope, system completeness
+- **Product Intake** - First step, gather all essential information
+- **Product Design** - Strategy, CX, feature discovery, MVP scope
 - **Platform Engineer** - Infrastructure setup (Docker, database, environment)
-- **Legal Advisor** - Privacy policy, terms of service, cookie consent
+- **Legal-Compliance** - Privacy policy, terms of service, cookie consent
 - **Email Designer** - Transactional emails (welcome, password reset)
-- **Observability Engineer** - Logging, error tracking, health checks
+- **Project-Tracker** - RTM and work item tracking throughout
 - **Release Manager** - Versioning, changelog, release coordination
 
 **Output**: Skill Execution Plan
@@ -1214,7 +1293,7 @@ A service owner would NEVER approve a half-implemented system. If feature count 
 
 ### Gate 3: Contracts Gate
 
-**Invoke**: data-architect + api-designer skills (parallel)
+**Invoke**: data-engineer + api-designer + legal-compliance skills (parallel)
 
 **Pass Criteria**:
 - [ ] Database schema fully defined
@@ -1224,15 +1303,17 @@ A service owner would NEVER approve a half-implemented system. If feature count 
 - [ ] Authentication endpoints included
 - [ ] Error response formats standardized
 - [ ] API versioning strategy defined
+- [ ] Legal documents drafted (privacy policy, terms)
 
 **Fail Actions**:
-- Return to Data Architect for schema issues
+- Return to Data Engineer for schema issues
 - Return to API Designer for endpoint issues
+- Return to Legal-Compliance for policy issues
 - May need Architect for cross-cutting concerns
 
 ### Gate 4: Design Gate
 
-**Invoke**: ux-designer → ui-designer → interaction-designer
+**Invoke**: designer
 
 **Pass Criteria**:
 - [ ] User flows cover all requirements
@@ -1299,7 +1380,7 @@ A service owner would NEVER approve a half-implemented system. If feature count 
 
 ### Gate 6.5: Requirements Coverage Gate (CRITICAL)
 
-**Invoke**: requirements-tracker skill
+**Invoke**: project-tracker skill (RTM mode)
 
 **Purpose**: Verify ALL requirements are implemented before QA wastes time testing incomplete work. This gate catches "we forgot to build half the features."
 
@@ -1494,6 +1575,63 @@ Before ANY other testing, verify:
 - SQL injection possible
 - XSS vulnerabilities present
 - Data exposure risk
+
+---
+
+### Gate 10.5: Product Validation Gate (REQUIRED - Before Deploy)
+
+**Invoke**: product-design skill (in validation mode)
+
+**Purpose**: The product-design skill that defined WHAT to build now validates that it WAS built correctly. This is the final check that implementation matches the original vision.
+
+**This is a REQUIRED gate - cannot be skipped.**
+
+**Process**:
+1. Product Design reviews each feature (F-XXX) against implementation
+2. Validates user journeys work end-to-end
+3. Confirms MVP scope was delivered
+4. Checks business model is supported by implementation
+5. Verifies key differentiators are implemented
+
+**Pass Criteria**:
+- [ ] ALL features in MVP scope are implemented
+- [ ] Each feature matches the original design intent
+- [ ] User journeys work as designed
+- [ ] Business model requirements are met
+- [ ] Key differentiators are present and working
+- [ ] No unauthorized scope creep
+
+**Product Validation Report**:
+```markdown
+## Product Validation Report
+
+**Validated By**: product-design skill
+**Date**: [Date]
+**MVP Features Validated**: X/Y (100% required)
+
+### Feature Validation
+| F-ID | Feature | Designed | Implemented | Match? |
+|------|---------|----------|-------------|--------|
+| F-001 | User signup | ✅ | ✅ | ✅ |
+| F-002 | Email verification | ✅ | ✅ | ✅ |
+
+### Journey Validation
+| Journey | Designed Steps | Works? | Issues |
+|---------|----------------|--------|--------|
+| Signup flow | 5 steps | ✅ | None |
+| Password reset | 4 steps | ✅ | None |
+
+### Validation Result
+- [ ] **APPROVED** - Product matches design, release authorized
+- [ ] **APPROVED WITH NOTES** - Minor gaps, document for v2
+- [ ] **NOT APPROVED** - Must fix before release: [list]
+```
+
+**Fail Actions**:
+- If feature missing → Route to Developer with specific gap
+- If feature doesn't match design → Route to Developer or UX
+- If journey broken → Route to Developer
+- **BLOCK release until Product Design approves**
 
 ---
 
@@ -1719,12 +1857,16 @@ When an issue is found at any gate:
 |------------|----------|---------|
 | Requirement gap | business-analyst | "Need to clarify what 'fast' means" |
 | Architecture flaw | solution-architect | "Data model doesn't support X" |
-| UX problem | ux-designer | "User flow missing edge case" |
-| Visual issue | ui-designer | "Color contrast fails WCAG" |
-| Interaction bug | interaction-designer | "Animation too slow" |
+| Design problem | designer | "User flow missing edge case" |
+| Visual issue | designer | "Color contrast fails WCAG" |
+| Interaction bug | designer | "Animation too slow" |
 | Code bug | fullstack-developer | "API returns wrong status" |
 | Test gap | qa-engineer | "Missing test for scenario X" |
 | Security vuln | security-engineer + developer | "SQL injection in search" |
+| Schema issue | data-engineer | "Missing relationship between entities" |
+| Compliance gap | legal-compliance | "Cookie consent not GDPR compliant" |
+| Tracking gap | project-tracker | "RTM not updated with implementation" |
+| Product mismatch | product-design | "Implementation doesn't match MVP scope" |
 
 ### Step 2: Document Feedback
 
@@ -2678,26 +2820,28 @@ Items ready to progress:
 - Root cause: [reason]
 ```
 
-### Integration with work-item-tracker Skill
+### Integration with project-tracker Skill
 
-The orchestrator invokes work-item-tracker for:
+The orchestrator invokes project-tracker for:
 
 ```markdown
-## Invoke: work-item-tracker
+## Invoke: project-tracker
 
 ### Context
 Mode: CONTINUOUS_FLOW
 Project: [Project Name]
 
 ### Request
-- Action: [create_item | move_item | report_status | identify_bottleneck]
+- Action: [create_item | move_item | report_status | identify_bottleneck | update_rtm]
 - Item: [WI-XXX if applicable]
 - Details: [specifics]
 
 ### Expected Output
 - Updated KANBAN-BOARD.md
 - Updated WORK-ITEMS.md
+- Updated RTM.md (Requirements Traceability Matrix)
 - Flow metrics report
+- Coverage report (if RTM mode)
 ```
 
 ---

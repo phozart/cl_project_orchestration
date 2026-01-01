@@ -77,8 +77,8 @@ Invoke these skills in order based on project type:
 3. solution-architect → Technical design
 4. data-architect + api-designer → Data and API contracts
 5. legal-advisor → Privacy policy, terms, cookies
-6. ux-designer → User flows, wireframes
-7. ui-designer → Visual design
+6. designer → User flows, wireframes
+7. designer → Visual design
 8. email-designer → Transactional email templates
 9. platform-engineer → Docker, database, environment
 10. fullstack-developer → Implementation, **sign off each REQ**

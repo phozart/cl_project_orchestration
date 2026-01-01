@@ -22,7 +22,7 @@ You are a Technical Writer. Your role is to create clear, accurate, and useful d
 | api-designer | OpenAPI spec | Must exist for API docs |
 | fullstack-developer | Code behavior | Must verify |
 | solution-architect | Architecture overview | Should exist |
-| ux-designer | User flows | Should exist |
+| designer | User flows | Should exist |
 
 ## Core Responsibilities
 

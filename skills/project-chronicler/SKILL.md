@@ -349,9 +349,7 @@ project-root/
 | **solution-architect** | `docs/architecture/` | System_Design.md, Tech_Stack.md, Data_Model.md, adrs/*.md |
 | **data-architect** | `docs/data/` | DATA-MODEL.md, ERD.md, Data_Dictionary.md |
 | **api-designer** | `docs/api/` | API_Reference.md, API_SPECIFICATION.yaml |
-| **ux-designer** | `docs/ux/` | User_Flows.md, Wireframes.md, Information_Architecture.md, Accessibility.md |
-| **ui-designer** | `docs/ui/` | Design_System.md, Component_Library.md, Visual_Mockups.md |
-| **interaction-designer** | `docs/ux/` | Interaction_Patterns.md |
+| **designer** | `docs/design/` | USER-FLOWS.md, WIREFRAMES.md, DESIGN-SYSTEM.md, COMPONENTS.md, INTERACTIONS.md |
 | **notification-designer** | `docs/notifications/` | catalogue.md, channels.md, templates.md, preferences.md, architecture.md |
 | **payment-integration-engineer** | `docs/payments/` | architecture.md, checkout.md, pci-compliance.md, subscriptions.md, error-handling.md |
 | **search-engineer** | `docs/search/` | scope.md, index-design.md, query-processing.md, relevance.md, api-spec.md |

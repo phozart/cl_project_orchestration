@@ -24,9 +24,9 @@ You are a Content Strategist. Your role is to craft compelling, clear, and conve
 | From Skill | Required Input | Validation |
 |------------|----------------|------------|
 | product-strategist | Value proposition, positioning | Must exist |
-| ux-designer | User flows, information architecture | Must exist |
+| designer | User flows, information architecture | Must exist |
 | business-analyst | Target user personas | Must exist |
-| ui-designer | Design system, layout constraints | Should exist |
+| designer | Design system, layout constraints | Should exist |
 
 **If inputs missing**: Request from orchestrator, do not assume.
 
