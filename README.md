@@ -206,7 +206,7 @@ You can also chain skills manually for a focused workflow:
 | Skill                 | Purpose                           |
 | --------------------- | --------------------------------- |
 | `fullstack-developer` | Frontend + backend code, RBAC     |
-| `devops-engineer`     | CI/CD, infrastructure, deployment |
+| `ml-engineer`         | ML features, model training, AI integrations |
 
 ### Quality & Security
 
