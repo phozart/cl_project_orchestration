@@ -2024,6 +2024,140 @@ Maintain this document throughout:
 6. **Never ignore feedback loops** - Issues route back to source
 7. **Document everything** - Future self (or other skills) will need context
 
+---
+
+## Context Recovery Protocol (CRITICAL)
+
+**Problem**: Claude Code conversations get compacted/summarized when context grows large. After compaction, critical project state may be lost. The orchestrator MUST be able to recover full context from persistent files.
+
+### Critical State Files (Always Re-Read After Compaction)
+
+When the conversation appears to have been compacted (you see a summary of previous work), **IMMEDIATELY re-read these files in order**:
+
+```
+1. PROJECT-STATUS.md          # Current phase, gate history, blockers
+2. PRODUCT-INTAKE.md          # Original requirements and constraints
+3. docs/product/FEATURE-INVENTORY.md   # What we're building (F-XXX list)
+4. docs/traceability/RTM.md   # What's implemented vs what's pending
+5. FEEDBACK/*.md              # Any open feedback loops
+```
+
+### State Recovery Checklist
+
+After any conversation compaction, run this checklist:
+
+```markdown
+## Context Recovery Checklist
+
+### 1. Read Core State (REQUIRED)
+- [ ] Read PROJECT-STATUS.md - Extract: current phase, last gate, blockers
+- [ ] Read PRODUCT-INTAKE.md - Extract: project name, problem, constraints
+- [ ] Read RTM.md - Extract: implementation progress, test coverage
+
+### 2. Determine Current Position
+From PROJECT-STATUS.md, identify:
+- Current Phase: [Discovery/Requirements/Architecture/Design/Implementation/QA/Security/Release]
+- Last Completed Gate: [Gate number and name]
+- Current Work Item: [What was being worked on]
+- Open Blockers: [Any blocking issues]
+
+### 3. Resume Work
+Based on current position:
+- If mid-phase → Continue with current skill
+- If gate pending → Run gate validation
+- If blocked → Address blocker first
+- If between phases → Proceed to next phase
+
+### 4. Verify Context
+Ask user: "I've recovered context. You're in [Phase] phase, last completed [Gate].
+Currently working on [Item]. Is this correct?"
+```
+
+### PROJECT-STATUS.md Format (Must Stay Updated)
+
+The PROJECT-STATUS.md file is the **single source of truth**. Keep it updated after EVERY significant action:
+
+```markdown
+# Project Status: [Project Name]
+
+## Current State
+- **Phase**: [Current phase name]
+- **Gate**: [Last passed gate] / [Next gate]
+- **Sprint**: [Current sprint number] (if applicable)
+- **Last Updated**: [Timestamp]
+
+## Quick Resume
+> After context compaction, read this section first.
+>
+> **What's happening**: [One sentence - what's currently being worked on]
+> **Next step**: [One sentence - what should happen next]
+> **Blockers**: [None / List blockers]
+
+## Progress Summary
+| Phase | Status | Gate | Date |
+|-------|--------|------|------|
+| Product Intake | ✅ Complete | - | [date] |
+| Product Design | ✅ Complete | Gate 0 ✅ | [date] |
+| Requirements | ✅ Complete | Gate 1 ✅ | [date] |
+| Architecture | 🔄 In Progress | Gate 2 Pending | - |
+| Design | ⏳ Pending | - | - |
+| Implementation | ⏳ Pending | - | - |
+| QA | ⏳ Pending | - | - |
+| Security | ⏳ Pending | - | - |
+| Release | ⏳ Pending | - | - |
+
+## Open Items
+- [ ] [Current work item 1]
+- [ ] [Current work item 2]
+
+## Blockers
+- [None / List with owners]
+
+## Recent Activity
+- [Timestamp]: [Action taken]
+- [Timestamp]: [Action taken]
+```
+
+### Detecting Compaction
+
+Signs that conversation was compacted:
+1. You see "Analysis:" or "Summary:" at the start of context
+2. Previous tool calls are described rather than shown
+3. You don't remember recent actions that are described
+4. User references something you don't have context for
+
+**When detected**: Announce to user and run recovery:
+```
+"I notice the conversation was compacted. Let me recover project context..."
+[Read critical files]
+"Context recovered. We're in [Phase], working on [Item]. Continuing..."
+```
+
+### Update Frequency
+
+Update PROJECT-STATUS.md:
+- ✅ After every gate pass/fail
+- ✅ After every phase transition
+- ✅ After every feedback loop creation
+- ✅ After every blocker identified/resolved
+- ✅ At end of every work session
+- ✅ Before any expected long pause
+
+### Recovery Failures
+
+If critical files are missing or corrupted:
+
+| Missing File | Recovery Action |
+|--------------|-----------------|
+| PROJECT-STATUS.md | Ask user for current state, recreate from memory |
+| PRODUCT-INTAKE.md | Re-run product-intake skill |
+| RTM.md | Rebuild from docs/requirements/ and implementation |
+| Feature inventory | Rebuild from product-design outputs |
+
+**Never proceed blind** - If you can't recover state, ask the user.
+
+---
+
 ## Usage
 
 Start any project with:
