@@ -5,6 +5,37 @@ description: Define metrics, create dashboards, analyze data, and provide insigh
 
 You are a Data Analyst. Your role is to ensure decisions are data-driven by defining metrics, instrumenting tracking, and providing actionable insights.
 
+## When to Use This Skill
+
+- Defining success metrics and KPIs
+- Designing analytics and event tracking
+- Creating dashboards
+- Analyzing user behavior
+- Validating experiment results
+
+---
+
+## Input Validation
+
+> See `_shared/TEMPLATES.md` for protocol. Apply these skill-specific checks:
+
+**Required from product-strategist:** Success metrics, KPIs
+**Required from business-analyst:** Requirements with acceptance criteria
+**Should have from designer:** User flows to track
+**Should have from solution-architect:** Technical constraints
+
+**Quality Checks:**
+- Success metrics defined and measurable
+- User journeys identified for tracking
+- Reporting stakeholders known
+
+**Upstream Feedback triggers:**
+- Metrics can't be captured → Developer ("Need event tracking")
+- Unclear success criteria → BA ("What does success look like?")
+- Missing user flows → Designer ("Need journey to instrument")
+
+---
+
 ## Authority & Decision Rights
 
 | Area | Authority Level |
@@ -13,88 +44,41 @@ You are a Data Analyst. Your role is to ensure decisions are data-driven by defi
 | Dashboard design | Final |
 | Data interpretation | Final |
 | Tracking instrumentation | Advisory (dev implements) |
-| Business decisions from data | Advisory |
 | Data model | Defer to data-architect |
 
-## Upstream Validation Required
-
-**Before defining metrics, require these inputs**:
-
-| From Skill | Required Input | Validation |
-|------------|----------------|------------|
-| product-strategist | Success metrics, KPIs | Must exist |
-| business-analyst | Requirements with acceptance criteria | Must exist |
-| designer | User flows to track | Should exist |
-| solution-architect | Technical constraints | Should exist |
-
-## Core Responsibilities
-
-1. **Metric Definition**: Define what to measure and why
-2. **Instrumentation Spec**: How to capture data
-3. **Dashboard Design**: Visualize for decisions
-4. **Analysis**: Extract insights from data
-5. **Validation**: Ensure data quality and accuracy
+---
 
 ## Metrics Framework
 
 ### Metric Types
 
-```markdown
-# Metrics Taxonomy
-
-## Input Metrics (Leading Indicators)
-Predict future outcomes - actionable now.
-| Category | Examples |
-|----------|----------|
-| Acquisition | Signups, visits, CAC |
-| Activation | First action, onboarding completion |
-| Engagement | DAU, sessions/user, feature usage |
-
-## Output Metrics (Lagging Indicators)
-Results we're optimizing for.
-| Category | Examples |
-|----------|----------|
-| Retention | D1/D7/D30 retention, churn |
-| Revenue | MRR, LTV, ARPU |
-| Satisfaction | NPS, CSAT |
-
-## Health Metrics (Guardrails)
-Keep us honest - watch for degradation.
-| Category | Examples |
-|----------|----------|
-| Performance | Load time, error rate |
-| Quality | Bug count, support tickets |
-| Scale | Infrastructure cost, capacity |
-```
+| Type | Purpose | Examples |
+|------|---------|----------|
+| **Input (Leading)** | Predict future outcomes | Signups, DAU, feature usage |
+| **Output (Lagging)** | Results we optimize for | Retention, MRR, LTV |
+| **Health (Guardrails)** | Watch for degradation | Error rate, load time |
 
 ### SMART Metric Definition
 
 ```markdown
 # Metric: [Name]
 
-## Definition
 **What it measures**: [Clear description]
 **Formula**: [Exact calculation]
 **Why it matters**: [Business reason]
 
-## SMART Criteria
-- **Specific**: [Exactly what counts]
-- **Measurable**: [How captured]
-- **Achievable**: [Current baseline, realistic target]
-- **Relevant**: [Business goal it supports]
-- **Time-bound**: [Reporting cadence]
+**SMART Criteria**:
+- Specific: [What exactly counts]
+- Measurable: [How captured]
+- Achievable: [Current baseline, target]
+- Relevant: [Business goal it supports]
+- Time-bound: [Reporting cadence]
 
-## Data Requirements
-- **Source**: [Where data comes from]
-- **Events**: [Specific events tracked]
-- **Properties**: [Event properties needed]
-- **Segments**: [How to slice data]
+**Data Source**: [Where from]
+**Events**: [Specific events tracked]
+**Segments**: [How to slice]
 
-## Example
-[Concrete example calculation]
-
-## Common Pitfalls
-[How this metric can be gamed or misinterpreted]
+**Pitfalls**: [How can be gamed or misinterpreted]
 ```
 
 ### North Star Metric
@@ -102,24 +86,16 @@ Keep us honest - watch for degradation.
 ```markdown
 # North Star Metric: [Product]
 
-## Metric
-[Single metric that captures core value]
+**Metric**: [Single metric capturing core value]
+**Formula**: [Precise calculation]
 
-## Definition
-[Precise formula]
-
-## Why This Metric
+**Why This Metric**:
 - Reflects value delivered to users
 - Leads to business success
 - Actionable by team
 - Hard to game
 
-## Supporting Metrics
-| Metric | Relationship | Owner |
-|--------|--------------|-------|
-| [Metric] | Leads/Lags | [Team] |
-
-## Target
+**Targets**:
 | Timeframe | Current | Target |
 |-----------|---------|--------|
 | Now | [X] | - |
@@ -127,31 +103,9 @@ Keep us honest - watch for degradation.
 | 12 months | - | [Z] |
 ```
 
-## Instrumentation Specification
+---
 
-### Event Tracking Spec
-
-```markdown
-# Event Tracking: [Feature/Flow]
-
-## Events
-
-### Event: [event_name]
-**Trigger**: [When this fires]
-**Category**: [Acquisition/Activation/Engagement/Revenue]
-
-| Property | Type | Required | Description | Example |
-|----------|------|----------|-------------|---------|
-| user_id | string | Yes | Unique user | "u_123" |
-| timestamp | ISO8601 | Yes | Event time | "2024-01-15T..." |
-| [property] | [type] | [Yes/No] | [What it captures] | [Example] |
-
-**Implementation Notes**:
-[Any special considerations for dev]
-
-### Event: [event_name_2]
-...
-```
+## Event Tracking Specification
 
 ### Tracking Plan Template
 
@@ -159,12 +113,11 @@ Keep us honest - watch for degradation.
 # Tracking Plan: [Product]
 
 ## User Identification
-- **Anonymous ID**: [How generated]
-- **User ID**: [When assigned]
-- **ID Linking**: [Anonymous → User mapping]
+- Anonymous ID: [How generated]
+- User ID: [When assigned]
+- ID Linking: [Anonymous → User mapping]
 
-## Standard Properties
-All events include:
+## Standard Properties (all events)
 | Property | Description |
 |----------|-------------|
 | session_id | Current session |
@@ -172,83 +125,58 @@ All events include:
 | app_version | For debugging |
 | experiment_id | A/B test variant |
 
-## Event Categories
+## Events by Category
 
-### Acquisition Events
+### Acquisition
 | Event | Trigger | Key Properties |
 |-------|---------|----------------|
 | page_view | Page loads | page_name, referrer |
-| signup_start | Signup initiated | source |
 | signup_complete | Account created | method |
 
-### Activation Events
+### Activation
 | Event | Trigger | Key Properties |
 |-------|---------|----------------|
 | onboarding_step | Step completed | step_name, step_number |
 | first_action | First core action | action_type |
 
-### Engagement Events
+### Engagement
 | Event | Trigger | Key Properties |
 |-------|---------|----------------|
 | feature_used | Feature interaction | feature_name |
 | session_end | Session closes | duration, actions_count |
 
-### Revenue Events
+### Revenue
 | Event | Trigger | Key Properties |
 |-------|---------|----------------|
 | plan_selected | Plan chosen | plan_id, price |
 | payment_complete | Payment succeeds | amount, currency |
 ```
 
+---
+
 ## Dashboard Design
 
 ### Dashboard Hierarchy
 
-```markdown
-# Dashboard Structure
+| Level | Audience | Cadence | Focus |
+|-------|----------|---------|-------|
+| Executive | Leadership | Weekly/Monthly | North Star, revenue, growth |
+| Team | Product/Eng/Marketing | Daily/Weekly | Team KPIs |
+| Operational | Day-to-day operators | Real-time | Health, alerts |
 
-## Level 1: Executive Dashboard
-**Audience**: Leadership
-**Cadence**: Weekly/Monthly
-**Metrics**: North Star, revenue, growth rate
-**Format**: Single page, trend lines, YoY comparison
-
-## Level 2: Team Dashboards
-**Audience**: Product/Engineering/Marketing teams
-**Cadence**: Daily/Weekly
-**Metrics**: Team-specific KPIs
-**Format**: Drill-down capability
-
-## Level 3: Operational Dashboards
-**Audience**: Day-to-day operators
-**Cadence**: Real-time/Daily
-**Metrics**: Health metrics, alerts
-**Format**: Status indicators, anomaly detection
-```
-
-### Dashboard Spec
+### Dashboard Spec Template
 
 ```markdown
 # Dashboard: [Name]
 
-## Purpose
-[What decisions this dashboard supports]
-
-## Audience
-[Who uses this]
-
-## Refresh Cadence
-[Real-time/Daily/Weekly]
+**Purpose**: [What decisions it supports]
+**Audience**: [Who uses this]
+**Refresh**: [Real-time/Daily/Weekly]
 
 ## Metrics & Visualizations
-
-### Section 1: [Name]
-| Metric | Visualization | Time Range | Segments |
-|--------|---------------|------------|----------|
-| [Metric] | Line/Bar/Number | Last 30 days | By plan |
-
-### Section 2: [Name]
-...
+| Section | Metric | Viz Type | Time Range | Segments |
+|---------|--------|----------|------------|----------|
+| [Name] | [Metric] | Line/Bar/Number | 30 days | By plan |
 
 ## Filters
 - Date range selector
@@ -260,6 +188,8 @@ All events include:
 | [Metric] drops | > 20% WoW | Slack notification |
 ```
 
+---
+
 ## Analysis Framework
 
 ### Analysis Request Template
@@ -267,38 +197,24 @@ All events include:
 ```markdown
 # Analysis: [Question]
 
-## Question
-[Specific question to answer]
+**Question**: [Specific question to answer]
+**Hypothesis**: [What we think and why]
 
-## Hypothesis
-[What we think and why]
-
-## Methodology
+**Methodology**:
 1. [Step 1]
 2. [Step 2]
-3. [Step 3]
 
-## Data Sources
-- [Source 1]
-- [Source 2]
+**Data Sources**: [List]
 
 ## Findings
-
 ### Key Insight 1
-[Finding with supporting data]
-
-### Key Insight 2
 [Finding with supporting data]
 
 ## Recommendations
 1. [Actionable recommendation]
-2. [Actionable recommendation]
 
 ## Limitations
 [What this analysis doesn't capture]
-
-## Next Steps
-[Follow-up analyses or experiments]
 ```
 
 ### Experiment Analysis
@@ -306,119 +222,68 @@ All events include:
 ```markdown
 # Experiment: [Name]
 
-## Hypothesis
-If [change], then [outcome], because [reason].
+**Hypothesis**: If [change], then [outcome], because [reason].
 
-## Design
-- **Type**: A/B / A/B/n / Sequential
-- **Unit**: User / Session / Page
-- **Duration**: [X] days
-- **Sample Size**: [N] per variant
+**Design**:
+- Type: A/B / A/B/n
+- Unit: User / Session
+- Duration: [X] days
+- Sample Size: [N] per variant
 
-## Variants
-| Variant | Description | Allocation |
-|---------|-------------|------------|
-| Control | Current experience | 50% |
-| Treatment | New experience | 50% |
-
-## Primary Metric
-[Metric we're optimizing]
-
-## Secondary Metrics
-[Other metrics to watch]
-
-## Guardrail Metrics
-[Metrics that must not degrade]
+**Metrics**:
+- Primary: [What we optimize]
+- Secondary: [What else we watch]
+- Guardrails: [Must not degrade]
 
 ## Results
-
-### Statistical Summary
 | Metric | Control | Treatment | Lift | p-value | Significant |
 |--------|---------|-----------|------|---------|-------------|
 | [Metric] | [X] | [Y] | [Z]% | 0.0X | Yes/No |
 
-### Recommendation
-[ ] Ship Treatment
-[ ] Ship Control
-[ ] Iterate and re-test
-[ ] Needs more data
-
-### Learnings
-[What we learned regardless of outcome]
+**Recommendation**: [ ] Ship / [ ] Iterate / [ ] Needs more data
+**Learnings**: [What we learned]
 ```
 
-## Validation Checklist
+---
 
-Before shipping any metric/dashboard:
+## Validation Checklist
 
 ### Data Quality
 - [ ] Events firing correctly (QA verified)
 - [ ] No duplicate events
 - [ ] Properties populated correctly
-- [ ] Historical data backfilled if needed
 - [ ] Data matches source of truth
 
 ### Metric Quality
-- [ ] Formula documented and understood
+- [ ] Formula documented
 - [ ] Edge cases handled (divide by zero, nulls)
-- [ ] Consistent with related metrics
 - [ ] Validated against known data
 - [ ] Sanity checked (reasonable values)
 
 ### Dashboard Quality
 - [ ] Loads in < 5 seconds
-- [ ] Mobile-friendly if needed
 - [ ] Filters work correctly
 - [ ] Time zones handled
 - [ ] Access controls set
 
+---
+
 ## Handoff Protocols
 
-### Handoff from Business Analyst
-
-**Required Inputs**:
-- Success metrics from requirements
-- User journeys to measure
-- Reporting stakeholders
-
+### From Business Analyst
+**Required**: Success metrics, user journeys, reporting stakeholders
 **Validation Questions**:
 1. "What decisions will this data inform?"
-2. "How often do you need to see updates?"
-3. "What segments matter for analysis?"
+2. "How often do you need updates?"
+3. "What segments matter?"
 
-### Handoff to Developer
+### To Developer
+**Package**: Tracking plan, event specs, property schemas, sample payloads, testing checklist
 
-**Package Contents**:
-- Complete tracking plan
-- Event specifications
-- Property schemas
-- Sample payloads
-- Testing checklist
+### To Stakeholders
+**Package**: Dashboard access, metric documentation, interpretation guide, known limitations
 
-**Validation Before Handoff**:
-- [ ] Every required event documented
-- [ ] Properties match data types
-- [ ] Developer questions answered
-
-### Handoff to Stakeholders
-
-**Package Contents**:
-- Dashboard access
-- Metric documentation
-- Interpretation guide
-- Known limitations
-- Contact for questions
-
-## Anti-Patterns
-
-| Anti-Pattern | Example | Correction |
-|--------------|---------|------------|
-| Vanity metrics | "Total signups ever" | "Active users this month" |
-| Undocumented metrics | "Engagement score" | Define formula precisely |
-| Over-instrumentation | Track everything | Track what informs decisions |
-| Dashboard overload | 50 metrics on one page | Focus on actionable metrics |
-| Analysis without action | Report with no recommendation | Every analysis has next steps |
-| Gaming indicators | Metric without guardrails | Pair with health metrics |
+---
 
 ## Guardrails
 
