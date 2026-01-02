@@ -52,12 +52,41 @@ You are the Project Orchestrator - the meta-skill that coordinates all other dev
 
 ---
 
+## Project Initialization
+
+**For NEW projects, the orchestrator MUST initialize the project structure FIRST:**
+
+```bash
+# Run from the target project directory
+/path/to/development-workflow-plugin/scripts/scaffold-docs.sh "Project Name" --with-templates
+```
+
+### When to Initialize
+
+| Scenario | Action |
+|----------|--------|
+| New product (no docs/ folder) | **RUN scaffold script** with `--with-templates` |
+| Existing product (has docs/) | Skip initialization, proceed to appropriate phase |
+| Adding feature to existing | Skip initialization |
+| Bug fix | Skip initialization |
+
+### Initialization Checklist
+
+Before proceeding to product-intake, verify:
+- [ ] `docs/` directory structure exists
+- [ ] `PROJECT-STATUS.md` created (or template copied)
+- [ ] Templates available for skills to reference
+
+**If docs/ doesn't exist → RUN THE SCAFFOLD SCRIPT FIRST**
+
+---
+
 ## Workflow
 
 ```
-START → INTAKE → PRODUCT DESIGN → BA → ARCHITECT → DESIGN → PLATFORM → DEV → QA → RELEASE
-         ↓                                                                    ↑
-    [Gate 0]                                                            [Gates 1-5]
+START → [INITIALIZE] → INTAKE → PRODUCT DESIGN → BA → ARCHITECT → DESIGN → PLATFORM → DEV → QA → RELEASE
+              ↓           ↓                                                                    ↑
+        [scaffold]   [Gate 0]                                                            [Gates 1-5]
 
 RELEASE: Business Acceptance → Security → Product Validation → Deploy → Chronicle
 ```
@@ -261,31 +290,20 @@ docs/
 
 ---
 
-## Scaffolding & Templates
+## Templates Reference
 
-**Use the scaffold script to initialize project structure:**
-
-```bash
-# From project directory
-/path/to/development-workflow-plugin/scripts/scaffold-docs.sh "Project Name"
-
-# With templates copied
-/path/to/development-workflow-plugin/scripts/scaffold-docs.sh "Project Name" --with-templates
-
-# Minimal structure only
-/path/to/development-workflow-plugin/scripts/scaffold-docs.sh "Project Name" --minimal
-```
+> **See "Project Initialization" section above for when and how to run the scaffold script.**
 
 **Template Directory:** `templates/` contains all document templates.
 
-**Key Templates:**
-| Document | Template |
-|----------|----------|
-| Product Intake | `templates/PRODUCT-INTAKE.template.md` |
-| Project Status | `templates/PROJECT-STATUS.template.md` |
-| Project Brief | `templates/docs/discovery/PROJECT-BRIEF.template.md` |
-| BRD | `templates/docs/requirements/BRD.template.md` |
-| System Design | `templates/docs/architecture/SYSTEM-DESIGN.template.md` |
-| RTM | `templates/docs/traceability/RTM.template.md` |
+| Phase | Key Templates |
+|-------|---------------|
+| Intake | `PRODUCT-INTAKE.template.md`, `PROJECT-STATUS.template.md` |
+| Discovery | `docs/discovery/PROJECT-BRIEF.template.md` |
+| Product | `docs/product/PRODUCT-VISION.template.md`, `FEATURE-INVENTORY.template.md`, `MVP-SCOPE.template.md` |
+| Requirements | `docs/requirements/BRD.template.md`, `REQUIREMENTS-CATALOGUE.template.md`, `USER-STORIES.template.md` |
+| Architecture | `docs/architecture/SYSTEM-DESIGN.template.md`, `ADR/ADR-001.template.md` |
+| QA | `docs/qa/TEST-PLAN.template.md`, `TEST-CASES.template.md` |
+| Traceability | `docs/traceability/RTM.template.md` |
 
-**Usage:** Each skill has its own Templates section with specific instructions. Templates use `{{PLACEHOLDER}}` syntax for project-specific values.
+**Each skill has its own Templates section** with specific instructions. Templates use `{{PLACEHOLDER}}` syntax.
