@@ -13,28 +13,24 @@ You are a Legal & Compliance Specialist. Your role is to ensure products meet le
 - After Architecture is defined (understand data flows)
 - Before deployment to production
 - When user mentions "privacy policy", "terms of service", "GDPR", "cookie consent"
-- Reviewing compliance requirements
 
 ---
 
-## Input Validation Protocol
+## Input Validation
 
-### Inputs Required
+> See `_shared/TEMPLATES.md` for protocol. Apply these skill-specific checks:
 
-| From | What | Required |
-|------|------|----------|
-| BA | What data is collected, why, how long retained | Yes |
-| Solution Architect | Data flows, third-party services | Yes |
-| Data Engineer | Data storage, encryption, deletion capability | Yes |
+**Required from BA/Architect/Data Engineer:** Data inventory (what, from whom, why), data flows, third-party services, storage/encryption details, retention periods
 
-### Quick Checks
+**Quality Checks:**
+- Data inventory complete?
+- Third-party services documented?
+- Retention periods defined?
+- User rights implementation possible?
 
-- [ ] Data inventory complete (what data, from whom)?
-- [ ] Third-party services documented?
-- [ ] Data retention periods defined?
-- [ ] User rights implementation possible?
+**Domain Questions:** Is lawful basis for processing identified? Are consent flows adequate? Cross-border transfers handled?
 
-**Decision:** ACCEPT / CLARIFY / BLOCK
+**Upstream Feedback triggers:** Data flow unclear, retention conflict, missing consent mechanism, risky third-party → Architect/BA/Developer/Security
 
 ---
 
@@ -55,54 +51,36 @@ Compliance Gaps    →    Cookie Policy       →    Consent Tracking
 ## Privacy Checklist (GDPR/CCPA)
 
 ### Data Collection
-- [ ] Lawful basis for processing identified
-- [ ] Only necessary data collected (data minimization)
+- [ ] Lawful basis identified
+- [ ] Data minimization (only necessary data)
 - [ ] Consent obtained where required
-- [ ] Privacy notice provided at collection
+- [ ] Privacy notice at collection
 
-### Data Storage
+### Data Storage & Security
 - [ ] Encryption at rest
-- [ ] Access controls in place
+- [ ] Access controls
 - [ ] Retention periods defined
 - [ ] Deletion procedures documented
 
 ### Data Subject Rights
-- [ ] Right to access (can export data)
-- [ ] Right to rectification (can correct data)
-- [ ] Right to erasure (can delete account)
-- [ ] Right to portability (can download data)
-- [ ] Right to object (can opt out)
+- [ ] Right to access (export)
+- [ ] Right to rectification (correct)
+- [ ] Right to erasure (delete)
+- [ ] Right to portability (download)
+- [ ] Right to object (opt out)
 
 ### Third Parties
 - [ ] Data Processing Agreements in place
 - [ ] Subprocessor list maintained
 - [ ] Cross-border transfer mechanisms (SCCs)
 
-## Compliance by Region
+## Regional Requirements
 
-### GDPR (EU/UK)
-- [ ] Privacy Policy with required disclosures
-- [ ] Cookie consent banner (not just notice)
-- [ ] Data Subject Access Request process
-- [ ] Right to deletion ("right to be forgotten")
-- [ ] Data export/portability
-- [ ] Data Processing Agreement with vendors
-- [ ] Data breach notification process (72 hours)
-- [ ] DPO appointed (if required)
+**GDPR (EU/UK):** Privacy policy, cookie consent banner, DSAR process, deletion right, data portability, DPA with vendors, breach notification (72h)
 
-### CCPA (California)
-- [ ] "Do Not Sell My Personal Information" link
-- [ ] Privacy Policy with CCPA disclosures
-- [ ] Data access request process
-- [ ] Data deletion request process
-- [ ] Non-discrimination clause
+**CCPA (California):** "Do Not Sell" link, privacy policy with CCPA disclosures, access/deletion requests, non-discrimination clause
 
-### General (All Regions)
-- [ ] Terms of Service
-- [ ] Privacy Policy accessible from all pages
-- [ ] Cookie Policy (if using cookies)
-- [ ] Age verification (if required)
-- [ ] Clear unsubscribe mechanism
+**General:** Terms of service, privacy policy on all pages, cookie policy, clear unsubscribe
 
 ---
 
@@ -116,57 +94,38 @@ Compliance Gaps    →    Cookie Policy       →    Consent Tracking
 **Last Updated:** {{date}}
 
 ## Introduction
-{{companyName}} ("we", "our", "us") operates {{appName}} (the "Service").
-This Privacy Policy explains how we collect, use, disclose, and protect your information.
+{{companyName}} operates {{appName}}. This explains how we collect and use your information.
 
 ## Information We Collect
+- **Account Info**: Email, password, name - for account management
+- **Profile Info**: Avatar, bio - for personalization
+- **Usage Data**: Pages visited, features used - for improvement
+- **Device Info**: Browser, OS - for security
 
-### Information You Provide
-- **Account Information**: Email, password, name - to create and manage your account
-- **Profile Information**: Avatar, bio - to personalize your experience
-- **Payment Information**: Card details (processed by Stripe) - to process payments
-
-### Information Collected Automatically
-- **Usage Data**: Pages visited, features used - to improve the Service
-- **Device Information**: Browser type, OS, device ID - for security and compatibility
-- **Log Data**: IP address, access times - for security and debugging
-
-## How We Use Your Information
-- Provide and maintain the Service
+## How We Use Information
+- Provide and maintain service
 - Process transactions
-- Send service-related communications
-- Improve and personalize your experience
-- Detect and prevent fraud
+- Send service communications
+- Improve experience
+- Detect fraud
 
 ## Information Sharing
-We do NOT sell your personal information. We share data only:
-- **Service Providers**: Third parties that help operate our Service
-- **Legal Requirements**: When required by law
-- **Business Transfers**: In connection with merger or acquisition
+We do NOT sell data. We share only with:
+- Service providers (to operate service)
+- Legal requirements
+- Business transfers (merger/acquisition)
 
 ## Data Retention
-- **Account Data**: Until you delete your account
-- **Transaction Records**: 7 years (legal requirement)
-- **Log Data**: 90 days
+- Account data: Until deletion
+- Transaction records: 7 years (legal)
+- Logs: 90 days
 
 ## Your Rights
+**GDPR (EU/UK):** Access, correct, delete, export, object, withdraw consent
+**CCPA (CA):** Know what's collected, delete, opt-out of sale (we don't sell)
 
-### For EU/UK Users (GDPR)
-- Access your personal data
-- Correct inaccurate data
-- Delete your data ("right to be forgotten")
-- Export your data (portability)
-- Object to processing
-- Withdraw consent
-
-### For California Users (CCPA)
-- Know what personal information we collect
-- Delete your personal information
-- Opt-out of sale (we do not sell data)
-- Non-discrimination for exercising rights
-
-## Contact Us
-For privacy inquiries: {{privacyEmail}}
+## Contact
+Privacy inquiries: {{privacyEmail}}
 ```
 
 ## Terms of Service Template
@@ -176,47 +135,35 @@ For privacy inquiries: {{privacyEmail}}
 
 **Last Updated:** {{date}}
 
-## Agreement to Terms
-By accessing or using {{appName}} ("Service"), you agree to these Terms.
+## Agreement
+By using {{appName}}, you agree to these Terms.
 
-## Use of Service
+## Eligibility
+You must be at least {{minimumAge}} years old.
 
-### Eligibility
-You must be at least {{minimumAge}} years old to use this Service.
+## Account Responsibilities
+- Maintain security, provide accurate info, responsible for activity
 
-### Account Responsibilities
-- Maintain account security
-- Provide accurate information
-- Responsible for all activity under your account
-
-### Acceptable Use
-You agree NOT to:
-- Violate any laws or regulations
-- Infringe on intellectual property rights
-- Transmit malware or harmful code
-- Attempt unauthorized access
-- Harass, abuse, or harm others
+## Acceptable Use
+Do NOT: Violate laws, infringe IP, transmit malware, harass others
 
 ## User Content
-You retain ownership of content you submit. By submitting, you grant us
-a license to use, display, and distribute it as necessary to provide the Service.
+You retain ownership. You grant us license to display/distribute as needed.
 
 ## Disclaimers
-THE SERVICE IS PROVIDED "AS IS" WITHOUT WARRANTIES OF ANY KIND.
+SERVICE PROVIDED "AS IS" WITHOUT WARRANTIES.
 
 ## Limitation of Liability
-TO THE MAXIMUM EXTENT PERMITTED BY LAW:
-- We are not liable for indirect, incidental, or consequential damages
-- Our total liability is limited to the amount you paid us in the past 12 months
+Not liable for indirect damages. Total liability limited to fees paid in past 12 months.
 
 ## Termination
-We may terminate or suspend your access for violation of these Terms.
+We may terminate for Terms violation.
 
 ## Governing Law
-These Terms are governed by the laws of {{jurisdiction}}.
+Laws of {{jurisdiction}}.
 
 ## Contact
-Questions: {{legalEmail}}
+{{legalEmail}}
 ```
 
 ## Cookie Policy Template
@@ -224,32 +171,22 @@ Questions: {{legalEmail}}
 ```markdown
 # Cookie Policy
 
-**Last Updated:** {{date}}
-
-## What Are Cookies
-Cookies are small text files stored on your device when you visit websites.
-
-## How We Use Cookies
-
-### Essential Cookies (Required)
+## Essential Cookies (Required)
 | Cookie | Purpose | Duration |
 |--------|---------|----------|
-| session_id | Maintains login session | Session |
-| csrf_token | Security protection | Session |
-| cookie_consent | Remembers preferences | 1 year |
+| session_id | Login session | Session |
+| csrf_token | Security | Session |
+| cookie_consent | Preferences | 1 year |
 
-### Analytics Cookies (Optional)
-| Cookie | Purpose | Duration | Provider |
-|--------|---------|----------|----------|
-| _ga | Analytics tracking | 2 years | Google |
+## Analytics Cookies (Optional)
+| Cookie | Purpose | Provider |
+|--------|---------|----------|
+| _ga | Analytics | Google |
 
-### Marketing Cookies (Optional)
-| Cookie | Purpose | Duration | Provider |
-|--------|---------|----------|----------|
-| _fbp | Facebook pixel | 3 months | Facebook |
-
-## Managing Cookies
-Use our cookie preferences center to control optional cookies.
+## Marketing Cookies (Optional)
+| Cookie | Purpose | Provider |
+|--------|---------|----------|
+| _fbp | Ads | Facebook |
 ```
 
 ---
@@ -261,102 +198,53 @@ Use our cookie preferences center to control optional cookies.
 ```typescript
 // components/CookieConsent.tsx
 'use client';
-
 import { useState, useEffect } from 'react';
 
-type CookiePreferences = {
-  essential: true;
-  analytics: boolean;
-  preferences: boolean;
-  marketing: boolean;
-};
-
-const DEFAULT_PREFERENCES: CookiePreferences = {
-  essential: true,
-  analytics: false,
-  preferences: false,
-  marketing: false,
-};
-
 export function CookieConsent() {
-  const [showBanner, setShowBanner] = useState(false);
-  const [preferences, setPreferences] = useState<CookiePreferences>(DEFAULT_PREFERENCES);
+  const [show, setShow] = useState(false);
 
   useEffect(() => {
-    const consent = localStorage.getItem('cookie_consent');
-    if (!consent) setShowBanner(true);
+    if (!localStorage.getItem('cookie_consent')) setShow(true);
   }, []);
 
-  const savePreferences = (prefs: CookiePreferences) => {
+  const save = (prefs: object) => {
     localStorage.setItem('cookie_consent', JSON.stringify({
-      ...prefs,
-      timestamp: new Date().toISOString(),
+      ...prefs, timestamp: new Date().toISOString()
     }));
-    setShowBanner(false);
+    setShow(false);
   };
 
-  const acceptAll = () => savePreferences({
-    essential: true, analytics: true, preferences: true, marketing: true
-  });
-
-  const acceptEssential = () => savePreferences(DEFAULT_PREFERENCES);
-
-  if (!showBanner) return null;
+  if (!show) return null;
 
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-white border-t p-4 z-50">
       <p>We use cookies to improve your experience.</p>
-      <div className="flex gap-2">
-        <button onClick={acceptEssential}>Essential Only</button>
-        <button onClick={acceptAll}>Accept All</button>
-      </div>
+      <button onClick={() => save({ essential: true })}>Essential Only</button>
+      <button onClick={() => save({ essential: true, analytics: true, marketing: true })}>
+        Accept All
+      </button>
     </div>
   );
 }
 ```
 
-## Data Subject Request Handlers
+## Data Request Handlers
 
 ```typescript
 // lib/gdpr.ts
-
 export async function handleDataAccessRequest(userId: string) {
   const userData = await gatherUserData(userId);
-  return {
-    profile: userData.profile,
-    content: userData.content,
-    activity: userData.activityLog,
-    exportedAt: new Date().toISOString(),
-  };
+  return { profile: userData.profile, content: userData.content, exportedAt: new Date() };
 }
 
 export async function handleDataDeletionRequest(userId: string) {
   await db.$transaction([
-    // Anonymize user
-    db.user.update({
-      where: { id: userId },
-      data: {
-        email: `deleted-${userId}@deleted.local`,
-        name: 'Deleted User',
-        deletedAt: new Date(),
-      },
-    }),
-    // Delete sessions
+    db.user.update({ where: { id: userId }, data: {
+      email: `deleted-${userId}@deleted.local`, name: 'Deleted User', deletedAt: new Date()
+    }}),
     db.session.deleteMany({ where: { userId } }),
-    // Log deletion
-    db.auditLog.create({
-      data: {
-        action: 'user.deleted',
-        targetId: userId,
-        details: { reason: 'GDPR deletion request' },
-      },
-    }),
+    db.auditLog.create({ data: { action: 'user.deleted', targetId: userId } }),
   ]);
-}
-
-export async function handleDataExportRequest(userId: string) {
-  const data = await handleDataAccessRequest(userId);
-  return { format: 'json', data, exportedAt: new Date().toISOString() };
 }
 ```
 
@@ -364,7 +252,6 @@ export async function handleDataExportRequest(userId: string) {
 
 ## Release Gate Checklist
 
-### Before Release
 - [ ] Privacy policy reviewed and current
 - [ ] Terms of service reviewed
 - [ ] Cookie consent implemented
@@ -374,36 +261,24 @@ export async function handleDataExportRequest(userId: string) {
 
 ---
 
-## Upstream Feedback: When to Trigger
-
-| Issue | Feedback To | Example |
-|-------|-------------|---------|
-| Data flow unclear | Architect | "Need data flow diagram for privacy policy" |
-| Retention conflict | BA | "7-year retention conflicts with 'delete anytime'" |
-| Missing consent | Developer | "No consent capture for marketing emails" |
-| Third-party risk | Security | "This vendor doesn't have DPA" |
-
----
-
 ## Outputs
 
 ```
 docs/legal/
-├── PRIVACY-POLICY.md          # Privacy policy document
-├── TERMS-OF-SERVICE.md        # Terms of service document
-├── COOKIE-POLICY.md           # Cookie policy document
-├── COMPLIANCE-CHECKLIST.md    # Audit checklist with status
-└── DATA-INVENTORY.md          # What data we collect and why
+├── PRIVACY-POLICY.md
+├── TERMS-OF-SERVICE.md
+├── COOKIE-POLICY.md
+├── COMPLIANCE-CHECKLIST.md
+└── DATA-INVENTORY.md
 
 app/
-├── privacy/page.tsx           # Privacy policy page
-├── terms/page.tsx             # Terms of service page
-├── cookies/page.tsx           # Cookie policy page
-└── legal/data-request/page.tsx # Data request form
+├── privacy/page.tsx
+├── terms/page.tsx
+└── cookies/page.tsx
 
 components/
-└── CookieConsent.tsx          # Cookie consent banner
+└── CookieConsent.tsx
 
 lib/
-└── gdpr.ts                    # Data request handlers
+└── gdpr.ts
 ```

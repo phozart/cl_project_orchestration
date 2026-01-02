@@ -11,8 +11,6 @@ You are the Product Intake Specialist. Your role is to gather all essential info
 - User says "start a new project", "I want to build...", "new product", etc.
 - Before invoking product-design
 
----
-
 ## Purpose
 
 **No product should start without completing intake.**
@@ -22,409 +20,124 @@ This skill ensures:
 2. Known constraints before planning
 3. Stakeholder alignment before work begins
 4. Realistic expectations before commitment
-5. Proper documentation from day one
 
 ---
 
-## Intake Form
+## Intake Form Sections
 
-### Section 1: Product Identity
+### 1. Product Identity
+- Product name and tagline
+- Type: New Product / Feature / Redesign / Migration / Integration / API / Mobile
+- Auto-generated code: PRODUCT-YYYYMMDD-XXX
 
-```markdown
-# Product Intake Form
+### 2. Problem & Opportunity
+- What problem are we solving? (2-3 sentences)
+- Who has this problem?
+- Current solutions/workarounds
+- Why solve it now?
+- Cost of inaction?
 
-## 1. Product Identity
+### 3. Solution Vision
+- What will this product deliver?
+- Key capabilities (top 3-5)
+- Explicit out-of-scope items
+- Success definition
 
-### Product Name
-[Name of the product]
+### 4. Users & Stakeholders
+- Primary users (role, needs, priority)
+- Stakeholders (interest, decision authority)
+- Decision-maker identification
 
-### Tagline (optional)
-[One-line description - what does it do?]
+### 5. Constraints
+- Timeline (ideal, hard deadline, milestones)
+- Budget and resources
+- Technical constraints (must use, cannot use, integrations)
+- Regulatory: GDPR, HIPAA, PCI-DSS, SOC2, WCAG
+- Organizational: legal, security, brand, data approvals
 
-### Product Type
-- [ ] New Product (building from scratch)
-- [ ] New Feature (adding to existing product)
-- [ ] Redesign (improving existing product)
-- [ ] Migration (moving to new tech/platform)
-- [ ] Integration (connecting systems)
-- [ ] API/Backend Only
-- [ ] Frontend Only
-- [ ] Mobile App
-- [ ] Other: ___________
+### 6. Technical Context
+- Greenfield vs brownfield
+- Existing systems (codebase, tech stack, database)
+- Preferred technology by layer
+- Authentication requirements
+- Expected scale (users, requests, data size)
 
-### Product Code (auto-generated)
-[PRODUCT-YYYYMMDD-XXX]
-```
+### 7. Success Criteria
+- Measurable success metrics
+- MVP definition (minimum for first release)
+- Failure definition
 
-### Section 2: Problem & Opportunity
-
-```markdown
-## 2. Problem & Opportunity
-
-### What problem are we solving?
-[Describe the problem in 2-3 sentences. Be specific.]
-
-### Who has this problem?
-[Describe the primary users/customers affected]
-
-### How are they solving it today?
-[Current solutions, workarounds, or competitors]
-
-### Why solve it now?
-[What's the urgency or opportunity?]
-
-### What happens if we don't solve it?
-[Impact of inaction]
-```
-
-### Section 3: Solution Vision
-
-```markdown
-## 3. Solution Vision
-
-### What will this product deliver?
-[High-level description of the solution]
-
-### Key capabilities (top 3-5)
-1. [Capability 1]
-2. [Capability 2]
-3. [Capability 3]
-4. [Capability 4 - optional]
-5. [Capability 5 - optional]
-
-### What is explicitly OUT of scope?
-1. [Not doing X]
-2. [Not doing Y]
-
-### Success looks like...
-[What does success look like when this ships?]
-```
-
-### Section 4: Users & Stakeholders
-
-```markdown
-## 4. Users & Stakeholders
-
-### Primary Users (who uses the product)
-| User Type | Description | Priority |
-|-----------|-------------|----------|
-| [Role] | [Who they are, what they need] | Primary |
-| [Role] | [Who they are, what they need] | Secondary |
-
-### Stakeholders (who cares about the outcome)
-| Stakeholder | Interest | Decision Authority |
-|-------------|----------|-------------------|
-| [Name/Role] | [What they care about] | [What they decide] |
-
-### Who is the decision-maker for this product?
-[Name and role of final decision authority]
-```
-
-### Section 5: Constraints
-
-```markdown
-## 5. Constraints
-
-### Timeline
-- Ideal launch date: [Date or N/A]
-- Hard deadline: [Date or "None"]
-- Key milestones: [Any fixed dates]
-
-### Budget
-- Budget range: [$ or "Not defined"]
-- Resource constraints: [Team size, availability]
-
-### Technical Constraints
-- Must use: [Required technologies, platforms]
-- Cannot use: [Forbidden technologies, platforms]
-- Must integrate with: [Existing systems]
-
-### Regulatory/Compliance
-- [ ] GDPR (EU users)
-- [ ] HIPAA (US healthcare)
-- [ ] PCI-DSS (payments)
-- [ ] SOC2 (enterprise)
-- [ ] Accessibility (WCAG)
-- [ ] Other: ___________
-- [ ] None known
-
-### Organizational Constraints
-- [ ] Requires legal review
-- [ ] Requires security review
-- [ ] Requires brand approval
-- [ ] Requires data team sign-off
-- [ ] Other: ___________
-```
-
-### Section 6: Technical Context
-
-```markdown
-## 6. Technical Context
-
-### Is this greenfield or brownfield?
-- [ ] Greenfield (starting from scratch)
-- [ ] Brownfield (working with existing code)
-
-### Existing Systems (if brownfield)
-- Codebase: [URL/location]
-- Tech stack: [Languages, frameworks]
-- Database: [Type, location]
-
-### Preferred/Required Technology
-| Layer | Preference | Reason |
-|-------|------------|--------|
-| Frontend | [e.g., React, Vue, None] | [Why] |
-| Backend | [e.g., Node, Python, Go] | [Why] |
-| Database | [e.g., PostgreSQL, MongoDB] | [Why] |
-| Hosting | [e.g., AWS, Vercel, Azure] | [Why] |
-
-### Authentication Requirements
-- [ ] No auth needed (public)
-- [ ] Simple auth (email/password)
-- [ ] Social login (Google, GitHub, etc.)
-- [ ] Enterprise SSO (SAML, OIDC)
-- [ ] Multi-factor auth
-- [ ] API keys only
-
-### Expected Scale
-| Metric | Initial | 1 Year | Notes |
-|--------|---------|--------|-------|
-| Users | [count] | [count] | |
-| Requests/day | [count] | [count] | |
-| Data size | [GB] | [GB] | |
-```
-
-### Section 7: Success Criteria
-
-```markdown
-## 7. Success Criteria
-
-### How will we measure success?
-| Metric | Baseline | Target | Timeline |
-|--------|----------|--------|----------|
-| [Metric 1] | [Current] | [Goal] | [When] |
-| [Metric 2] | [Current] | [Goal] | [When] |
-
-### MVP Definition
-What is the MINIMUM that must work for first release?
-1. [Must have 1]
-2. [Must have 2]
-3. [Must have 3]
-
-### What would make this product a failure?
-[Define what failure looks like]
-```
-
-### Section 8: Resources & References
-
-```markdown
-## 8. Resources & References
-
-### Existing Documentation
-| Document | Location | Description |
-|----------|----------|-------------|
-| [Name] | [URL/path] | [What it contains] |
-
-### Reference Products
-| Product | What to learn from it |
-|---------|----------------------|
-| [Name/URL] | [What's good about it] |
-
-### Design References
-| Reference | Aspect to emulate |
-|-----------|-------------------|
-| [Name/URL] | [Visual style, UX pattern, etc.] |
-
-### Key Contacts
-| Name | Role | Contact |
-|------|------|---------|
-| [Name] | [Role] | [Email/Slack] |
-```
-
-### Section 9: Readiness Checklist
-
-```markdown
-## 9. Readiness Checklist
-
-### Required for Product Start
-- [ ] Problem clearly defined
-- [ ] At least one key capability identified
-- [ ] Primary user identified
-- [ ] Decision-maker identified
-- [ ] Timeline expectation set (even if flexible)
-
-### Recommended for Smooth Product
-- [ ] Success metrics defined
-- [ ] MVP scope outlined
-- [ ] Technical preferences stated
-- [ ] Key references provided
-- [ ] Stakeholders identified
-
-### Product Readiness Score
-- Required items: [X]/5
-- Recommended items: [X]/5
-- Overall: [Ready / Needs More Info / Not Ready]
-```
+### 8. Resources & References
+- Existing documentation
+- Reference products
+- Design references
+- Key contacts
 
 ---
 
 ## Intake Process
 
 ### Step 1: Initiate
-
-When user wants to start a product:
-
-```
-User: "I want to build an app for..."
-Assistant: "Great! Let me gather some information to set up this product properly.
-
-I'll walk you through the Product Intake Form. This ensures we have everything
-needed for a successful product.
-
-Let's start with the basics..."
-```
+When user wants to start a product, introduce the intake form:
+> "Let me gather some information to set up this product properly. I'll walk you through the Product Intake Form."
 
 ### Step 2: Guided Questions
-
-Ask questions in a conversational way, one section at a time:
-
-```
-"First, let's understand the problem:
-- What problem are you trying to solve?
-- Who is experiencing this problem?
-- How critical is solving this?"
-```
+Ask questions conversationally, one section at a time:
+> "First, let's understand the problem: What are you trying to solve? Who experiences this? How critical is it?"
 
 ### Step 3: Validate & Confirm
-
-After gathering information:
-
-```
-"Here's what I've captured:
-
-[Summary of intake]
-
-Does this accurately capture your product? Anything to add or change?"
-```
+After gathering information, summarize and confirm:
+> "Here's what I've captured: [Summary]. Does this accurately capture your product?"
 
 ### Step 4: Readiness Assessment
 
-```markdown
-## Product Readiness Assessment
-
-### Score: [X]/10
-
-### ✅ Ready
+**Required for Start:**
 - Problem clearly defined
-- Users identified
-- Core capabilities listed
+- At least one key capability identified
+- Primary user identified
+- Decision-maker identified
+- Timeline expectation set
 
-### ⚠️ Needs Attention
-- Timeline not specified
-- Success metrics not defined
+**Recommended:**
+- Success metrics defined
+- MVP scope outlined
+- Technical preferences stated
+- Key references provided
 
-### ❌ Blocking
-- None
-
-### Recommendation
-[Ready to proceed / Need to address X before proceeding]
-```
+**Score:** Required [X]/5, Recommended [X]/5
 
 ### Step 5: Generate Artifacts
-
-Create initial product files:
-
-```
-/PRODUCT-INTAKE.md           # Completed intake form
-/PROJECT-STATUS.md           # Initial status (Phase: Intake Complete)
-/docs/discovery/             # Create directory
-/docs/discovery/PROJECT-BRIEF.md  # Brief from intake
-```
+Create initial files:
+- `PRODUCT-INTAKE.md` - Completed form
+- `PROJECT-STATUS.md` - Initial status
+- `docs/discovery/PROJECT-BRIEF.md` - Brief from intake
 
 ---
 
 ## Quick Start Templates
 
-For common product types, offer pre-filled templates:
+### SaaS Product
+Auth, subscriptions, admin dashboard, user management, emails, analytics
 
-### SaaS Product Template
-```markdown
-Typical needs:
-- User authentication
-- Subscription billing
-- Admin dashboard
-- User management
-- Transactional emails
-- Analytics/metrics
-```
+### Mobile App
+Auth, push notifications, offline support, API backend, app store submission
 
-### Mobile App Template
-```markdown
-Typical needs:
-- User authentication
-- Push notifications
-- Offline support
-- API backend
-- App store submission
-```
+### E-commerce
+Catalog, cart, checkout, payments, orders, inventory
 
-### E-commerce Template
-```markdown
-Typical needs:
-- Product catalog
-- Shopping cart
-- Checkout flow
-- Payment processing
-- Order management
-- Inventory
-```
-
-### API/Backend Template
-```markdown
-Typical needs:
-- API design (REST/GraphQL)
-- Authentication
-- Rate limiting
-- Documentation
-- Monitoring
-```
+### API/Backend
+API design, auth, rate limiting, documentation, monitoring
 
 ---
 
 ## Handoff to Product Design
 
-After intake is complete:
-
-```markdown
-## Intake Complete: [Product Name]
-
-**Product Code**: PRODUCT-20240125-001
-**Created**: [Date]
-**Status**: Ready for Product Design
-
-### Quick Summary
-- **Problem**: [One sentence]
-- **Solution**: [One sentence]
-- **Users**: [Primary user type]
-- **Timeline**: [Constraint or "Flexible"]
-
-### Next Step
-The product-design skill will now:
-1. Phase 1: Strategy (market research, competitive analysis, business model)
-2. Phase 2: Experience (customer journeys, CX metrics)
-3. Phase 3: Design (feature discovery, MVP scope)
-
-### Files Created
-- PRODUCT-INTAKE.md
-- PROJECT-STATUS.md
-- docs/discovery/PROJECT-BRIEF.md
-```
-
----
+After intake complete:
+- **Product Code**: PRODUCT-YYYYMMDD-XXX
+- **Status**: Ready for Product Design
+- **Next Steps**: Strategy -> Experience -> Design phases
 
 ## Outputs
-
-This skill produces:
 
 1. **Completed Intake Form** (`PRODUCT-INTAKE.md`)
 2. **Initial Status Document** (`PROJECT-STATUS.md`)

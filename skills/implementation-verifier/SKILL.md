@@ -7,15 +7,7 @@ description: Verify the implementation actually works before QA testing. Smoke t
 
 Verify the implementation actually runs before passing to QA. This skill catches fundamental issues like broken links, missing database tables, failed builds, and configuration errors.
 
-## Why This Exists
-
-QA testers shouldn't discover:
-- "The app doesn't start"
-- "Half the links are broken"
-- "Database connection fails"
-- "Login doesn't work at all"
-
-These are **implementation failures**, not bugs to test. Catch them here.
+**QA testers shouldn't discover "the app doesn't start" - those are implementation failures, not bugs to test.**
 
 ## When to Use This Skill
 
@@ -25,339 +17,221 @@ These are **implementation failures**, not bugs to test. Catch them here.
 - Before passing to QA Engineer
 - When user says "verify it works", "smoke test", "sanity check"
 
+---
+
+## Input Validation
+
+> See `_shared/TEMPLATES.md` for protocol. Apply these skill-specific checks:
+
+**Required from Developer/Platform:** Complete codebase, environment configuration, seed data, test credentials
+
+**Quality Checks:**
+- Build completes without errors?
+- Environment variables configured?
+- Database migrations exist?
+- Seed data provided?
+
+**Domain Questions:** Can app start? Do routes respond? Does auth work? Can core features be exercised?
+
+**Upstream Feedback triggers:** Build fails, missing env vars, no seed data, broken infrastructure → Developer/Platform Engineer
+
+---
+
 ## Verification Process
 
 ### Phase 1: Build Verification
 
 ```bash
-# Can the project build at all?
-npm run build  # or equivalent
-
-# Expected: Build succeeds without errors
-# If fails: STOP - return to developer
+npm run build  # Must succeed without errors
 ```
 
-**Checklist:**
-- [ ] Build command completes successfully
+- [ ] Build completes successfully
 - [ ] No TypeScript/compilation errors
 - [ ] No missing dependencies
 - [ ] Build output exists (dist/, .next/, build/)
 
+**If fails: STOP - return to developer**
+
 ### Phase 2: Infrastructure Verification
 
 ```bash
-# Do all services start?
-docker-compose up -d
-docker-compose ps  # All services should be "Up"
-
-# Is database accessible?
+docker-compose up -d && docker-compose ps  # All "Up"
 docker-compose exec db psql -U postgres -c "SELECT 1"
-
-# Is Redis accessible (if used)?
-docker-compose exec redis redis-cli ping
 ```
 
-**Checklist:**
 - [ ] All Docker containers start
-- [ ] Database container healthy
-- [ ] Redis/cache container healthy (if used)
+- [ ] Database accessible
+- [ ] Cache/Redis accessible (if used)
 - [ ] No port conflicts
-- [ ] Volumes mounted correctly
 
 ### Phase 3: Database Verification
 
 ```bash
-# Do migrations run?
-npm run db:migrate
-
-# Is seed data present?
-npm run db:seed
-
-# Can we query the database?
-# Check that expected tables exist
+npm run db:migrate && npm run db:seed
 ```
 
-**Checklist:**
 - [ ] Migrations run without errors
 - [ ] All expected tables exist
-- [ ] Seed data is present
-- [ ] Foreign key relationships valid
-- [ ] Indexes created
+- [ ] Seed data present
+- [ ] Foreign keys valid
 
 ### Phase 4: Application Startup
 
 ```bash
-# Does the app start?
-npm run dev  # or npm start
-
-# Wait for startup, then verify
-curl -I http://localhost:3000
-# Expected: HTTP 200 or redirect to login
+npm run dev  # Then: curl -I http://localhost:3000
 ```
 
-**Checklist:**
-- [ ] Application starts without crash
-- [ ] No unhandled exceptions on startup
-- [ ] Logs show successful initialization
-- [ ] App responds on expected port
+- [ ] App starts without crash
+- [ ] No unhandled exceptions
+- [ ] Responds on expected port
 
 ### Phase 5: Route Verification
 
 Test all main routes respond (not 404 or 500):
 
 ```bash
-# Public routes
-curl -I http://localhost:3000/
-curl -I http://localhost:3000/login
-curl -I http://localhost:3000/signup
-
-# API routes (expect 401 if auth required, not 404/500)
-curl -I http://localhost:3000/api/health
-curl -I http://localhost:3000/api/users
-
-# Static assets
-curl -I http://localhost:3000/favicon.ico
+curl -I http://localhost:3000/           # Homepage
+curl -I http://localhost:3000/login      # Login page
+curl -I http://localhost:3000/api/health # API health
 ```
 
-**Checklist:**
 - [ ] Homepage loads (200 or redirect)
-- [ ] Login page loads
-- [ ] Signup page loads (if applicable)
+- [ ] Login/signup pages load
 - [ ] API health endpoint responds
 - [ ] Static assets load
-- [ ] No 404s on main navigation links
-- [ ] No 500 errors on any route
+- [ ] No 404s on main navigation
+- [ ] No 500 errors
 
 ### Phase 6: Authentication Flow
 
 ```bash
-# Can a user sign up? (if signup enabled)
-curl -X POST http://localhost:3000/api/auth/signup \
-  -H "Content-Type: application/json" \
-  -d '{"email":"test@test.com","password":"Test123!@#"}'
-
-# Can a user log in?
 curl -X POST http://localhost:3000/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{"email":"test@test.com","password":"Test123!@#"}'
-
-# Does session work?
-# Use returned token/cookie for authenticated request
 ```
 
-**Checklist:**
-- [ ] Signup creates user (if enabled)
 - [ ] Login returns session/token
-- [ ] Authenticated routes work with token
+- [ ] Authenticated routes work
 - [ ] Logout invalidates session
-- [ ] Password requirements enforced
 
 ### Phase 7: Core Feature Smoke Test
 
-For each core user story, verify the happy path works:
+For each Must-have user story, verify happy path:
 
-```markdown
-## US-001: [User Story Title]
-**Quick Test:** [One-line description of test]
-**Result:** PASS / FAIL / BLOCKED
+| US-ID | Quick Test | Result |
+|-------|-----------|--------|
+| US-001 | [One-line test] | PASS/FAIL |
 
-Example:
-## US-001: Resume Reading
-**Quick Test:** Upload PDF, start reading, close app, reopen - should resume
-**Result:** PASS
-```
-
-**Checklist:**
-- [ ] Each Must-have user story has basic functionality
-- [ ] CRUD operations work for main entities
-- [ ] Navigation between pages works
+- [ ] Each Must-have story has basic functionality
+- [ ] CRUD operations work
 - [ ] Forms submit successfully
-- [ ] Data persists after page refresh
+- [ ] Data persists after refresh
 
 ### Phase 8: Admin Functionality (if applicable)
 
-```bash
-# Can admin log in?
-curl -X POST http://localhost:3000/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"email":"admin@app.com","password":"AdminPass123!"}'
-
-# Can admin access admin routes?
-curl -I http://localhost:3000/admin \
-  -H "Authorization: Bearer <admin_token>"
-```
-
-**Checklist:**
 - [ ] Admin user exists (seeded)
 - [ ] Admin can log in
 - [ ] Admin dashboard accessible
 - [ ] User management works
-- [ ] Role assignment works
-- [ ] Admin-only routes protected
+
+---
 
 ## Verification Report
 
 ```markdown
 # Implementation Verification Report
 
-## Project: [Name]
-## Date: [Date]
-## Verified by: implementation-verifier
+**Project:** [Name] | **Date:** [Date]
+**Status:** PASS / FAIL / PARTIAL
+**Ready for QA:** YES / NO
 
 ## Summary
-- **Status**: PASS / FAIL / PARTIAL
-- **Ready for QA**: YES / NO
-- **Blockers**: [Count]
-
-## Build
-- [ ] Build succeeds: PASS/FAIL
-- [ ] No compilation errors: PASS/FAIL
-- Notes: [Any warnings or issues]
-
-## Infrastructure
-- [ ] Docker services start: PASS/FAIL
-- [ ] Database accessible: PASS/FAIL
-- [ ] Cache accessible: PASS/FAIL
-- Notes: [Any issues]
-
-## Database
-- [ ] Migrations run: PASS/FAIL
-- [ ] Seed data present: PASS/FAIL
-- [ ] Tables exist: PASS/FAIL
-- Notes: [Any issues]
-
-## Application
-- [ ] App starts: PASS/FAIL
-- [ ] No startup errors: PASS/FAIL
-- [ ] Responds on port: PASS/FAIL
-- Notes: [Any issues]
+| Area | Status |
+|------|--------|
+| Build | PASS/FAIL |
+| Infrastructure | PASS/FAIL |
+| Database | PASS/FAIL |
+| Application | PASS/FAIL |
+| Routes | PASS/FAIL |
+| Auth | PASS/FAIL |
+| Core Features | PASS/FAIL |
 
 ## Routes Tested
 | Route | Expected | Actual | Status |
 |-------|----------|--------|--------|
 | / | 200/redirect | [result] | PASS/FAIL |
-| /login | 200 | [result] | PASS/FAIL |
-| /api/health | 200 | [result] | PASS/FAIL |
-| ... | ... | ... | ... |
-
-## Broken Links Found
-| Page | Broken Link | Expected Target |
-|------|-------------|-----------------|
-| [page] | [link text] | [where it should go] |
-
-## Authentication
-- [ ] Signup works: PASS/FAIL/NA
-- [ ] Login works: PASS/FAIL
-- [ ] Session persists: PASS/FAIL
-- [ ] Logout works: PASS/FAIL
-- Notes: [Any issues]
-
-## Admin Functionality
-- [ ] Admin user exists: PASS/FAIL/NA
-- [ ] Admin can login: PASS/FAIL/NA
-- [ ] Admin dashboard works: PASS/FAIL/NA
-- [ ] User management works: PASS/FAIL/NA
-- Notes: [Any issues]
-
-## Core Features Smoke Test
-| User Story | Test | Result |
-|------------|------|--------|
-| US-001 | [test] | PASS/FAIL |
-| US-002 | [test] | PASS/FAIL |
-| ... | ... | ... |
 
 ## Blockers (Must Fix Before QA)
-1. [Critical issue that blocks QA]
-2. [Another blocker]
+1. [Critical issue]
 
 ## Warnings (Should Fix)
 1. [Non-blocking issue]
-2. [Another warning]
 
 ## Recommendation
-[ ] PROCEED to QA - All critical verifications pass
-[ ] RETURN to Developer - Blockers must be fixed
-[ ] RETURN to Platform Engineer - Infrastructure issues
+[ ] PROCEED to QA
+[ ] RETURN to Developer - [issues]
+[ ] RETURN to Platform Engineer - [issues]
 ```
+
+---
 
 ## Routing Issues
 
-| Issue Type | Route To | Example |
-|------------|----------|---------|
-| Build fails | Fullstack Developer | "TypeScript errors in auth module" |
-| Docker won't start | Platform Engineer | "Port 5432 already in use" |
-| Database errors | Platform Engineer + Data Architect | "Migration fails on foreign key" |
-| Routes 404 | Fullstack Developer | "Missing /api/users endpoint" |
-| Auth broken | Fullstack Developer | "Login returns 500" |
-| Missing seed data | Platform Engineer | "No admin user to test with" |
-| Env var missing | Platform Engineer | "DATABASE_URL not set" |
+| Issue Type | Route To |
+|------------|----------|
+| Build fails | Developer |
+| Docker won't start | Platform Engineer |
+| Database errors | Platform Engineer + Data Engineer |
+| Routes 404 | Developer |
+| Auth broken | Developer |
+| Missing seed data | Platform Engineer |
+| Env var missing | Platform Engineer |
+
+---
 
 ## Handoff Protocol
 
 ### If PASS → QA Engineer
-```markdown
-Implementation verified and ready for QA testing.
 
-**Verified:**
-- Build: OK
-- Infrastructure: OK
-- Database: OK
-- Routes: OK
-- Auth: OK
-- Core features: Basic functionality confirmed
+```markdown
+Implementation verified and ready for QA.
 
 **Test Environment:**
 - URL: http://localhost:3000
 - Admin: admin@app.com / AdminPass123!
 - Test User: test@test.com / TestPass123!
 
-**Known Limitations:**
-- [Any non-blocking issues]
-
-Ready for full QA testing.
+**Known Limitations:** [Any non-blocking issues]
 ```
 
 ### If FAIL → Developer/Platform Engineer
+
 ```markdown
 Implementation verification FAILED. Not ready for QA.
 
 **Blockers:**
-1. [Issue 1] - Assigned to: [skill]
-2. [Issue 2] - Assigned to: [skill]
-
-**Must be fixed before re-verification.**
+1. [Issue] - Assigned to: [skill]
 
 Re-verify after fixes are applied.
 ```
 
-## Anti-Patterns
-
-| Anti-Pattern | Problem | Correction |
-|--------------|---------|------------|
-| Skipping verification | QA finds "app doesn't start" | Always verify before QA |
-| Manual testing only | Inconsistent, misses issues | Use scripted checks |
-| No seed data | Can't test anything | Require seed data |
-| Testing production | Dangerous, incomplete | Always use dev environment |
-| Ignoring warnings | Issues accumulate | Fix or document all warnings |
-
-## Output Location
-
-```
-docs/
-└── verification/
-    └── VERIFICATION-REPORT.md    # Latest verification report
-```
+---
 
 ## Integration with Workflow
 
 ```
-[Fullstack Developer] → Implementation complete
-        ↓
-[Implementation Verifier] → Does it actually work? ← YOU ARE HERE
-        ↓
-    PASS → [QA Engineer] → Full testing
-        ↓
-    FAIL → Return to Developer/Platform Engineer
+[Developer] → [Implementation Verifier] → PASS → [QA Engineer]
+                       ↓
+                     FAIL → Return to Developer/Platform
 ```
 
 This is a **gate** - QA should not begin until verification passes.
+
+---
+
+## Output Location
+
+```
+docs/verification/
+└── VERIFICATION-REPORT.md
+```

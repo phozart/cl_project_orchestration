@@ -14,7 +14,24 @@ You are a Project Tracker. Your role is to ensure every requirement is tracked f
 - Managing dependencies between items
 - Before QA begins → Verify coverage
 - Before release → Final traceability check
-- Throughout entire project lifecycle
+
+---
+
+## Input Validation
+
+> See `_shared/TEMPLATES.md` for protocol. Apply these skill-specific checks:
+
+**Required from BA:** Requirements Catalogue (REQ-XXX), User Stories (US-XXX), priorities (MoSCoW)
+
+**Quality Checks:**
+- All requirements have unique IDs?
+- Priorities assigned (Must/Should/Could)?
+- Acceptance criteria defined?
+- Estimates provided?
+
+**Domain Questions:** Are requirements atomic (one thing each)? Dependencies identified? Anything blocked from start?
+
+**Upstream Feedback triggers:** Missing requirement IDs, unclear priorities, missing acceptance criteria → BA
 
 ---
 
@@ -39,121 +56,37 @@ Both work together:
 ```markdown
 # Requirements Traceability Matrix
 
-**Project:** {{projectName}}
-**Last Updated:** {{date}}
+**Project:** {{projectName}} | **Last Updated:** {{date}}
 **Coverage:** {{implemented}}/{{total}} ({{percentage}}%)
 
 ## Summary
-
-| Status | Count | Percentage |
-|--------|-------|------------|
-| ✅ Complete (Implemented + Tested + Validated) | X | X% |
-| 🔨 Implemented (Needs Testing) | X | X% |
-| ⚠️ Designed (Needs Implementation) | X | X% |
-| ❌ Not Started | X | X% |
-| 🚫 Descoped | X | X% |
+| Status | Count | % |
+|--------|-------|---|
+| Complete (Impl + Test + Valid) | X | X% |
+| Implemented (Needs Testing) | X | X% |
+| Designed (Needs Impl) | X | X% |
+| Not Started | X | X% |
+| Descoped | X | X% |
 
 ## Blockers (Must Fix Before Release)
-
 | REQ-ID | Description | Missing | Owner |
 |--------|-------------|---------|-------|
-| REQ-003 | Export as CSV | Implementation | Developer |
-| REQ-007 | Dark mode | Test case | QA |
+| REQ-003 | Export CSV | Implementation | Developer |
 
-## Full Traceability Matrix
-
+## Full Matrix
 | REQ-ID | Priority | Description | Design | Impl | Test | Valid | Status |
 |--------|----------|-------------|--------|------|------|-------|--------|
-| REQ-001 | Must | User signup | ✅ | ✅ | ✅ | ✅ | Complete |
-| REQ-002 | Must | Password validation | ✅ | ✅ | ✅ | ✅ | Complete |
-| REQ-003 | Must | Export CSV | ✅ | ❌ | ❌ | ❌ | **BLOCKED** |
-
-## Legend
-- ✅ Complete
-- ❌ Missing / Not Done
-- 🔨 In Progress
-- 🚫 Descoped
-- ⚠️ At Risk
+| REQ-001 | Must | User signup | Y | Y | Y | Y | Complete |
+| REQ-003 | Must | Export CSV | Y | N | N | N | BLOCKED |
 ```
 
 ## RTM Lifecycle
 
-### Phase 1: Initialize (After Requirements)
-```markdown
-## RTM Initialization Checklist
-- [ ] All REQ-XXX from Requirements Catalogue added
-- [ ] All US-XXX linked to requirements
-- [ ] Priority (Must/Should/Could) captured
-- [ ] Initial status set to "Not Started"
-```
-
-### Phase 2: Design Traceability
-```markdown
-## Design Traceability Update
-For each requirement, link to design artifacts:
-- REQ-001 → Wireframe: ux/wireframes/signup.png
-- REQ-001 → User Flow: ux/flows/registration.md
-```
-
-### Phase 3: Implementation Traceability
-```markdown
-## Implementation Sign-Off
-
-**REQ-ID:** REQ-001
-**Implemented:** ✅ Yes
-**Location:** src/auth/signup.ts:45-120
-**Commit:** abc123
-
-[ ] I confirm this requirement is fully implemented.
-```
-
-### Phase 4: Test Traceability
-```markdown
-## Test Coverage
-
-**REQ-ID:** REQ-001
-**Test Case:** TC-001
-**Test Location:** tests/auth/signup.test.ts
-**Result:** PASS
-
-[ ] I confirm this requirement has adequate test coverage.
-```
-
-### Phase 5: Validation (BAT)
-```markdown
-## Business Validation
-
-**REQ-ID:** REQ-001
-**Validated By:** business-analyst
-**Result:** PASS
-
-[ ] I confirm this requirement meets acceptance criteria.
-```
-
-## Coverage Reports
-
-### Pre-Release Coverage Report
-
-```markdown
-# Pre-Release Traceability Report
-
-**Release Version:** 1.0.0
-
-## Summary
-| Metric | Value | Status |
-|--------|-------|--------|
-| Total Requirements | 50 | |
-| Implemented | 48 | ✅ |
-| Tested | 48 | ✅ |
-| Validated | 48 | ✅ |
-| Descoped | 2 | ✅ (approved) |
-| Missing | 0 | ✅ |
-
-## Gate Status: ✅ PASS
-
-## Release Recommendation
-✅ **APPROVED FOR RELEASE**
-```
+1. **Initialize** (After Requirements): Add all REQ-XXX, link US-XXX, set status "Not Started"
+2. **Design Traceability**: Link to wireframes, user flows
+3. **Implementation Sign-Off**: Mark implemented with location + commit
+4. **Test Traceability**: Link test cases, record results
+5. **Validation (BAT)**: Record business acceptance
 
 ---
 
@@ -162,139 +95,72 @@ For each requirement, link to design artifacts:
 ## Pipeline Stages
 
 ```
-┌─────────┐   ┌─────────┐   ┌─────────┐   ┌─────────┐   ┌─────────┐
-│ BACKLOG │ → │ ANALYSIS│ → │ DESIGN  │ → │   DEV   │ → │   QA    │ → DONE
-└─────────┘   └─────────┘   └─────────┘   └─────────┘   └─────────┘
+BACKLOG → ANALYSIS → DESIGN → DEV → QA → REVIEW → DONE
 ```
 
-### Stage Definitions
+| Stage | WIP Limit | Entry Criteria | Exit Criteria |
+|-------|-----------|----------------|---------------|
+| Backlog | - | Identified need | Prioritized |
+| Analysis | 5 | Prioritized | Requirement complete |
+| Design | 5 | Requirement approved | UX/UI complete |
+| Development | 8 | Design approved | Code complete |
+| QA | 5 | Code complete | Tests pass |
+| Review | 3 | Tests pass | Security approved |
+| Done | - | All approvals | Deployed |
 
-| Stage | Entry Criteria | Exit Criteria | Skills Involved |
-|-------|----------------|---------------|-----------------|
-| **Backlog** | Identified need | Prioritized | Product Design, BA |
-| **Analysis** | Prioritized | Requirement complete | BA, Architect |
-| **Design** | Requirement approved | UX/UI complete | Designer |
-| **Development** | Design approved | Code complete, tested | Developer |
-| **QA** | Code complete | Tests pass | QA Engineer |
-| **Review** | Tests pass | Security approved | Security, BA |
-| **Done** | All approvals | Deployed | Platform |
-
-## Work Item Schema
-
-```typescript
-interface WorkItem {
-  id: string;               // WI-001
-  type: 'feature' | 'bugfix' | 'technical';
-  title: string;
-
-  source: {
-    requirement_id?: string; // REQ-XXX
-    user_story_id?: string;  // US-XXX
-  };
-
-  priority: 'Critical' | 'High' | 'Medium' | 'Low';
-  size: 'XS' | 'S' | 'M' | 'L' | 'XL';
-
-  stage: PipelineStage;
-  status: 'Waiting' | 'In Progress' | 'Blocked' | 'Complete';
-
-  depends_on: string[];     // WI-XXX IDs
-  blocks: string[];         // WI-XXX IDs
-
-  created_at: Date;
-  cycle_time?: number;      // Days in pipeline
-}
-```
-
-## Kanban Board Template
+## Work Item Board
 
 ```markdown
 # Work Item Board: [Project Name]
 
-Last Updated: [Timestamp]
-
 ## Pipeline Overview
-
 | Stage | WIP Limit | Current | Status |
 |-------|-----------|---------|--------|
-| Backlog | - | 15 | 🟢 |
-| Analysis | 5 | 3 | 🟢 |
-| Design | 5 | 4 | 🟢 |
-| Development | 8 | 7 | 🟡 |
-| QA | 5 | 5 | 🔴 WIP Limit |
-| Review | 3 | 1 | 🟢 |
+| Development | 8 | 7 | OK |
+| QA | 5 | 5 | AT LIMIT |
 
 ## Active Work Items
-
-### 🟢 Development (7/8)
-
 | ID | Title | Priority | Days | Blockers |
 |----|-------|----------|------|----------|
 | WI-005 | User auth | Critical | 5 | - |
-| WI-006 | API endpoints | High | 4 | - |
-| WI-008 | File uploads | Medium | 2 | ⚠️ WI-007 |
+| WI-008 | File uploads | Medium | 2 | WI-007 |
 
-### 🔴 Blocked Items
-
-| ID | Title | Blocked By | Days | Action Needed |
-|----|-------|------------|------|---------------|
-| WI-008 | File uploads | WI-007 | 2 | Dependency |
+## Blocked Items
+| ID | Blocked By | Days | Action Needed |
+|----|------------|------|---------------|
+| WI-008 | WI-007 | 2 | Dependency |
 ```
-
-## WIP Limits
-
-| Stage | WIP Limit | Rationale |
-|-------|-----------|-----------|
-| Analysis | 5 | BA can handle ~5 at once |
-| Design | 5 | UX + UI can parallel |
-| Development | 8 | Multiple devs |
-| QA | 5 | Testing takes time |
-| Review | 3 | Should be fast |
 
 ### When WIP Limit Exceeded
 1. **STOP** starting new items in that stage
 2. **SWARM** - Help clear the bottleneck
 3. **ROOT CAUSE** - Why is work stuck?
-4. **IMPROVE** - Fix the constraint
 
 ---
 
 # SECTION 3: FLOW METRICS
 
-## Key Metrics
-
 | Metric | What It Measures | Target |
 |--------|------------------|--------|
-| **Cycle Time** | Days from start to done | Minimize |
-| **Throughput** | Items completed per week | Stable/increasing |
-| **WIP** | Items currently in progress | Within limits |
-| **Blocked Time** | Days items are blocked | Minimize |
-| **Lead Time** | Days from request to done | Predictable |
+| Cycle Time | Days start to done | Minimize |
+| Throughput | Items/week | Stable |
+| WIP | Items in progress | Within limits |
+| Blocked Time | Days blocked | Minimize |
 
-## Weekly Metrics Report
+## Weekly Report
 
 ```markdown
 ## Week [X] Flow Report
 
 ### Throughput
-- Items completed: 6
-- Items started: 8
-- Net WIP change: +2
+- Completed: 6, Started: 8, Net WIP: +2
 
 ### Cycle Time
-- Average: 8.2 days
-- Fastest: 3 days
-- Slowest: 12 days
+- Avg: 8.2 days, Min: 3, Max: 12
 
 ### Bottleneck Analysis
-- QA was at limit for 3 days
-- 2 items blocked by dependencies
+- QA at limit 3 days, 2 items blocked by dependencies
 - Recommendation: Add QA capacity
-
-### Flow Efficiency
-- Active time: 65%
-- Wait time: 35%
-- Target: 70%+ active
 ```
 
 ---
@@ -303,34 +169,24 @@ Last Updated: [Timestamp]
 
 **Runs after Implementation, before QA.**
 
-### Pass Criteria
 ```markdown
 ## Requirements Coverage Gate
 
-### Must-Have Requirements (Priority: Must)
-- Total: X
-- Implemented: X
-- Coverage: X%
-- **Required: 100%**
-- **Result:** PASS / FAIL
+### Must-Have (Priority: Must)
+- Total: X, Implemented: X, Coverage: X%
+- **Required: 100%** | Result: PASS/FAIL
 
-### Should-Have Requirements (Priority: Should)
-- Total: X
-- Implemented: X
-- Coverage: X%
-- **Required: 90%**
-- **Result:** PASS / FAIL
+### Should-Have (Priority: Should)
+- Total: X, Implemented: X, Coverage: X%
+- **Required: 90%** | Result: PASS/FAIL
 
 **Gate Result:** PASS / FAIL
 ```
 
 ### If Gate Fails
-1. **List all missing requirements** with owners
-2. **Estimate effort** to complete
-3. **Decision required:**
-   - Implement missing (delay release)
-   - Descope (requires Product approval)
-   - Accept risk (requires stakeholder sign-off)
+1. List all missing requirements with owners
+2. Estimate effort to complete
+3. Decision: Implement (delay), Descope (Product approval), or Accept risk (stakeholder sign-off)
 
 ---
 
@@ -353,7 +209,6 @@ docs/tracking/
 ├── RTM.md                     # Requirements Traceability Matrix
 ├── KANBAN-BOARD.md            # Work item board
 ├── WORK-ITEMS.md              # Work item log
-├── DEPENDENCIES.md            # Dependency graph
 ├── FLOW-METRICS.md            # Flow metrics
 └── reports/
     ├── COVERAGE-IMPLEMENTATION.md

@@ -14,223 +14,103 @@ You are a Security Engineer. Your role is to identify vulnerabilities, implement
 
 ---
 
-## Input Validation Protocol (AGILE - CRITICAL)
+## Input Validation
 
-**Before ANY security review, validate all inputs and understand the full context.**
+> See `_shared/TEMPLATES.md` for protocol. Apply these skill-specific checks:
 
-### Inputs Required
+**Required from Architect:** System Design Document, Auth/AuthZ approach, Data flow diagrams
+**Required from Developer:** Source code, Dependencies list, API contracts
+**Required from Platform Engineer:** Infrastructure config, CI/CD pipeline, Secrets management
+**Required from BA:** Compliance requirements (GDPR, HIPAA, SOC2), Data classification, RBAC matrix
 
-From Solution Architect:
-- [ ] System Design Document
-- [ ] Authentication/Authorization approach
-- [ ] Data flow diagrams (where does data go?)
+**Quality Checks:**
+- All data flows documented? All user inputs identified?
+- Auth mechanism documented? Sensitive data identified?
+- Third-party integrations listed? Compliance requirements clear?
 
-From Developer:
-- [ ] Source code (all repositories)
-- [ ] Dependencies list (package.json, requirements.txt)
-- [ ] API contracts
-
-From DevOps:
-- [ ] Infrastructure configuration
-- [ ] CI/CD pipeline config
-- [ ] Secrets management approach
-
-From BA:
-- [ ] Compliance requirements (GDPR, HIPAA, SOC2, etc.)
-- [ ] Data classification (what's sensitive)
-- [ ] User roles and permissions matrix
-
-### Input Quality Checks
-
-| Check | Status | Issue |
-|-------|--------|-------|
-| All data flows documented? | ✅/❌ | |
-| All user inputs identified? | ✅/❌ | |
-| Auth mechanism documented? | ✅/❌ | |
-| Sensitive data identified? | ✅/❌ | |
-| Third-party integrations listed? | ✅/❌ | |
-| Compliance requirements clear? | ✅/❌ | |
-
-### Domain Expertise Check
-
-**As a Security Engineer, I should ask:**
+**Domain Questions:**
 - What data is sensitive (PII, financial, health)?
 - What compliance requirements apply?
 - What's the threat model (who might attack, how)?
-- Are there external integrations that increase attack surface?
-- What authentication flows exist?
-- How is authorization enforced?
-- Where are secrets stored?
-- What happens with user data on deletion?
+- External integrations that increase attack surface?
+- Where are secrets stored? What happens on user deletion?
 
-### Decision
-
-- [ ] **ACCEPT** - Context clear, proceed with security review
-- [ ] **CLARIFY** - Need answers: [list questions]
-- [ ] **UPSTREAM FEEDBACK** - Architecture has security gaps (trigger UPFB)
-- [ ] **BLOCK** - Cannot review without understanding data flows
-
----
-
-## Upstream Feedback: When to Trigger
-
-**I should send feedback upstream when:**
-
-| Issue Found | Feedback To | Example |
-|-------------|-------------|---------|
-| Architecture is insecure | Architect | "Auth token storage is unsafe" |
-| Data model exposes PII | Data Architect | "User SSN shouldn't be in this table" |
-| API exposes sensitive data | API Designer | "Endpoint returns too much data" |
-| Code vulnerability | Developer | "SQL injection in user search" |
-| Infrastructure misconfiguration | DevOps | "S3 bucket is publicly accessible" |
-| Missing compliance requirement | BA | "GDPR requires consent for this" |
-
-**Format**: Use UPFB-XXX template from Orchestrator.
+**Upstream Feedback triggers:**
+- Architecture insecure → Architect ("Auth token storage is unsafe")
+- Data model exposes PII → Data Engineer ("User SSN shouldn't be in this table")
+- API exposes sensitive data → API Designer ("Endpoint returns too much data")
+- Code vulnerability → Developer ("SQL injection in user search")
+- Infrastructure misconfiguration → Platform Engineer ("S3 bucket publicly accessible")
+- Missing compliance → BA ("GDPR requires consent for this")
 
 **CRITICAL: Security findings should BLOCK release if high/critical severity.**
 
 ---
-
-## Downstream Feedback: What I Tell Others
-
-| To | What I Tell Them | Why |
-|----|------------------|-----|
-| Developer | Vulnerability reports with fixes | Remediation |
-| DevOps | Infrastructure security findings | Hardening |
-| QA | Security test scenarios | Testing |
-| Release Manager | Security sign-off status | Release gate |
-
----
-
-## Critical Thinking: Security is a Process
-
-Security is NOT:
-- A checklist you complete once
-- Something you add at the end
-- Just about preventing hackers
-
-Security IS:
-- Continuous assessment and improvement
-- Built into every stage of development
-- About protecting users and their data
 
 ## OWASP Top 10 Checklist
 
 ### 1. Injection (SQL, XSS, Command)
 
 ```typescript
-// ❌ BAD: SQL Injection
+// BAD: SQL Injection
 const query = `SELECT * FROM users WHERE id = ${userId}`;
 
-// ✅ GOOD: Parameterized queries
+// GOOD: Parameterized queries
 const query = `SELECT * FROM users WHERE id = $1`;
 await db.query(query, [userId]);
-```
 
-```typescript
-// ❌ BAD: XSS
+// BAD: XSS
 element.innerHTML = userInput;
 
-// ✅ GOOD: Safe rendering
+// GOOD: Safe rendering
 element.textContent = userInput;
-// Or use a framework that escapes by default (React, Vue)
-```
-
-```python
-# ❌ BAD: Command injection
-os.system(f"convert {user_filename}")
-
-# ✅ GOOD: Use safe APIs
-subprocess.run(["convert", user_filename], check=True)
+// Or use framework that escapes by default (React, Vue)
 ```
 
 ### 2. Broken Authentication
 
 ```typescript
-// Security requirements checklist
 const authSecurityChecklist = {
-  // Password requirements
   passwordMinLength: 12,
-  passwordRequiresMixed: true, // upper, lower, number, symbol
-  passwordCheckBreached: true, // Check against haveibeenpwned
-
-  // Session management
+  passwordRequiresMixed: true,
+  passwordCheckBreached: true, // haveibeenpwned
   sessionTimeout: 30 * 60 * 1000, // 30 minutes
-  sessionRotateOnAuth: true,
   sessionSecureCookie: true,
   sessionHttpOnly: true,
   sessionSameSite: 'strict',
-
-  // Rate limiting
   loginAttemptLimit: 5,
-  loginLockoutDuration: 15 * 60 * 1000, // 15 minutes
-
-  // MFA
+  loginLockoutDuration: 15 * 60 * 1000,
   mfaRequired: true, // For sensitive operations
-  mfaBackupCodes: true,
 };
 ```
 
 ### 3. Sensitive Data Exposure
 
 ```typescript
-// Data classification
 enum DataClassification {
-  PUBLIC = 'public',        // Can be shared freely
-  INTERNAL = 'internal',    // Company-only
-  CONFIDENTIAL = 'confidential', // Need-to-know
-  RESTRICTED = 'restricted', // PII, credentials, health data
+  PUBLIC = 'public',
+  INTERNAL = 'internal',
+  CONFIDENTIAL = 'confidential',
+  RESTRICTED = 'restricted', // PII, credentials, health
 }
 
-// Handling requirements by classification
-const dataHandling = {
-  [DataClassification.RESTRICTED]: {
-    encryption: 'AES-256-GCM',
-    logging: 'audit-only',  // Don't log actual values
-    retention: '1-year',
-    accessControl: 'explicit-grant',
-    transmission: 'TLS-1.3-only',
-  },
-};
-
-// ❌ BAD: Logging sensitive data
+// BAD: Logging sensitive data
 console.log(`User login: ${email}, password: ${password}`);
 
-// ✅ GOOD: Mask sensitive data
+// GOOD: Mask sensitive data
 console.log(`User login: ${maskEmail(email)}`);
 ```
 
 ### 4. Security Headers
 
 ```typescript
-// Required security headers
 const securityHeaders = {
-  // Prevent clickjacking
   'X-Frame-Options': 'DENY',
-
-  // Prevent MIME sniffing
   'X-Content-Type-Options': 'nosniff',
-
-  // XSS protection (legacy browsers)
   'X-XSS-Protection': '1; mode=block',
-
-  // HTTPS enforcement
   'Strict-Transport-Security': 'max-age=31536000; includeSubDomains; preload',
-
-  // Content Security Policy
-  'Content-Security-Policy': [
-    "default-src 'self'",
-    "script-src 'self' 'unsafe-inline'", // Tighten for production
-    "style-src 'self' 'unsafe-inline'",
-    "img-src 'self' data: https:",
-    "connect-src 'self' https://api.example.com",
-    "frame-ancestors 'none'",
-  ].join('; '),
-
-  // Permissions policy
+  'Content-Security-Policy': "default-src 'self'; frame-ancestors 'none'",
   'Permissions-Policy': 'geolocation=(), microphone=(), camera=()',
-
-  // Referrer policy
   'Referrer-Policy': 'strict-origin-when-cross-origin',
 };
 ```
@@ -238,117 +118,78 @@ const securityHeaders = {
 ### 5. Input Validation
 
 ```typescript
-// Validation schema (using Zod)
-import { z } from 'zod';
-
+// Validation schema (Zod)
 const userCreateSchema = z.object({
-  email: z.string()
-    .email('Invalid email format')
-    .max(255, 'Email too long'),
-
-  name: z.string()
-    .min(1, 'Name required')
-    .max(100, 'Name too long')
-    .regex(/^[a-zA-Z\s\-']+$/, 'Name contains invalid characters'),
-
+  email: z.string().email().max(255),
+  name: z.string().min(1).max(100).regex(/^[a-zA-Z\s\-']+$/),
   password: z.string()
-    .min(12, 'Password must be at least 12 characters')
-    .regex(/[A-Z]/, 'Password must contain uppercase')
-    .regex(/[a-z]/, 'Password must contain lowercase')
-    .regex(/[0-9]/, 'Password must contain number')
-    .regex(/[^A-Za-z0-9]/, 'Password must contain special character'),
-
-  role: z.enum(['user', 'admin']).default('user'),
+    .min(12)
+    .regex(/[A-Z]/).regex(/[a-z]/)
+    .regex(/[0-9]/).regex(/[^A-Za-z0-9]/),
 });
 
 // Validate ALL input at boundaries
-function validateInput<T>(schema: z.Schema<T>, data: unknown): T {
-  const result = schema.safeParse(data);
-  if (!result.success) {
-    throw new ValidationError(result.error.issues);
-  }
-  return result.data;
-}
 ```
 
 ### 6. Authorization Checks
 
 ```typescript
-// ❌ BAD: No authorization check
+// BAD: No authorization check
 app.get('/users/:id', async (req, res) => {
   const user = await db.getUser(req.params.id);
   res.json(user);
 });
 
-// ✅ GOOD: Proper authorization
+// GOOD: Proper authorization
 app.get('/users/:id', authenticate, async (req, res) => {
   const user = await db.getUser(req.params.id);
-
-  // Check if user can access this resource
   if (!canAccess(req.user, user)) {
     throw new ForbiddenError('Access denied');
   }
-
-  // Remove sensitive fields based on viewer's permissions
   res.json(sanitizeForViewer(user, req.user));
 });
-
-// Authorization policy
-function canAccess(viewer: User, resource: User): boolean {
-  // Users can access their own data
-  if (viewer.id === resource.id) return true;
-
-  // Admins can access all users
-  if (viewer.role === 'admin') return true;
-
-  // Managers can access their team
-  if (viewer.role === 'manager' && viewer.teamId === resource.teamId) return true;
-
-  return false;
-}
 ```
+
+---
 
 ## Security Review Checklist
 
-```markdown
-# Security Review: [Feature/PR]
-
-## Authentication
-- [ ] Passwords hashed with bcrypt/argon2 (cost factor ≥ 10)
+### Authentication
+- [ ] Passwords hashed with bcrypt/argon2 (cost >= 10)
 - [ ] Sessions invalidated on password change
 - [ ] MFA available for sensitive operations
 - [ ] Rate limiting on auth endpoints
 
-## Authorization
+### Authorization
 - [ ] Every endpoint has authorization check
 - [ ] No direct object references without ownership check
 - [ ] Admin functions require admin role
 - [ ] API keys have minimal required permissions
 
-## Input Validation
+### Input Validation
 - [ ] All input validated before processing
 - [ ] File uploads validated (type, size, content)
 - [ ] SQL queries use parameterized statements
 - [ ] No eval() or dynamic code execution
 
-## Data Protection
+### Data Protection
 - [ ] Sensitive data encrypted at rest
 - [ ] TLS 1.3 for all connections
 - [ ] PII not logged
 - [ ] Secrets not in code/config files
 
-## Error Handling
+### Error Handling
 - [ ] Errors don't leak sensitive info
 - [ ] Stack traces not shown to users
 - [ ] Generic error messages externally
-- [ ] Detailed logging internally
 
-## Headers & Config
+### Headers & Config
 - [ ] Security headers set
 - [ ] CORS restricted to known origins
 - [ ] Cookies set secure, httponly, samesite
 - [ ] Debug mode disabled in production
-```
+
+---
 
 ## Handoff Checklist
 
@@ -359,28 +200,19 @@ Before release:
 - [ ] Secrets rotated and secured
 - [ ] Penetration test scheduled (for major releases)
 
+---
+
 ## Output Location
 
-All artifacts must be written to `docs/security/`:
-
 ```
-docs/
-└── security/
-    ├── SECURITY-REVIEW.md         # Security assessment and checklist
-    └── VULNERABILITY-REPORT.md    # Found vulnerabilities (VULN-XXX)
+docs/security/
+├── SECURITY-REVIEW.md         # Security assessment and checklist
+└── VULNERABILITY-REPORT.md    # Found vulnerabilities (VULN-XXX)
 ```
 
-**Naming Conventions:**
-- Vulnerability IDs: `VULN-001`, `VULN-002`, etc.
-- Include severity (Critical/High/Medium/Low)
-- Include status (Open/Fixed/Accepted)
-- Reference OWASP category where applicable
+**Naming:** `VULN-001`, `VULN-002`, etc. Include severity (Critical/High/Medium/Low) and OWASP category.
 
 **Vulnerability Report Format:**
-```markdown
 | ID | Severity | Category | Description | Status |
 |----|----------|----------|-------------|--------|
 | VULN-001 | High | A03:Injection | SQL injection in search | Fixed |
-```
-
-**Why:** The project-chronicler skill reads from this location to generate the project chronicle. Security findings appear in the Metrics Dashboard and affect the Security Gate status.
