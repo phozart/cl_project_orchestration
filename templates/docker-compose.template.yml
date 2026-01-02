@@ -1,0 +1,135 @@
+# {{PROJECT_NAME}} Docker Compose Configuration
+# Usage: docker-compose up -d
+
+version: '3.8'
+
+services:
+  # ==========================================================================
+  # APPLICATION
+  # ==========================================================================
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: {{project_name}}-app
+    restart: unless-stopped
+    ports:
+      - "${PORT:-3000}:3000"
+    environment:
+      - NODE_ENV=${NODE_ENV:-development}
+      - DATABASE_URL=postgresql://${DB_USER:-postgres}:${DB_PASSWORD:-postgres}@db:5432/${DB_NAME:-app}
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    networks:
+      - {{project_name}}-network
+
+  # ==========================================================================
+  # DATABASE
+  # ==========================================================================
+  db:
+    image: postgres:16-alpine
+    container_name: {{project_name}}-db
+    restart: unless-stopped
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    environment:
+      - POSTGRES_USER=${DB_USER:-postgres}
+      - POSTGRES_PASSWORD=${DB_PASSWORD:-postgres}
+      - POSTGRES_DB=${DB_NAME:-app}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      # - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - {{project_name}}-network
+
+  # ==========================================================================
+  # REDIS (Caching/Sessions)
+  # ==========================================================================
+  redis:
+    image: redis:7-alpine
+    container_name: {{project_name}}-redis
+    restart: unless-stopped
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - {{project_name}}-network
+
+  # ==========================================================================
+  # OPTIONAL SERVICES (uncomment as needed)
+  # ==========================================================================
+
+  # # Mailhog (Email testing)
+  # mailhog:
+  #   image: mailhog/mailhog
+  #   container_name: {{project_name}}-mailhog
+  #   ports:
+  #     - "1025:1025"  # SMTP
+  #     - "8025:8025"  # Web UI
+  #   networks:
+  #     - {{project_name}}-network
+
+  # # MinIO (S3-compatible storage)
+  # minio:
+  #   image: minio/minio
+  #   container_name: {{project_name}}-minio
+  #   command: server /data --console-address ":9001"
+  #   ports:
+  #     - "9000:9000"
+  #     - "9001:9001"
+  #   environment:
+  #     - MINIO_ROOT_USER=${MINIO_USER:-minioadmin}
+  #     - MINIO_ROOT_PASSWORD=${MINIO_PASSWORD:-minioadmin}
+  #   volumes:
+  #     - minio_data:/data
+  #   networks:
+  #     - {{project_name}}-network
+
+  # # Adminer (Database admin UI)
+  # adminer:
+  #   image: adminer
+  #   container_name: {{project_name}}-adminer
+  #   restart: unless-stopped
+  #   ports:
+  #     - "8080:8080"
+  #   depends_on:
+  #     - db
+  #   networks:
+  #     - {{project_name}}-network
+
+# ==========================================================================
+# VOLUMES
+# ==========================================================================
+volumes:
+  postgres_data:
+    name: {{project_name}}-postgres-data
+  redis_data:
+    name: {{project_name}}-redis-data
+  # minio_data:
+  #   name: {{project_name}}-minio-data
+
+# ==========================================================================
+# NETWORKS
+# ==========================================================================
+networks:
+  {{project_name}}-network:
+    name: {{project_name}}-network
+    driver: bridge

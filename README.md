@@ -15,6 +15,53 @@ A comprehensive Claude Code plugin providing **34 specialized skills** for end-t
 - **Continuous Flow Mode** - Kanban-style parallel item processing for larger projects
 - **Standalone Mode** - Call individual skills directly for specific tasks
 
+## Scaffolding & Templates
+
+The plugin includes a **scaffolding system** to accelerate project setup and reduce token usage.
+
+### Quick Scaffold
+
+```bash
+# Create full docs structure for a new project
+./scripts/scaffold-docs.sh "My Project"
+
+# With templates copied
+./scripts/scaffold-docs.sh "My Project" --with-templates
+
+# Minimal structure only
+./scripts/scaffold-docs.sh "My Project" --minimal
+```
+
+### Templates Directory
+
+```
+templates/
+├── PRODUCT-INTAKE.template.md      # Product intake form
+├── PROJECT-STATUS.template.md      # Project status tracker
+├── .env.example.template           # Environment variables
+├── docker-compose.template.yml     # Docker configuration
+└── docs/
+    ├── discovery/PROJECT-BRIEF.template.md
+    ├── product/FEATURE-INVENTORY.template.md
+    ├── requirements/BRD.template.md
+    ├── traceability/RTM.template.md
+    ├── architecture/SYSTEM-DESIGN.template.md
+    ├── api/API-SPEC.template.md
+    ├── qa/TEST-PLAN.template.md
+    └── security/SECURITY-REVIEW.template.md
+```
+
+### Benefits
+
+| Benefit | Description |
+|---------|-------------|
+| **Token Efficiency** | ~75% reduction - Claude fills templates instead of generating |
+| **Consistency** | Same document structure across all projects |
+| **Speed** | Project structure created in seconds |
+| **Completeness** | Templates include all required sections |
+
+See `templates/README.md` for full documentation.
+
 ## Installation
 
 ### Option 1: Install from Directory (Local)
@@ -663,53 +710,6 @@ Use continuous flow mode for this project.
 ```
 
 The `project-tracker` skill manages the Kanban board, RTM, and tracks each work item (WI-XXX) through the pipeline.
-
-## Developer Entertainment Mode
-
-**Long implementations can be tedious. Stay engaged with fun interactions!**
-
-The plugin includes an entertainment system to keep developers engaged during long-running operations:
-
-### Features
-
-| Feature | Description |
-|---------|-------------|
-| **Fun Facts** | Tech history, coding trivia during waits |
-| **Achievements** | Celebrate milestones ("Gate Crusher!", "Zero Defects!") |
-| **Developer Jokes** | Clean humor for coffee breaks |
-| **Progress Celebrations** | Phase completion announcements |
-| **Patience Rewards** | Stretch reminders, wisdom quotes |
-| **Mini-Games** | Code golf challenges during very long waits |
-
-### Configuration
-
-```
-/config entertainment --level fun    # Default - occasional fun facts
-/config entertainment --level jokes  # Add developer jokes
-/config entertainment --level full   # Maximum engagement
-/config entertainment --off          # Serious mode only
-```
-
-### Example Achievement
-
-```
-🏆 **Achievement Unlocked: Gate Crusher!**
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-You passed the Requirements Gate on the first attempt!
-Only 34% of projects achieve this. Excellent planning!
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-```
-
-### Example Fun Fact
-
-```
-💡 **Did You Know?**
-The first computer bug was an actual bug - a moth found in a Harvard Mark II
-computer in 1947. Grace Hopper taped it to the log book, noting "First actual
-case of bug being found."
-```
-
-The entertainment system is non-blocking, respects preferences, and can be disabled for serious/client-visible sessions.
 
 ## Feedback Loops
 

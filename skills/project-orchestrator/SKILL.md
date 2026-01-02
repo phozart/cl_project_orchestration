@@ -258,3 +258,34 @@ docs/
 ├── traceability/RTM.md
 └── PROJECT-STATUS.md
 ```
+
+---
+
+## Scaffolding & Templates
+
+**Use the scaffold script to initialize project structure:**
+
+```bash
+# From project directory
+/path/to/development-workflow-plugin/scripts/scaffold-docs.sh "Project Name"
+
+# With templates copied
+/path/to/development-workflow-plugin/scripts/scaffold-docs.sh "Project Name" --with-templates
+
+# Minimal structure only
+/path/to/development-workflow-plugin/scripts/scaffold-docs.sh "Project Name" --minimal
+```
+
+**Template Directory:** `templates/` contains all document templates.
+
+**Key Templates:**
+| Document | Template |
+|----------|----------|
+| Product Intake | `templates/PRODUCT-INTAKE.template.md` |
+| Project Status | `templates/PROJECT-STATUS.template.md` |
+| Project Brief | `templates/docs/discovery/PROJECT-BRIEF.template.md` |
+| BRD | `templates/docs/requirements/BRD.template.md` |
+| System Design | `templates/docs/architecture/SYSTEM-DESIGN.template.md` |
+| RTM | `templates/docs/traceability/RTM.template.md` |
+
+**Usage:** Each skill has its own Templates section with specific instructions. Templates use `{{PLACEHOLDER}}` syntax for project-specific values.

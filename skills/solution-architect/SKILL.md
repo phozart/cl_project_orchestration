@@ -119,3 +119,16 @@ docs/architecture/
 ```
 
 ADR naming: `ADR-XXX-short-description.md`, sequential IDs
+
+---
+
+## Templates
+
+**Use these templates to save tokens and ensure consistency:**
+
+| Document | Template | Target |
+|----------|----------|--------|
+| System Design | `templates/docs/architecture/SYSTEM-DESIGN.template.md` | `docs/architecture/SYSTEM-DESIGN.md` |
+| ADR | `templates/docs/architecture/ADR/ADR-001.template.md` | `docs/architecture/ADR/ADR-XXX-description.md` |
+
+**Instructions:** Copy template to target location, then fill in `{{PLACEHOLDERS}}` with project-specific content. Do NOT regenerate the document structure - it's already correct in the template.

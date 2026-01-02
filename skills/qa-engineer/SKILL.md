@@ -293,3 +293,17 @@ tests/
 docs/traceability/
 └── RTM.md                      # Updated with test results
 ```
+
+---
+
+## Templates
+
+**Use these templates to save tokens and ensure consistency:**
+
+| Document | Template | Target |
+|----------|----------|--------|
+| Test Plan | `templates/docs/qa/TEST-PLAN.template.md` | `docs/qa/TEST-PLAN.md` |
+| Test Cases | `templates/docs/qa/TEST-CASES.template.md` | `docs/qa/TEST-CASES.md` |
+| RTM | `templates/docs/traceability/RTM.template.md` | `docs/traceability/RTM.md` |
+
+**Instructions:** Copy template to target location, then fill in `{{PLACEHOLDERS}}` with project-specific content. Do NOT regenerate the document structure - it's already correct in the template.

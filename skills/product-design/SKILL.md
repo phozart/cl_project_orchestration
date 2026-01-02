@@ -279,3 +279,18 @@ docs/product/
 ├── MVP-SCOPE.md
 └── VALIDATION-REPORT.md
 ```
+
+---
+
+## Templates
+
+**Use these templates to save tokens and ensure consistency:**
+
+| Document | Template | Target |
+|----------|----------|--------|
+| Project Brief | `templates/docs/discovery/PROJECT-BRIEF.template.md` | `docs/discovery/PROJECT-BRIEF.md` |
+| Product Vision | `templates/docs/product/PRODUCT-VISION.template.md` | `docs/product/PRODUCT-VISION.md` |
+| Feature Inventory | `templates/docs/product/FEATURE-INVENTORY.template.md` | `docs/product/FEATURE-INVENTORY.md` |
+| MVP Scope | `templates/docs/product/MVP-SCOPE.template.md` | `docs/product/MVP-SCOPE.md` |
+
+**Instructions:** Copy template to target location, then fill in `{{PLACEHOLDERS}}` with project-specific content. Do NOT regenerate the document structure - it's already correct in the template.

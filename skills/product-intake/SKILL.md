@@ -143,3 +143,17 @@ After intake complete:
 2. **Initial Status Document** (`PROJECT-STATUS.md`)
 3. **Product Brief** (`docs/discovery/PROJECT-BRIEF.md`)
 4. **Readiness Assessment** (inline report)
+
+---
+
+## Templates
+
+**Use these templates to save tokens and ensure consistency:**
+
+| Document | Template | Target |
+|----------|----------|--------|
+| Product Intake | `templates/PRODUCT-INTAKE.template.md` | `PRODUCT-INTAKE.md` |
+| Project Status | `templates/PROJECT-STATUS.template.md` | `PROJECT-STATUS.md` |
+| Project Brief | `templates/docs/discovery/PROJECT-BRIEF.template.md` | `docs/discovery/PROJECT-BRIEF.md` |
+
+**Instructions:** Copy template to target location, then fill in `{{PLACEHOLDERS}}` with project-specific content. Do NOT regenerate the document structure - it's already correct in the template.

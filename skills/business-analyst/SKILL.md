@@ -142,3 +142,17 @@ docs/requirements/
 ```
 
 IDs: `REQ-001`, `US-001` (sequential within project)
+
+---
+
+## Templates
+
+**Use these templates to save tokens and ensure consistency:**
+
+| Document | Template | Target |
+|----------|----------|--------|
+| BRD | `templates/docs/requirements/BRD.template.md` | `docs/requirements/BRD.md` |
+| Requirements | `templates/docs/requirements/REQUIREMENTS-CATALOGUE.template.md` | `docs/requirements/REQUIREMENTS-CATALOGUE.md` |
+| User Stories | `templates/docs/requirements/USER-STORIES.template.md` | `docs/requirements/USER-STORIES.md` |
+
+**Instructions:** Copy template to target location, then fill in `{{PLACEHOLDERS}}` with project-specific content. Do NOT regenerate the document structure - it's already correct in the template.
