@@ -2158,6 +2158,263 @@ If critical files are missing or corrupted:
 
 ---
 
+## Proactive Context Management
+
+Instead of waiting for compaction to happen unexpectedly, the orchestrator should **proactively manage context** at strategic points.
+
+### 1. Gate Checkpoints (After Every Gate)
+
+After each gate passes, create a checkpoint file:
+
+```markdown
+# Checkpoint: [Gate Name]
+Generated: [Timestamp]
+
+## State Summary
+- Project: [Name]
+- Phase Completed: [Phase]
+- Gate: [Gate Number] - PASSED
+- Next Phase: [Phase]
+
+## What Was Accomplished
+[Brief summary of this phase's outputs]
+
+## Key Artifacts Created
+- [Artifact 1]: [One-line description]
+- [Artifact 2]: [One-line description]
+
+## Decisions Made (ADRs)
+- ADR-XXX: [Decision summary]
+
+## Context for Next Phase
+[What the next skill needs to know]
+
+## Open Items Carrying Forward
+- [ ] [Item 1]
+- [ ] [Item 2]
+```
+
+**Location**: `checkpoints/CHECKPOINT-[GateNumber]-[GateName]-[Date].md`
+
+### 2. Strategic Compaction Points
+
+**Suggest conversation compaction** at these natural boundaries:
+
+| After Gate | Suggest Compaction? | Reason |
+|------------|---------------------|--------|
+| Gate 0 (Product Design) | ✅ Yes | Major transition from definition to requirements |
+| Gate 1 (Requirements) | ✅ Yes | Heavy document phase complete |
+| Gate 2 (Architecture) | ✅ Yes | Technical decisions locked |
+| Gate 3 (Contracts) | Optional | Depends on complexity |
+| Gate 4 (Implementation) | ✅ Yes | Code phase complete, large context |
+| Gate 5 (QA) | Optional | Test results may be needed |
+| Gate 6 (Security) | ✅ Yes | Before final release gates |
+
+**Compaction Suggestion Template**:
+```
+Gate [X] passed successfully. This is a good point to compact the conversation
+to free up context for the next phase.
+
+I've created a checkpoint file at: checkpoints/CHECKPOINT-[X]-[Name].md
+
+You can:
+1. Run `/compact` to summarize the conversation
+2. Or continue - I'll recover context from checkpoint files if needed
+
+The next phase is [Phase Name]. Ready to continue?
+```
+
+### 3. Phase Handoff Documents
+
+Create explicit handoff documents when transitioning between major phases:
+
+```markdown
+# Handoff: [From Phase] → [To Phase]
+
+## For: [Target Skill Name]
+
+### Project Context (Read This First)
+- **Project**: [Name]
+- **Problem**: [One sentence]
+- **Users**: [Primary user types]
+
+### Your Inputs
+These artifacts are ready for you:
+| Artifact | Location | Status |
+|----------|----------|--------|
+| [Doc 1] | [Path] | ✅ Approved |
+| [Doc 2] | [Path] | ✅ Approved |
+
+### Your Deliverables
+You are expected to produce:
+- [ ] [Deliverable 1]
+- [ ] [Deliverable 2]
+
+### Key Constraints
+- [Constraint 1 from intake]
+- [Constraint 2 from architecture decisions]
+
+### Gate Criteria Preview
+Your output will be validated against:
+- [ ] [Gate criterion 1]
+- [ ] [Gate criterion 2]
+
+### Questions? Check These Files
+- Full requirements: docs/requirements/
+- Architecture decisions: docs/architecture/adrs/
+- Original intake: PRODUCT-INTAKE.md
+```
+
+**Location**: `docs/handoffs/HANDOFF-[FromPhase]-to-[ToPhase].md`
+
+### 4. Self-Contained Skill Invocations
+
+When invoking any skill, **always include full context** in the invocation message:
+
+```markdown
+## Invoke: [skill-name]
+
+### Project Context
+- Project: [Name]
+- Current Phase: [Phase]
+- Previous Gate: [Gate X] PASSED
+
+### Your Task
+[Clear description of what this skill should do]
+
+### Input Artifacts
+Read these files for context:
+1. [File path 1] - [What it contains]
+2. [File path 2] - [What it contains]
+
+### Expected Outputs
+Produce these artifacts:
+1. [Output 1] at [location]
+2. [Output 2] at [location]
+
+### Constraints
+- [Constraint 1]
+- [Constraint 2]
+
+### Gate Criteria (You Must Satisfy)
+- [ ] [Criterion 1]
+- [ ] [Criterion 2]
+```
+
+This ensures skills can work independently even if conversation context is limited.
+
+### 5. Session Break Recommendations
+
+For long projects, recommend session breaks at natural points:
+
+```
+We've completed [Phase]. This is a natural stopping point.
+
+📊 Progress: [X]% complete ([Phases done] of [Total phases])
+📁 All state saved to PROJECT-STATUS.md
+📋 Checkpoint created at checkpoints/CHECKPOINT-[X].md
+
+You can safely:
+- Take a break and return later
+- Start a new conversation
+- Continue in this session
+
+To resume later, just say: "Continue with [Project Name]"
+I'll read the checkpoint files and pick up where we left off.
+```
+
+### 6. Continuous State Sync
+
+Keep PROJECT-STATUS.md updated in real-time with a "Last Action" field:
+
+```markdown
+## Real-Time State
+
+**Last Action**: [Timestamp] - [What just happened]
+**Current Activity**: [What's happening now]
+**Next Action**: [What will happen next]
+
+## Session Log (Last 10 Actions)
+| Time | Action | Result |
+|------|--------|--------|
+| 14:32 | Ran Gate 2 validation | PASSED |
+| 14:30 | Created ADR-003 | Approved |
+| 14:25 | Completed System Design | Ready for review |
+```
+
+### 7. Agent Completion Protocol (CRITICAL)
+
+When using Task tool agents for parallel work, **update state IMMEDIATELY after each agent completes**:
+
+```markdown
+## After Each Agent Completes
+
+1. UPDATE PROJECT-STATUS.md:
+   - Add to Session Log: "[Time] Agent '[Name]' completed - [Summary]"
+   - Update Open Items checklist
+   - Update RTM if implementation work
+
+2. VERIFY outputs exist on disk:
+   - Check files were written (not just reported)
+   - Validate against expected deliverables
+
+3. If "Context low" warning appears:
+   - FIRST: Ensure PROJECT-STATUS.md is current
+   - THEN: Safe to run /compact
+```
+
+**Agent Completion Update Template**:
+```markdown
+## Session Log
+| Time | Action | Result |
+|------|--------|--------|
+| 14:45 | Agent "Build frontend settings" | ✅ Complete - src/pages/settings/ |
+| 14:40 | Agent "Build frontend planner" | ✅ Complete - src/pages/planner/ |
+| 14:35 | Agent "Initialize React frontend" | ✅ Complete - package.json, vite.config |
+
+## Implementation Progress
+- [x] React frontend initialized
+- [x] Settings pages built
+- [x] Planner pages built
+- [ ] Dashboard pages (in progress)
+- [ ] Messaging pages (pending)
+```
+
+**Before Compaction Checklist**:
+```
+Before running /compact, verify:
+- [ ] PROJECT-STATUS.md has all completed agents logged
+- [ ] RTM.md updated with implemented requirements
+- [ ] All code files exist on disk
+- [ ] No agent output exists only in conversation context
+```
+
+### 8. Context Budget Awareness
+
+Monitor context usage and proactively manage it:
+
+**Warning Signs** (suggest compaction):
+- More than 3 phases completed in one session
+- Large code files have been read/written
+- Multiple feedback loops have occurred
+- User mentions slow responses
+- Multiple "Context low" warnings from agents
+
+**Proactive Message**:
+```
+📊 Context check: We've been working for a while and have covered a lot of ground.
+
+Completed: [List phases]
+Created: [X] artifacts, [Y] ADRs
+
+To keep things running smoothly, I recommend we compact the conversation now.
+All progress is saved in PROJECT-STATUS.md and checkpoint files.
+
+Compact now? (This won't lose any project state)
+```
+
+---
+
 ## Usage
 
 Start any project with:
