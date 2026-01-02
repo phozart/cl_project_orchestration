@@ -181,6 +181,112 @@ Before ANY development starts, verify:
 
 **No tests = Not implemented = Cannot pass gate**
 
+---
+
+## Phased Development Plan
+
+**Structure large projects into COMPLETE phases, not partial features.**
+
+### Phase Structure
+
+Each phase should be:
+1. **Self-contained** - Delivers value independently
+2. **Fully tested** - Complete test coverage for phase scope
+3. **Deployable** - Could go to production if needed
+4. **Reviewed** - Full-chain review before next phase
+
+### Recommended Phase Structure
+
+| Phase | What It Contains | Why This Order |
+|-------|------------------|----------------|
+| **Phase 1: Foundation** | Auth, admin panel, core infrastructure | Everything else depends on this |
+| **Phase 2: Core Feature** | The main value proposition | Users need this to care |
+| **Phase 3: Supporting Features** | Secondary features that enhance core | Build on top of working core |
+| **Phase 4: Polish & Edge Cases** | Error handling, edge cases, UX improvements | Refine what's already working |
+| **Phase 5: Scale & Optimize** | Performance, caching, monitoring | Optimize proven functionality |
+
+### Phase Planning Template
+
+```markdown
+## Phase [N]: [Name]
+
+### Goal
+[One sentence describing the end state]
+
+### Features Included
+- [ ] Feature A (REQ-XXX)
+- [ ] Feature B (REQ-XXX)
+- [ ] Feature C (REQ-XXX)
+
+### Definition of Done
+- [ ] All features implemented and working
+- [ ] Unit tests pass (100% for new code)
+- [ ] Integration tests pass
+- [ ] E2E test for user journey exists
+- [ ] Documentation updated
+- [ ] Phase Completion Review passed
+- [ ] Upstream updates triggered (if needed)
+
+### Dependencies
+- Requires Phase [N-1] complete
+- External: [Any external dependencies]
+
+### Exit Criteria
+Phase is COMPLETE when all Definition of Done items are checked AND Phase Completion Review decision is PROCEED.
+```
+
+### Phase Execution Rules
+
+1. **Complete Phase N before starting Phase N+1**
+   - No "I'll finish this later" - finish it NOW
+
+2. **Each phase gets full-chain review**
+   - Product Design validates intent
+   - BA validates requirements met
+   - QA validates testability
+   - All update their docs with learnings
+
+3. **Gaps found = Fix before proceeding**
+   - Don't carry technical debt to next phase
+   - Easier to fix now than after building more on top
+
+4. **Phase scope is locked once started**
+   - New ideas go to future phases
+   - Scope creep kills completion
+
+### Example: Auth App Phases
+
+```
+Phase 1: Foundation (Weeks 1-2)
+├── User registration
+├── User login/logout
+├── Admin panel (CRUD users)
+├── Email verification
+└── Password reset
+
+Phase 2: Core Features (Weeks 3-4)
+├── User dashboard
+├── Profile management
+├── Session management
+└── Activity logging
+
+Phase 3: Enhancement (Weeks 5-6)
+├── OAuth providers (Google, GitHub)
+├── 2FA/MFA
+├── API key management
+└── Webhooks
+
+Phase 4: Polish (Week 7)
+├── Rate limiting
+├── Security hardening
+├── Error page improvements
+└── Loading states
+```
+
+Each phase: Build → Test → Review → Update Upstream → Proceed
+
+---
+
 ## Authority
 
 | Area | Authority Level |
@@ -217,6 +323,108 @@ Before ANY development starts, verify:
 | Before Implementation | Dev + QA + Security | Test planning, security by design |
 | During QA | QA + Dev + BA | Defect triage |
 
+### Full-Chain Iteration Matrix
+
+**Every skill can trigger updates in BOTH upstream and downstream skills.**
+
+| When THIS Skill... | Finds This Issue... | Updates THIS Skill |
+|--------------------|---------------------|-------------------|
+| **BA** | Feature missing from vision | Product Design |
+| **BA** | User journey has gaps | Product Design |
+| **Architect** | Requirement technically impossible | BA → Product Design |
+| **Architect** | Security concern with feature | BA + Product Design |
+| **Designer** | Flow doesn't make sense | BA → Product Design |
+| **Designer** | Missing screens/states | BA |
+| **Platform** | Architecture can't deploy | Architect |
+| **Developer** | Design not implementable | Designer |
+| **Developer** | API contract doesn't work | Architect + API Designer |
+| **Developer** | Requirement ambiguous | BA |
+| **QA** | Feature not testable | Developer + BA |
+| **QA** | Acceptance criteria unclear | BA |
+| **QA** | User journey doesn't match design | Designer + Product Design |
+| **Security** | Architecture has vulnerability | Architect |
+| **Security** | Feature design is insecure | Product Design + BA |
+
+### Upstream Update Protocol
+
+When a downstream skill finds an issue with upstream work:
+
+1. **Document the issue** - Clear description of what's wrong
+2. **Propose the fix** - Don't just complain, suggest improvement
+3. **Route to correct skill** - Use Feedback Routing table
+4. **Wait for update** - Don't proceed with broken foundation
+5. **Verify fix** - Confirm upstream update resolves issue
+6. **Continue** - Now proceed with corrected inputs
+
+**Example Flow:**
+```
+Developer finds: "Login API endpoint structure won't support SSO"
+         ↓
+Routes to: Architect (API design issue)
+         ↓
+Architect updates: API contract to support SSO
+         ↓
+Architect notifies: BA (may affect requirements)
+         ↓
+BA updates: User stories for SSO flow
+         ↓
+Developer continues: With corrected API contract
+```
+
+**This is SUCCESS, not failure.** Finding issues early saves weeks of rework later.
+
+### Critical Path Testing - Stop Early When Broken
+
+**If the core user journey doesn't work, STOP EVERYTHING.**
+
+#### The "Login But Nothing Works" Anti-Pattern
+
+```
+❌ QA finds: User can login, but main feature doesn't work in UI
+   QA continues: Testing edge cases, other features, filing minor bugs
+   Result: 50 bug reports, but core product is broken → Wasted effort
+```
+
+```
+✅ QA finds: User can login, but main feature doesn't work in UI
+   QA STOPS: "Core user journey is BLOCKED - cannot proceed"
+   Action: Immediate full-chain review → Fix foundation → Then continue
+   Result: Core works first, everything else built on solid foundation
+```
+
+#### Critical Path Blocking Rules
+
+| What QA Finds | Severity | Action |
+|---------------|----------|--------|
+| **Core feature doesn't work at all** | BLOCKER | STOP all testing. Full-chain review. |
+| **User can't complete main journey** | BLOCKER | STOP all testing. Fix before proceeding. |
+| **UI doesn't connect to backend** | BLOCKER | STOP. This is integration failure. |
+| **Feature works but has bugs** | HIGH | Continue testing, track bugs for fix. |
+| **Edge cases fail** | MEDIUM | Note for fix, continue other testing. |
+| **Cosmetic/minor issues** | LOW | Log and continue. |
+
+#### Full-Chain Review Trigger
+
+When a BLOCKER is found:
+
+1. **STOP** - Don't continue testing other features
+2. **DOCUMENT** - What's broken, what evidence do you have
+3. **TRACE BACK** - Where did this break? Design? Implementation? Integration?
+4. **CONVENE** - Get relevant skills together (Dev + QA + maybe Architect/Designer)
+5. **FIX** - Address root cause, not symptoms
+6. **VERIFY** - Core journey works end-to-end
+7. **RESUME** - Continue testing from known-good state
+
+#### What "Core Journey Works" Means
+
+Before any detailed testing, verify:
+- [ ] User can complete the PRIMARY use case end-to-end
+- [ ] Data flows from UI → API → Database → API → UI correctly
+- [ ] User sees expected results (not just "no errors")
+- [ ] The feature does what it's supposed to do (not just renders)
+
+**If ANY of these fail → BLOCKER → Full-chain review BEFORE continuing.**
+
 ---
 
 ## Project Initialization
@@ -251,12 +459,40 @@ Before proceeding to product-intake, verify:
 ## Workflow
 
 ```
-START → [INITIALIZE] → INTAKE → PRODUCT DESIGN → BA → ARCHITECT → DESIGN → PLATFORM → DEV → QA → RELEASE
-              ↓           ↓                                                                    ↑
-        [scaffold]   [Gate 0]                                                            [Gates 1-5]
+                              ┌──────────────── FEEDBACK LOOPS ─────────────────┐
+                              │                                                 │
+                              ▼                                                 │
+START → [INITIALIZE] → INTAKE → PRODUCT DESIGN → BA → ARCHITECT → DESIGNER → PLATFORM → DEV → QA → RELEASE
+              │           │           │           │        │          │          │        │     │
+              │           │           │           │        │          │          │        │     │
+        [scaffold]    [Gate 0]    [Gate 1]    [Gate 2]  [Gate 3]   [Gate 3]  [Gate 3] [Gate 4] [Gate 5]
+                          │           │           │        │          │          │        │     │
+                          ▼           ▼           ▼        ▼          ▼          ▼        ▼     ▼
+                       REVIEW ──► REVIEW ──► REVIEW ──► REVIEW ──► REVIEW ──► REVIEW ──► REVIEW
+                          │           │           │        │          │          │        │
+                          └─────┬─────┴─────┬─────┴────────┴──────────┴──────────┴────────┘
+                                │           │
+                                ▼           ▼
+                         [FIX GAPS]   [UPDATE UPSTREAM]
 
 RELEASE: Business Acceptance → Security → Product Validation → Deploy → Chronicle
+                     │              │               │
+                     └──────────────┴───────────────┘
+                                    │
+                              [FINAL REVIEW]
+                                    │
+                        ┌───────────┴───────────┐
+                        ▼                       ▼
+                   [PROCEED]             [FIX & RETEST]
 ```
+
+### Iteration Flow
+
+Every gate triggers a Phase Completion Review that can result in:
+- **PROCEED** → Continue to next phase
+- **FIX FIRST** → Address gaps in current phase, then proceed
+- **UPDATE UPSTREAM** → Send feedback to earlier skills, update their work
+- **RESTART PHASE** → Too many issues, redo the phase
 
 ### Project Types
 
@@ -281,6 +517,15 @@ RELEASE: Business Acceptance → Security → Product Validation → Deploy → 
 
 ## Gates
 
+**CRITICAL: After EVERY gate passes, run the Phase Completion Review (see Continuous Improvement Loop section).**
+
+Each gate follows this pattern:
+1. Execute the gate's skill(s)
+2. Validate pass criteria
+3. **Run Phase Completion Review**
+4. Fix any gaps identified before proceeding
+5. Trigger upstream updates if needed
+
 ### Gate 0: Product Design Complete
 
 **Invoke:** product-design
@@ -294,17 +539,23 @@ RELEASE: Business Acceptance → Security → Product Validation → Deploy → 
 
 **CRITICAL:** A service owner would NEVER approve half-implemented. If feature count too low, BLOCK and restart with feedback.
 
+**After Gate 0:** Run Phase Completion Review. BA and Architect should pre-review for feasibility before proceeding.
+
 ### Gate 1: Requirements Complete
 
 **Invoke:** business-analyst
 
 **Pass:** All REQ-XXX with testable criteria, priorities, no ambiguous language, dependencies identified
 
+**After Gate 1:** Run Phase Completion Review. Architect validates requirements are technically feasible. Product Design confirms requirements capture intent.
+
 ### Gate 2: Architecture Complete
 
 **Invoke:** solution-architect, then data-engineer + api-designer + legal-compliance (parallel)
 
 **Pass:** ADRs documented, data model complete, API contracts defined, security model specified, no TBDs
+
+**After Gate 2:** Run Phase Completion Review. Developer reviews for implementability. QA reviews for testability. Update BA/Product Design if architecture reveals requirement gaps.
 
 ### Gate 3: Design + Infrastructure Ready
 
@@ -315,6 +566,8 @@ RELEASE: Business Acceptance → Security → Product Validation → Deploy → 
 - docker-compose works, DB accessible, .env.example complete, migrations run, README has setup
 
 **Block dev if:** Docker won't start, DB fails, env vars missing
+
+**After Gate 3:** Run Phase Completion Review. Developer confirms designs are implementable. Architect confirms platform matches architecture. Update upstream if design reveals UX issues with requirements.
 
 ### Gate 4: Implementation Complete
 
@@ -329,6 +582,8 @@ RELEASE: Business Acceptance → Security → Product Validation → Deploy → 
 
 Then invoke project-tracker to verify RTM coverage. Missing Must-Have → BLOCK QA.
 
+**After Gate 4:** Run Phase Completion Review. QA confirms all features are testable. BA validates user stories match implementation. Product Design reviews for intent match. Update upstream docs to reflect any implementation decisions.
+
 ### Gate 5: QA + Release
 
 **Invoke:** implementation-verifier (smoke test), then qa-engineer, then:
@@ -339,6 +594,8 @@ Then invoke project-tracker to verify RTM coverage. Missing Must-Have → BLOCK 
 **All three release gates are REQUIRED - cannot skip.**
 
 **Block release if:** Any user story fails, critical defect, security vulnerability, implementation doesn't match design
+
+**After Gate 5:** Run FINAL Phase Completion Review. Full-chain retrospective: What would we do differently? Update workflow templates and skill instructions based on learnings. Document in project chronicle.
 
 ---
 
