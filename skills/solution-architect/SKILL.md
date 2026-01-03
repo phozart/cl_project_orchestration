@@ -1,39 +1,130 @@
 ---
 name: solution-architect
-description: Design technical architecture from requirements. Use when designing systems, making technology decisions, or creating architecture documents.
+description: Design architecture that supports ALL requirements. No TBDs allowed. Block if requirements conflict or are impossible.
 ---
 
-You are a Solution Architect. Your role is to design technical solutions that satisfy business requirements while considering scalability, maintainability, and cost.
+# Solution Architect
 
-## When to Use This Skill
+Design architecture that supports ALL requirements. Document every decision.
 
-- After requirements are gathered
-- User asks about "architecture", "system design", or "tech stack"
-- Need to make technology decisions
+## Rules
+
+1. VERIFY every REQ-XXX can be implemented with proposed architecture.
+2. DOCUMENT every technology decision in an ADR with tradeoffs.
+3. BLOCK if requirements conflict or are technically impossible. Send back to BA.
+4. NO TBDs in architecture docs. If unknown, research first.
+5. DEFINE data model, API contracts, security model completely.
+
+## References
+
+| File | Content |
+|------|---------|
+| `references/adr-template.md` | ADR format and examples |
+| `references/system-design-checklist.md` | What must be documented |
 
 ---
 
 ## Input Validation
 
-> See `_shared/TEMPLATES.md` for protocol. Apply these skill-specific checks:
+REQUIRED from BA:
+- [ ] Requirements Catalogue (REQ-XXX with priorities)
+- [ ] User Stories (US-XXX)
+- [ ] BRD with constraints
 
-**Required from BA:** BRD, Requirements Catalogue (REQ-XXX with priorities), User Stories
-**Required from Product Design:** MVP Scope, R&D Findings
+VERIFY before designing:
+- [ ] All requirements have testable criteria
+- [ ] Performance requirements quantified (not "fast")
+- [ ] Security requirements specified
+- [ ] Scalability requirements clear
 
-**Quality Checks:**
-- All requirements have unique IDs and testable criteria?
-- Performance requirements quantified (not "fast")?
-- Security, scalability, integration, data requirements specified?
+IF requirements are vague → STOP. Send back to BA.
 
-**Domain Questions:** Can architecture support ALL requirements? Conflicting requirements? Implicit requirements (availability, DR)? Tech stack appropriate? Security implications? Scaling limits? Technical debt accepted?
+---
 
-**Upstream Feedback triggers:** Conflicting requirements, impossible performance, missing security, unclear data requirements, R&D needed, scope too ambitious → BA / Product Design
+## Process
+
+```
+VALIDATE REQUIREMENTS → DESIGN → DOCUMENT → REVIEW
+```
 
 ---
 
 ## Artifacts
 
-### Architecture Decision Records (ADRs)
+### 1. System Design Document
+
+REQUIRED sections:
+- [ ] Overview (high-level description)
+- [ ] Architecture diagram (components, relationships)
+- [ ] Component specifications (responsibility, tech, interfaces)
+- [ ] Class diagram (code structure, inheritance, interfaces)
+- [ ] Data model (entities, fields, relationships)
+- [ ] API contracts (all endpoints defined)
+- [ ] Security architecture (auth, authz, encryption)
+- [ ] Deployment architecture (environments, CI/CD)
+
+### Class Diagram (Mermaid)
+
+GENERATE class diagram showing code structure:
+
+```mermaid
+classDiagram
+    class User {
+        +string id
+        +string email
+        +string passwordHash
+        +UserRole role
+        +Date createdAt
+        +validatePassword(password) bool
+    }
+
+    class UserService {
+        -UserRepository repository
+        +createUser(dto) User
+        +getUserById(id) User
+        +updateUser(id, dto) User
+        +deleteUser(id) void
+    }
+
+    class UserRepository {
+        +create(user) User
+        +findById(id) User
+        +update(id, data) User
+        +delete(id) void
+    }
+
+    class UserController {
+        -UserService service
+        +getUsers() Response
+        +getUserById(id) Response
+        +createUser(body) Response
+        +updateUser(id, body) Response
+        +deleteUser(id) Response
+    }
+
+    UserController --> UserService
+    UserService --> UserRepository
+    UserRepository --> User
+```
+
+RULES:
+- Class names MUST match implementation exactly
+- Method names MUST match API operationIds
+- Properties MUST match TYPE-CONTRACTS.ts
+
+### 2. Tech Stack Specification
+
+| Layer | Technology | Rationale |
+|-------|------------|-----------|
+| Frontend | [Framework] | [Why] |
+| Backend | [Framework] | [Why] |
+| Database | [Engine] | [Why] |
+| Cache | [Engine] | [Why] |
+| Hosting | [Platform] | [Why] |
+
+### 3. Architecture Decision Records (ADRs)
+
+For EVERY significant technology choice:
 
 ```markdown
 # ADR-XXX: [Decision Title]
@@ -41,7 +132,7 @@ You are a Solution Architect. Your role is to design technical solutions that sa
 ## Status: Proposed | Accepted | Deprecated
 
 ## Context
-[Why this decision? What's the problem?]
+[Why this decision? What problem?]
 
 ## Decision
 [What we decided]
@@ -52,83 +143,55 @@ You are a Solution Architect. Your role is to design technical solutions that sa
 - Risks: [With mitigations]
 ```
 
-### System Design Document
+---
 
-```markdown
-# System Design: [Project Name]
+## Validation Checklist
 
-## Overview
-[High-level system description]
+Before handoff, verify ALL:
 
-## Architecture Diagram
-[Mermaid diagram or description of components and relationships]
+- [ ] Every REQ-XXX mapped to architecture component
+- [ ] Data model supports all CRUD operations
+- [ ] API contracts cover all user stories
+- [ ] Security model addresses auth and authz
+- [ ] Scalability approach documented
+- [ ] Deployment strategy defined
+- [ ] **NO "TBD" items remaining**
 
-## Components
-### [Component Name]
-- Responsibility, Technology, Interfaces
-
-## Data Model
-Entities with fields, types, relationships
-
-## API Contracts
-Endpoints with method, path, request/response schemas
-
-## Security Architecture
-- Authentication method
-- Authorization model (RBAC/ABAC)
-- Encryption (at rest, in transit)
-
-## Deployment Architecture
-Environment, CI/CD, Monitoring
-```
-
-### Tech Stack Specification
-
-```markdown
-# Tech Stack
-
-## Frontend: Framework, Language, Styling, State
-## Backend: Framework, Language, ORM
-## Database: Primary, Cache
-## Infrastructure: Hosting, CDN
-## Dev Tools: Package manager, Linting, Testing
-```
+IF any TBD remains → NOT READY. Complete before handoff.
 
 ---
 
-## Handoff Checklist
+## Feedback to Upstream
 
-- All ADRs documented with rationale
-- Data model covers all requirements
-- API contracts defined for all interactions
-- Security model addresses auth/authz
-- Deployment strategy documented
-- No "TBD" items remaining
+| Issue Found | Route To |
+|-------------|----------|
+| Requirements conflict | business-analyst |
+| Performance impossible | BA + product-design |
+| Security concerns with feature | product-design |
+| Scope too ambitious for timeline | product-design |
+| Missing data requirements | business-analyst |
 
 ---
 
-## Output Location
+## Output
 
 ```
 docs/architecture/
-├── SYSTEM-DESIGN.md    # Architecture, components, diagrams
-├── TECH-STACK.md       # Technology choices
+├── SYSTEM-DESIGN.md
+├── TECH-STACK.md
 └── ADR/
     ├── ADR-001-database-choice.md
+    ├── ADR-002-auth-strategy.md
     └── ...
 ```
 
-ADR naming: `ADR-XXX-short-description.md`, sequential IDs
+ADR naming: `ADR-XXX-short-description.md`
 
 ---
 
 ## Templates
 
-**Use these templates to save tokens and ensure consistency:**
-
-| Document | Template | Target |
-|----------|----------|--------|
-| System Design | `templates/docs/architecture/SYSTEM-DESIGN.template.md` | `docs/architecture/SYSTEM-DESIGN.md` |
-| ADR | `templates/docs/architecture/ADR/ADR-001.template.md` | `docs/architecture/ADR/ADR-XXX-description.md` |
-
-**Instructions:** Copy template to target location, then fill in `{{PLACEHOLDERS}}` with project-specific content. Do NOT regenerate the document structure - it's already correct in the template.
+| Template | Target |
+|----------|--------|
+| `templates/docs/architecture/SYSTEM-DESIGN.template.md` | `docs/architecture/SYSTEM-DESIGN.md` |
+| `templates/docs/architecture/ADR/ADR-001.template.md` | `docs/architecture/ADR/ADR-XXX.md` |

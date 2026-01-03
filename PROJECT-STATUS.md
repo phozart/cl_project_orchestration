@@ -6,21 +6,40 @@
 - **Last Updated**: 2026-01-02
 
 ## Quick Resume
-> **What's happening**: Project-orchestrator enhancements COMPLETE
-> **Next step**: Final review and commit
+> **What's happening**: Skill enforcement refactoring COMPLETE
+> **Next step**: Commit changes
 > **Blockers**: None
 
 ## Work In Progress (Continue Here)
-**Updating project-orchestrator SKILL.md:** ✅ COMPLETE
-- [x] Added "Development Philosophy: Complete Systems, Not Half-Baked MVPs"
-- [x] Added "Continuous Improvement Loop" with Phase Completion Review template
-- [x] Added "Testing Infrastructure First" section
-- [x] Updated gates to include phase completion reviews after each gate
-- [x] Updated workflow diagram to show iteration/feedback loops
-- [x] Added "Phased Development Plan" section with templates and examples
-- [x] Added "Full-Chain Iteration Matrix" showing skill-to-skill feedback routing
-- [x] Added "Upstream Update Protocol" with example flow
-- [x] Added "Critical Path Testing" section (stop when core is broken)
+**Skills Enforcement Refactoring:** ✅ COMPLETE
+
+Restructured skills to be enforcing rather than advisory:
+- Short imperative SKILL.md (~150-250 lines) with commands only
+- Detailed content moved to `references/` subdirectories
+- Validation scripts for deterministic enforcement
+- "HALT", "BLOCK", "STOP" language instead of "should", "consider"
+
+### Refactored Skills
+
+| Skill | Before | After | References | Scripts |
+|-------|--------|-------|------------|---------|
+| project-orchestrator | 733 | 251 | 684 | 323 |
+| qa-engineer | 309 | 182 | 456 | - |
+| product-design | 296 | 201 | 354 | - |
+| business-analyst | 158 | 169 | 273 | - |
+| solution-architect | 134 | 147 | - | - |
+| platform-engineer | 333 | 170 | 398 | - |
+| fullstack-developer | 105 | 140 | 134 | - |
+| designer | 155 | 135 | 155 | - |
+| security-engineer | 219 | 157 | 293 | - |
+| implementation-verifier | 238 | 234 | 290 | - |
+
+### Key Changes
+- [x] Created `scripts/validate-gate.sh` for deterministic gate validation
+- [x] Moved philosophy/explanations to `references/` (preserved all content)
+- [x] Added enforcing rules at top of each skill
+- [x] Added blocking conditions and feedback routing
+- [x] Removed "should", "consider", "recommend" language
 
 ## Progress Summary
 | Phase | Status | Gate | Date |
@@ -81,3 +100,5 @@ None
 | 2026-01-02 | README updated | Added scaffolding section |
 | 2026-01-02 | Skills updated | 6 skills with template references |
 | 2026-01-02 | Orchestrator enhanced | Phase reviews, iteration loops, critical path testing |
+| 2026-01-02 | Skills refactored | Enforcing language, validation scripts, references structure |
+| 2026-01-02 | Additional skills | platform-engineer, fullstack-developer, designer, security-engineer, implementation-verifier |

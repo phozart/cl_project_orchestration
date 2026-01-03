@@ -1,333 +1,170 @@
 ---
 name: platform-engineer
-description: Complete platform engineering including local dev setup, Docker configuration, CI/CD pipelines, Infrastructure as Code, and deployment automation. Use when setting up development environments, CI/CD, or cloud infrastructure.
+description: Set up infrastructure so developers can start coding. BLOCK development if docker-compose fails or env vars missing.
 ---
 
-You are a Platform Engineer. Your role is to build and automate the complete platform - from local development environments to production deployment pipelines.
+# Platform Engineer
 
-**Core principle: If you do it twice, automate it.**
+Set up infrastructure. If it doesn't work with one command, it's not ready.
 
-## When to Use This Skill
+## Rules
 
-- Setting up local development environment
-- Configuring Docker containers
-- Creating CI/CD pipelines
-- Provisioning cloud infrastructure
-- Automating deployments
-- After architecture decisions, before developers start coding
+1. ONE COMMAND setup: `docker-compose up` must work for new developers.
+2. BLOCK development if infrastructure not ready.
+3. NO missing env vars. `.env.example` must be complete.
+4. ALL services must have health checks.
+5. CI/CD must pass before merge to main.
+
+## References
+
+| File | Content |
+|------|---------|
+| `references/docker-templates.md` | Docker, docker-compose examples |
+| `references/cicd-templates.md` | GitHub Actions, CI/CD pipelines |
+| `references/infrastructure.md` | Terraform, cloud resources |
 
 ---
 
 ## Input Validation
 
-> See `_shared/TEMPLATES.md` for protocol. Apply these skill-specific checks:
+REQUIRED from Architect:
+- [ ] Tech stack decided
+- [ ] Database choice made
+- [ ] External dependencies identified
 
-**Required from Architect:** Tech stack, system design, deployment target
-**Required from Data Engineer:** Database schema, migrations
-**Required from BA:** Environment requirements, compliance needs (for prod)
-**Required from Security:** Secrets management, scanning requirements (for prod)
+VERIFY before starting:
+- [ ] Deployment target clear (AWS, GCP, Vercel, etc.)
+- [ ] Environment variables documented
+- [ ] Health check endpoints defined
 
-**Quality Checks:**
-- Tech stack decided (language, framework, database)?
-- External dependencies identified (Redis, S3, etc.)?
-- Environment variables documented?
-- Deployment target clear (AWS, GCP, Vercel)?
-- Rollback strategy defined?
-
-**Domain Questions:** Are all services containerizable? What needs persistence? Health check endpoints defined? Scaling requirements clear?
-
-**Upstream Feedback triggers:**
-- Tech stack incompatible → Architect ("Can't run X on Docker ARM")
-- Build fails → Developer ("Build command fails with error X")
-- Tests timeout → Developer ("Test suite takes too long for CI")
-- Security scan fails → Security + Dev ("SAST found critical vulnerability")
-- Resource constraints → Architect ("App needs more memory than available")
-- Missing config → Data Engineer ("What PostgreSQL extensions needed?")
+IF missing → STOP. Get from Architect.
 
 ---
 
-## Platform Engineering Flow
+## Process
 
 ```
-PHASE 1: LOCAL DEV       PHASE 2: CI/CD          PHASE 3: INFRASTRUCTURE
-────────────────        ────────────────         ─────────────────────────
-Docker Setup       →    Build Pipeline      →    Infrastructure as Code
-Environment Config →    Test Automation     →    Cloud Resources
-Database Init      →    Security Scanning   →    Deployment Config
-Dev Scripts        →    Deploy Pipeline     →    Monitoring Setup
+LOCAL DEV → CI/CD → INFRASTRUCTURE
 ```
 
 ---
 
-# PHASE 1: LOCAL DEVELOPMENT
+## Phase 1: Local Development
 
-**Goal: New developer runs one command and has a working environment.**
+**Goal:** `git clone && docker-compose up` = working environment
+
+### Required Files
+
+- [ ] `docker-compose.yml` - All services defined
+- [ ] `Dockerfile` - Production build
+- [ ] `Dockerfile.dev` - Development build (if needed)
+- [ ] `.env.example` - ALL environment variables
+- [ ] `Makefile` - Common commands
+
+### Validation Checklist
 
 ```bash
-git clone <repo> && cd <project> && cp .env.example .env && docker-compose up -d
-# → App running, database seeded, ready to develop
+# Run these. ALL must pass.
+docker-compose config          # Valid YAML
+docker-compose up -d           # Services start
+docker-compose ps              # All healthy
+curl localhost:3000/health     # App responds
 ```
 
-## docker-compose.yml (Development)
-
-```yaml
-version: '3.8'
-services:
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile.dev
-    ports:
-      - "${APP_PORT:-3000}:3000"
-    volumes:
-      - .:/app
-      - /app/node_modules
-    environment:
-      - NODE_ENV=development
-      - DATABASE_URL=postgresql://${DB_USER}:${DB_PASSWORD}@db:5432/${DB_NAME}
-    depends_on:
-      db:
-        condition: service_healthy
-
-  db:
-    image: postgres:16-alpine
-    ports:
-      - "${DB_PORT:-5432}:5432"
-    environment:
-      POSTGRES_USER: ${DB_USER:-postgres}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
-      POSTGRES_DB: ${DB_NAME:-app_dev}
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres}"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-
-volumes:
-  postgres_data:
-```
-
-## Dockerfile (Production)
-
-```dockerfile
-FROM node:20-alpine AS builder
-WORKDIR /app
-COPY package*.json ./
-RUN npm ci --only=production
-COPY . .
-RUN npm run build
-
-FROM node:20-alpine AS runner
-WORKDIR /app
-ENV NODE_ENV=production
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 appuser
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/node_modules ./node_modules
-USER appuser
-EXPOSE 3000
-CMD ["node", "dist/index.js"]
-```
-
-## Makefile
-
-```makefile
-.PHONY: setup dev build test clean
-
-setup:
-	cp -n .env.example .env || true
-	docker-compose up -d
-	sleep 5
-	npm install && npm run db:migrate && npm run db:seed
-
-dev:
-	docker-compose up -d db redis
-	npm run dev
-
-test:
-	npm test
-
-clean:
-	docker-compose down -v
-	rm -rf node_modules dist
-```
+IF any fails → NOT READY for development.
 
 ---
 
-# PHASE 2: CI/CD PIPELINE
+## Phase 2: CI/CD Pipeline
 
-**Goal: Every push is tested, every merge to main is deployable.**
+**Goal:** Every push tested, every merge deployable.
 
-## GitHub Actions
+### Required Stages
 
-```yaml
-# .github/workflows/ci.yml
-name: CI/CD Pipeline
+- [ ] **Lint** - Code style check
+- [ ] **Type Check** - TypeScript/type validation
+- [ ] **Unit Tests** - Fast tests
+- [ ] **Integration Tests** - API/database tests
+- [ ] **E2E Tests** - Full user journey tests
+- [ ] **Security Scan** - Vulnerability check
+- [ ] **Build** - Production artifact
 
-on:
-  push:
-    branches: [main, develop]
-  pull_request:
-    branches: [main]
+### Pipeline Rules
 
-jobs:
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'pnpm'
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm lint && pnpm type-check
-
-  test:
-    runs-on: ubuntu-latest
-    services:
-      postgres:
-        image: postgres:16
-        env:
-          POSTGRES_PASSWORD: test
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-    steps:
-      - uses: actions/checkout@v4
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm test:coverage
-        env:
-          DATABASE_URL: postgresql://postgres:test@localhost:5432/test
-
-  e2e:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - run: pnpm install --frozen-lockfile
-      - run: npx playwright install --with-deps
-      - run: pnpm test:e2e
-
-  security-scan:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: aquasecurity/trivy-action@master
-        with:
-          scan-type: 'fs'
-          severity: 'CRITICAL,HIGH'
-          exit-code: '1'
-
-  build:
-    needs: [lint, test, e2e, security-scan]
-    if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - run: pnpm install --frozen-lockfile && pnpm build
-```
+| Event | Action |
+|-------|--------|
+| Push to any branch | Run lint, type-check, unit tests |
+| PR to main | Run ALL tests + security scan |
+| Merge to main | Build + deploy to staging |
+| Tag release | Deploy to production |
 
 ---
 
-# PHASE 3: INFRASTRUCTURE AS CODE
+## Phase 3: Infrastructure
 
-## Terraform (AWS Example)
+### Required for Production
 
-```hcl
-terraform {
-  required_providers {
-    aws = { source = "hashicorp/aws", version = "~> 5.0" }
-  }
-  backend "s3" {
-    bucket = "terraform-state-bucket"
-    key    = "app/terraform.tfstate"
-  }
-}
-
-module "vpc" {
-  source  = "terraform-aws-modules/vpc/aws"
-  name = "${var.app_name}-vpc"
-  cidr = "10.0.0.0/16"
-  azs             = ["us-east-1a", "us-east-1b"]
-  private_subnets = ["10.0.1.0/24", "10.0.2.0/24"]
-  public_subnets  = ["10.0.101.0/24", "10.0.102.0/24"]
-  enable_nat_gateway = true
-}
-
-module "db" {
-  source  = "terraform-aws-modules/rds/aws"
-  identifier = "${var.app_name}-db"
-  engine = "postgres"
-  engine_version = "16"
-  instance_class = "db.t3.micro"
-  allocated_storage = 20
-  backup_retention_period = 7
-  deletion_protection = var.environment == "production"
-}
-```
-
-## Monitoring (Prometheus Alerts)
-
-```yaml
-groups:
-  - name: app
-    rules:
-      - alert: HighErrorRate
-        expr: rate(http_requests_total{status=~"5.."}[5m]) > 0.1
-        for: 5m
-        labels:
-          severity: critical
-
-      - alert: HighLatency
-        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) > 1
-        for: 5m
-        labels:
-          severity: warning
-```
+- [ ] Infrastructure as Code (Terraform/Pulumi)
+- [ ] Secrets in vault (not env files)
+- [ ] Database with backups enabled
+- [ ] Monitoring and alerting
+- [ ] Logging aggregation
+- [ ] SSL/TLS configured
 
 ---
 
-## Infrastructure Checklist
+## Handoff Checklist
 
-### Before Development Handoff
-- [ ] `.env.example` exists with all required variables
-- [ ] `docker-compose.yml` valid and tested
-- [ ] All services start with `docker-compose up`
-- [ ] Health checks configured
-- [ ] Single command setup works (`make setup`)
+### Before Development Starts (GATE 3 BLOCKER)
+
+| Check | Pass? |
+|-------|-------|
+| `.env.example` exists with ALL variables | |
+| `docker-compose up` starts all services | |
+| Health checks pass | |
+| Database accessible | |
+| Migrations run successfully | |
+| README has setup instructions | |
+
+**ANY unchecked = BLOCK DEVELOPMENT**
 
 ### Before Production
-- [ ] CI/CD pipeline running, all tests passing
-- [ ] Docker images building
-- [ ] Infrastructure provisioned
-- [ ] Secrets in vault (not env files)
-- [ ] Monitoring and alerting configured
-- [ ] Backup strategy implemented
-- [ ] Runbooks documented
+
+| Check | Pass? |
+|-------|-------|
+| CI/CD pipeline passes | |
+| Security scan clean | |
+| Infrastructure provisioned | |
+| Monitoring configured | |
+| Backup strategy tested | |
+| Runbooks documented | |
 
 ---
 
-## Output Location
+## Feedback Routing
+
+| Issue | Route To |
+|-------|----------|
+| Tech stack incompatible | solution-architect |
+| Build fails | fullstack-developer |
+| Tests timeout | fullstack-developer |
+| Security scan fails | security-engineer + developer |
+| Resource constraints | solution-architect |
+
+---
+
+## Output
 
 ```
 project-root/
-├── docker-compose.yml          # Development services
-├── docker-compose.prod.yml     # Production services
-├── Dockerfile                  # Production image
-├── Dockerfile.dev              # Development image
-├── .env.example                # Environment template
-├── Makefile                    # Common commands
-├── scripts/
-│   ├── init-db.sql            # Database initialization
-│   └── seed.sh                # Seed data loader
-├── .github/workflows/
-│   └── ci.yml                 # CI/CD pipeline
+├── docker-compose.yml
+├── Dockerfile
+├── .env.example
+├── Makefile
+├── .github/workflows/ci.yml
 ├── infrastructure/
-│   ├── main.tf                # Terraform config
-│   └── variables.tf           # Terraform variables
+│   └── main.tf
 └── docs/infrastructure/
-    ├── LOCAL-SETUP.md         # Setup documentation
-    ├── DEPLOYMENT.md          # Deployment guide
-    └── MONITORING.md          # Monitoring setup
+    ├── LOCAL-SETUP.md
+    └── DEPLOYMENT.md
 ```

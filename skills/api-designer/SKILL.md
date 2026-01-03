@@ -1,16 +1,26 @@
 ---
 name: api-designer
-description: Design RESTful and GraphQL APIs with clear contracts. Use when defining service interfaces, documenting APIs, or establishing integration patterns.
+description: Design APIs with binding contracts. Every endpoint has an operationId. Developer MUST use exact function names. No improvisation.
 ---
 
-You are an API Designer. Your role is to design clean, consistent, well-documented APIs that developers love to use.
+# API Designer
 
-## When to Use This Skill
+Define API contracts. Every endpoint has exact operationId. Developers use YOUR names.
 
-- Designing new API endpoints
-- Documenting existing APIs
-- Establishing API standards
-- Planning integrations
+## Rules
+
+1. DEFINE operationId for EVERY endpoint. This is the function name.
+2. GENERATE API-CONTRACTS.ts with typed request/response for each operationId.
+3. USE consistent naming: getUsers, createUser, updateUser, deleteUser.
+4. NO function name improvisation. If not in contract, it doesn't exist.
+5. BLOCK development if API contracts incomplete.
+
+## References
+
+| File | Content |
+|------|---------|
+| `references/api-contracts.md` | How to generate API client contracts |
+| `references/openapi-standards.md` | OpenAPI specification rules |
 
 ---
 
@@ -204,13 +214,132 @@ Before passing to Developer:
 
 ---
 
+---
+
+## API CONTRACTS (MANDATORY)
+
+Generate binding TypeScript contracts for ALL endpoints:
+
+```typescript
+// docs/api/API-CONTRACTS.ts
+
+/**
+ * API CLIENT CONTRACTS
+ * operationId becomes function name
+ * This file is the SINGLE SOURCE OF TRUTH for API calls
+ */
+
+import { User, CreateUserDTO, UpdateUserDTO } from '../data/TYPE-CONTRACTS';
+
+// === Users API ===
+
+// GET /api/v1/users
+export interface GetUsersRequest {
+  page?: number;
+  limit?: number;
+  status?: 'active' | 'inactive';
+}
+export interface GetUsersResponse {
+  data: User[];
+  pagination: { page: number; total: number; hasNext: boolean };
+}
+
+// GET /api/v1/users/:id
+export interface GetUserByIdRequest {
+  id: string;
+}
+export interface GetUserByIdResponse {
+  data: User;
+}
+
+// POST /api/v1/users
+export interface CreateUserRequest {
+  body: CreateUserDTO;
+}
+export interface CreateUserResponse {
+  data: User;
+}
+
+// PUT /api/v1/users/:id
+export interface UpdateUserRequest {
+  id: string;
+  body: UpdateUserDTO;
+}
+export interface UpdateUserResponse {
+  data: User;
+}
+
+// DELETE /api/v1/users/:id
+export interface DeleteUserRequest {
+  id: string;
+}
+export interface DeleteUserResponse {
+  success: boolean;
+}
+
+// === API Client Interface ===
+export interface ApiClient {
+  // Users
+  getUsers(req: GetUsersRequest): Promise<GetUsersResponse>;
+  getUserById(req: GetUserByIdRequest): Promise<GetUserByIdResponse>;
+  createUser(req: CreateUserRequest): Promise<CreateUserResponse>;
+  updateUser(req: UpdateUserRequest): Promise<UpdateUserResponse>;
+  deleteUser(req: DeleteUserRequest): Promise<DeleteUserResponse>;
+}
+```
+
+### Contract Rules
+
+1. **Every endpoint** gets Request/Response interfaces
+2. **operationId** becomes the function name exactly
+3. **Import entity types** from TYPE-CONTRACTS.ts
+4. **ApiClient interface** lists ALL available operations
+
+### Developer Usage
+
+Developer MUST:
+```typescript
+import { ApiClient, GetUsersRequest } from '@/api/contracts';
+
+// Correct - uses contract function name
+const response = await apiClient.getUsers({ page: 1 });
+
+// WRONG - inventing function names
+const users = await api.fetchAllUsers();  // ❌ Not in contract
+const users = await api.listUsers();      // ❌ Not in contract
+```
+
+### OpenAPI operationId Mapping
+
+```yaml
+paths:
+  /users:
+    get:
+      operationId: getUsers        # ← Exact function name
+    post:
+      operationId: createUser      # ← Exact function name
+  /users/{id}:
+    get:
+      operationId: getUserById     # ← Exact function name
+    put:
+      operationId: updateUser      # ← Exact function name
+    delete:
+      operationId: deleteUser      # ← Exact function name
+```
+
+---
+
 ## Output Location
 
 ```
 docs/api/
-├── API-SPECIFICATION.yaml     # OpenAPI 3.1 specification
-├── API-CONTRACTS.md           # Human-readable API documentation
+├── API-SPECIFICATION.yaml     # OpenAPI 3.1 with operationIds
+├── API-CONTRACTS.ts           # BINDING TypeScript types (MANDATORY)
+├── API-CONTRACTS.md           # Human-readable documentation
 └── POSTMAN-COLLECTION.json    # Optional: Postman collection
 ```
 
-**Naming:** Use OpenAPI 3.1, include operationId for each endpoint, tag endpoints by resource (Users, Orders, etc.)
+**CRITICAL:**
+- Every endpoint MUST have operationId
+- API-CONTRACTS.ts MUST exist before development
+- Developer MUST import and use these types/functions

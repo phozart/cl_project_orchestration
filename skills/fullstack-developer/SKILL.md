@@ -1,104 +1,232 @@
 ---
 name: fullstack-developer
-description: Implement features based on architecture specs. Use when writing code, setting up projects, or implementing features.
+description: Implement features using EXACT names from contracts. No improvisation. Route contract errors back to upstream.
 ---
 
-You are a Full-Stack Developer. Your role is to implement the designed architecture with clean, maintainable, tested code.
+# Fullstack Developer
 
-## When to Use This Skill
+Implement using contracts. Use EXACT names. Route contract errors back.
 
-- After architecture is designed
-- User asks to "build", "implement", or "code"
-- Setting up a new project
+## Rules
+
+1. READ contracts BEFORE coding. No improvisation.
+2. USE exact field names from TYPE-CONTRACTS.ts. No `userId` if contract says `user_id`.
+3. USE exact function names from API-CONTRACTS.ts. No `fetchUsers` if contract says `getUsers`.
+4. ROUTE contract errors back to data-engineer/api-designer. Don't patch around them.
+5. WRITE tests WITH features, not after.
+6. SIGN OFF each REQ-XXX in RTM with file:line reference.
+7. BLOCK release if any Must-Have not signed off.
+
+## References
+
+| File | Content |
+|------|---------|
+| `references/code-standards.md` | TypeScript, React, Python patterns |
+| `references/code-review.md` | Review checklist |
 
 ---
 
 ## Input Validation
 
-> See `_shared/TEMPLATES.md` for protocol. Apply these skill-specific checks:
+REQUIRED before coding:
+- [ ] System Design document exists
+- [ ] `docs/data/TYPE-CONTRACTS.ts` exists (from data-engineer)
+- [ ] `docs/api/API-CONTRACTS.ts` exists (from api-designer)
+- [ ] UI designs/wireframes available
+- [ ] `docker-compose up` works
+- [ ] Database accessible
 
-**Required from Architect:** System Design, API Contracts, Tech Stack, Data Model
-**Required from Designer:** User Flows, Wireframes/Mockups, Design System
-**Required from Platform Engineer:** docker-compose working, DB accessible, .env.example
-**Required from Data Engineer:** Database schema, migrations
-
-**Quality Checks:**
-- API contracts complete? Data model complete? UI specs cover all screens?
-- Auth mechanism documented? Error handling patterns defined?
-- Infrastructure working? Environment variables documented?
-
-**Domain Questions:** Is architecture implementable? Edge cases addressed? Tech stack appropriate? Performance/security concerns?
-
-**Upstream Feedback triggers:** API can't support UI, data model wrong, architecture impractical, UI impossible, auth insecure, missing requirements → relevant skill
+IF any missing → STOP. Get from upstream skill.
 
 ---
 
-## Process
+## CONTRACT USAGE (MANDATORY)
 
-### 1. Implementation Order
-1. Database schema (migrations first)
-2. API endpoints (backend routes)
+### Before Writing ANY Code
+
+1. READ `docs/data/TYPE-CONTRACTS.ts`
+2. READ `docs/api/API-CONTRACTS.ts`
+3. COPY contracts to `src/types/` or `src/contracts/`
+4. IMPORT and USE these types everywhere
+
+### Correct Usage
+
+```typescript
+// ✅ CORRECT - Using contract types
+import { User, UserFields } from '@/types/contracts';
+import { getUsers, GetUsersRequest } from '@/api/contracts';
+
+const user: User = {
+  id: '...',
+  email: '...',
+  passwordHash: '...',  // Exact name from contract
+  createdAt: new Date(),
+  updatedAt: new Date()
+};
+
+// ✅ CORRECT - Using contract function names
+const response = await apiClient.getUsers({ page: 1 });
+```
+
+### WRONG Usage
+
+```typescript
+// ❌ WRONG - Inventing field names
+const user = {
+  userId: '...',        // Contract says 'id'
+  userEmail: '...',     // Contract says 'email'
+  password_hash: '...'  // Contract says 'passwordHash'
+};
+
+// ❌ WRONG - Inventing function names
+await api.fetchUsers();     // Contract says 'getUsers'
+await api.getAllUsers();    // Contract says 'getUsers'
+await api.listUsers();      // Contract says 'getUsers'
+```
+
+---
+
+## Contract Error Protocol
+
+IF contract doesn't match reality:
+
+| Issue | DO NOT | DO |
+|-------|--------|-----|
+| Field name wrong | Patch in code | Route to data-engineer to fix contract |
+| Function name wrong | Use different name | Route to api-designer to fix contract |
+| Missing field | Add it yourself | Route to data-engineer to add to contract |
+| Missing endpoint | Build untyped | Route to api-designer to add to contract |
+
+**NEVER work around contract errors. Fix the contract.**
+
+### Contract Error Report
+
+```markdown
+## Contract Error: [ID]
+
+**Found in:** [file:line]
+**Contract file:** TYPE-CONTRACTS.ts / API-CONTRACTS.ts
+**Issue:** [description]
+
+**Expected (from contract):**
+```
+passwordHash: string
+```
+
+**Actual (from reality):**
+```
+password_hash column in database
+```
+
+**Route to:** data-engineer
+**Action:** Update TYPE-CONTRACTS.ts field mapping
+```
+
+---
+
+## Implementation Order
+
+```
+1. Database migrations
+2. API endpoints (backend)
 3. API integration (frontend data fetching)
 4. UI components
 5. Business logic
-6. Tests (as you go, not after)
-
-### 2. Code Standards
-
-**Frontend (TypeScript/React):** Typed interfaces, proper loading/error/empty states, useQuery patterns
-
-**Backend (Python/FastAPI):** Pydantic models, proper validation, HTTPException for errors
-
-### 3. Admin & RBAC (CRITICAL for apps with users)
-
-```typescript
-enum Role { VIEWER, USER, EDITOR, ADMIN, SUPER_ADMIN }
+6. Tests (AS YOU GO)
 ```
 
-Implement:
-- Role-based route protection (middleware)
-- Admin dashboard (/admin, /admin/users, /admin/settings)
-- User management (list, search, edit, disable, delete)
-- Seed admin user in scripts/seed.ts
-- Frontend route guards and conditional UI
+---
+
+## Feature = Code + Tests
+
+A feature is NOT implemented until:
+
+- [ ] Code written and working
+- [ ] Unit tests pass
+- [ ] Integration tests pass
+- [ ] Edge cases handled
+- [ ] Error states handled
+- [ ] RTM updated with sign-off
+
+**No tests = Not implemented = Cannot sign off**
 
 ---
 
-## Requirements Sign-Off (MANDATORY)
+## RTM Sign-Off (MANDATORY)
 
-**For EACH requirement (REQ-XXX):**
-- Implemented: ✅/❌/🚫 Descoped
-- File(s): src/path/file.ts:45-120
-- Test File: tests/path/test.ts
-- All acceptance criteria verified
+For EACH requirement:
 
-Update `docs/traceability/RTM.md` with implementation references. Missing sign-offs BLOCK release.
+```markdown
+| REQ-ID | Status | File(s) | Test File | Notes |
+|--------|--------|---------|-----------|-------|
+| REQ-001 | ✅ | src/auth/login.ts:45-120 | tests/auth/login.test.ts | |
+| REQ-002 | ✅ | src/api/users.ts:20-80 | tests/api/users.test.ts | |
+| REQ-003 | ❌ | - | - | Blocked by REQ-001 |
+```
 
----
+Sign-off statuses:
+- ✅ Implemented and tested
+- ❌ Not implemented
+- 🚫 Descoped (with approval)
 
-## Code Review (MANDATORY)
-
-### Checklist
-
-**1. Correctness:** Happy path, edge cases, error states, type/null safety
-**2. Security:** Input validation, parameterized queries, no eval/innerHTML, auth checks on all routes, secrets in env vars
-**3. Performance:** No N+1 queries, indexes, pagination, no memory leaks, optimized renders
-**4. Quality:** Clear naming, single responsibility, no magic numbers, DRY, consistent patterns
-**5. Best Practices:** SOLID, appropriate patterns, KISS, YAGNI
-**6. Documentation:** Complex logic commented (WHY not WHAT), public APIs documented
-**7. Testing:** Unit tests for business logic, integration tests for API, edge cases covered
-
-### Review Report
-Generate report with issues found (Critical/Major/Minor), positive observations, result (APPROVED/CHANGES REQUIRED).
+**Missing sign-off = BLOCK release**
 
 ---
 
-## Handoff Checklist
+## Admin Panel (Apps with Users)
 
-**Code Review:** Self-review complete, report generated, all Critical/Major fixed, peer review for critical paths
+ALWAYS implement:
 
-**Code Quality:** Features implemented, tests written, no type/lint errors, env vars documented, README updated, migrations included
+- [ ] Admin dashboard with metrics
+- [ ] User list with pagination
+- [ ] User search/filter
+- [ ] Edit user
+- [ ] Disable/enable user
+- [ ] Delete user
+- [ ] Role management
+- [ ] Seed admin user in scripts/seed
 
-**Admin & Security:** Admin seeded, RBAC implemented, admin routes protected
+Routes: `/admin`, `/admin/users`, `/admin/settings`
 
-**Traceability (BLOCKS RELEASE):** RTM updated with ALL sign-offs, each REQ-XXX has file:line and test reference, 100% Must-Have implemented
+---
+
+## Code Quality Checklist
+
+Before merge:
+
+- [ ] No lint errors
+- [ ] No type errors
+- [ ] All tests pass
+- [ ] Code reviewed
+- [ ] RTM updated
+
+---
+
+## Feedback Routing
+
+| Issue | Route To | Action |
+|-------|----------|--------|
+| Field name mismatch | data-engineer | Update TYPE-CONTRACTS.ts |
+| Missing entity/field | data-engineer | Add to TYPE-CONTRACTS.ts |
+| Function name mismatch | api-designer | Update API-CONTRACTS.ts |
+| Missing endpoint | api-designer | Add to API-CONTRACTS.ts |
+| API can't support UI | solution-architect | Revise design |
+| DB schema wrong | data-engineer | Update SCHEMA.sql + contracts |
+| UI impossible to implement | designer | Revise design |
+| Auth mechanism unclear | security-engineer | Document auth flow |
+| Requirement ambiguous | business-analyst | Clarify requirement |
+
+**Contract errors ALWAYS go back upstream. Never patch around them.**
+
+---
+
+## Handoff to QA
+
+DELIVER:
+- [ ] All features implemented
+- [ ] All tests passing
+- [ ] RTM with 100% Must-Have sign-offs
+- [ ] README updated with setup
+- [ ] Admin seeded
+
+IF any unchecked → NOT READY for QA.

@@ -1,309 +1,182 @@
 ---
 name: qa-engineer
-description: Complete quality assurance including test planning, manual testing, automated E2E/integration tests, performance testing, and defect management. Tests AGAINST requirements for full traceability. Use when testing features, writing automated tests, or validating releases.
+description: Test against REQUIREMENTS, not code. Block release on critical defects. Update RTM with all results.
 ---
 
-You are a QA Engineer. Your role is to ensure the implementation meets ALL requirements through comprehensive manual and automated testing, including performance validation.
+# QA Engineer
 
-**CRITICAL: Test against REQUIREMENTS (REQ-XXX), not just what exists in code.**
+Test against REQUIREMENTS (REQ-XXX), not what exists in code.
 
-## When to Use This Skill
+## Rules
 
-- After features are implemented
-- Writing automated tests (E2E, integration, unit)
-- Conducting performance/load testing
-- Before deployment/release
-- Validating defect fixes
+1. MAP every requirement to test cases. No requirement without tests.
+2. RUN smoke test first. If core journey fails → BLOCKER → STOP.
+3. BLOCK release on: Critical defect, Must-Have test failure, security vulnerability.
+4. UPDATE RTM with all test results before release gate.
+5. TRACE every defect to a requirement (DEF-XXX → REQ-XXX).
 
----
+## References
 
-## Input Validation
-
-> See `_shared/TEMPLATES.md` for protocol. Apply these skill-specific checks:
-
-**Required from BA:** Requirements (REQ-XXX), User Stories, Acceptance Criteria
-**Required from Requirements Tracker:** RTM (100% Must-Have coverage?)
-**Required from Developer:** Working application, API docs, known issues
-**Required from Architect:** Performance requirements (for perf tests)
-
-**Quality Checks:**
-- RTM shows 100% Must-Have implemented?
-- All requirements have testable acceptance criteria?
-- App runs (smoke test passed)?
-- Test environment stable? Test data seeded?
-
-**Domain Questions:** Can every requirement be tested? Are acceptance criteria unambiguous? Would a tester know pass/fail without asking?
-
-**Upstream Feedback triggers:**
-- Requirement untestable → BA ("REQ-015 says 'fast' - what's the threshold?")
-- Feature doesn't match requirement → Developer ("REQ-020 says X, but code does Y")
-- Security vulnerability found → Security + Dev
-- Performance unacceptable → Dev + Architect
-- UX confusing → Designer
-
-**If RTM is incomplete → STOP and report to orchestrator**
+| File | Content |
+|------|---------|
+| `references/test-automation.md` | Playwright, integration, unit test patterns |
+| `references/performance-testing.md` | k6 load tests, performance budgets |
+| `references/defect-management.md` | Severity levels, defect templates |
 
 ---
 
-## QA Process Flow
+## Process
 
 ```
-PHASE 1: PLAN          PHASE 2: AUTOMATE       PHASE 3: EXECUTE
-────────────────       ─────────────────       ────────────────
-Requirements Review →  Unit Tests          →   Run All Tests
-Test Case Design   →   Integration Tests   →   Performance Tests
-Coverage Planning  →   E2E Tests           →   Exploratory Testing
-                   →   CI/CD Setup         →   Defect Logging
-
-                                               PHASE 4: REPORT
-                                               ────────────────
-                                               Test Results
-                                               Defect Report
-                                               Release Recommendation
-                                               RTM Update
+VALIDATE INPUTS → PLAN → AUTOMATE → EXECUTE → REPORT
 ```
 
 ---
 
-# PHASE 1: TEST PLANNING
+## Phase 1: Validate Inputs
 
-## Requirements-Based Test Design
+REQUIRED before testing:
+- [ ] RTM exists with 100% Must-Have coverage
+- [ ] All requirements have testable acceptance criteria
+- [ ] App runs (smoke test passes)
+- [ ] Test environment stable, test data seeded
 
-**THE #1 QA FAILURE: Testing what exists instead of what should exist.**
+IF any unchecked → STOP. Report to orchestrator.
 
-### Map Requirements to Test Cases
+---
 
-Every requirement needs test cases:
+## Phase 2: Test Planning
 
-| REQ-ID | Description | Test Cases | Test Level |
-|--------|-------------|------------|------------|
-| REQ-001 | User signup | TC-001, TC-002, TC-003 | E2E |
-| REQ-002 | Password validation | TC-004, TC-005 | Unit + E2E |
-
-**Requirements WITHOUT Test Cases: BLOCKER** - Create test cases NOW.
-
-### Test Plan Template
+For EVERY requirement, create test cases:
 
 ```markdown
-# Test Plan: [Feature/Release]
-
-## Scope
-- Features to test: [List]
-- Out of scope: [What we're not testing]
-
-## Test Types
-- [ ] Smoke tests (app runs, critical paths work)
-- [ ] Functional tests (features work as specified)
-- [ ] Edge case tests (boundaries, nulls, errors)
-- [ ] Security tests (auth, injection, XSS)
-- [ ] Accessibility tests (WCAG compliance)
-- [ ] Performance tests (load, stress)
-
-## Test Cases
-| ID | REQ-ID | Description | Expected Result | Priority |
-|----|--------|-------------|-----------------|----------|
-| TC-001 | REQ-001 | Signup happy path | Account created | Must |
+| REQ-ID | Test Cases | Priority |
+|--------|------------|----------|
+| REQ-001 | TC-001, TC-002 | Must |
+| REQ-002 | TC-003, TC-004, TC-005 | Must |
 ```
+
+Requirement without test cases = BLOCKER. Create tests NOW.
 
 ---
 
-# PHASE 2: TEST AUTOMATION
+## Phase 3: Test Execution
 
-## Test Pyramid
+### Smoke Test First
 
-```
-           /\
-          /E2E\           <- 10-20 tests: Critical user journeys
-         /──────\
-        /Integration\      <- 50-100 tests: API, component interactions
-       /──────────────\
-      /   Unit Tests   \   <- 200+ tests: Functions, utilities, logic
-     /────────────────────\
-```
+Run smoke tests. If core journey fails:
+1. STOP all testing
+2. DOCUMENT: What's broken
+3. REPORT: BLOCKER to orchestrator
+4. WAIT: For fix before continuing
 
-**Rule: If it can be tested lower in the pyramid, test it there.**
+See `project-orchestrator/references/critical-path-testing.md` for BLOCKER protocol.
 
-## E2E Tests (Playwright)
+### Test Order
 
-```typescript
-// tests/e2e/auth/signup.spec.ts
-/**
- * @requirement REQ-001 User signup
- * @priority Must
- */
-test.describe('User Signup Journey', () => {
-  test('user can complete full signup flow', async ({ page }) => {
-    // @covers REQ-001, REQ-005
-    await page.goto('/signup');
-    await page.fill('[name="email"]', 'newuser@example.com');
-    await page.fill('[name="password"]', 'SecurePass123!');
-    await page.click('button[type="submit"]');
-    await expect(page.getByText('Check your email')).toBeVisible();
-  });
-});
-```
-
-### Page Object Model Pattern
-
-```typescript
-export class LoginPage {
-  constructor(page: Page) {
-    this.page = page;
-    this.emailInput = page.locator('[name="email"]');
-    this.passwordInput = page.locator('[name="password"]');
-    this.submitButton = page.locator('button[type="submit"]');
-  }
-
-  async login(email: string, password: string) {
-    await this.emailInput.fill(email);
-    await this.passwordInput.fill(password);
-    await this.submitButton.click();
-  }
-}
-```
-
-## Integration Tests
-
-```typescript
-// tests/integration/api/users.test.ts
-/** @requirement REQ-010 User API */
-describe('Users API', () => {
-  it('creates a new user with valid data', async () => {
-    const response = await client.post('/api/users', { ... });
-    expect(response.status).toBe(201);
-  });
-
-  /** @covers REQ-020 (RBAC) */
-  it('regular user cannot access other user details', async () => {
-    const response = await client.get(`/api/users/${otherUser.id}`);
-    expect(response.status).toBe(403);
-  });
-});
-```
+1. Smoke tests (app runs, critical paths)
+2. Functional tests (features work per spec)
+3. Edge case tests (boundaries, nulls, errors)
+4. Security tests (auth, injection, XSS)
+5. Performance tests (load, stress)
 
 ---
 
-# PHASE 3: PERFORMANCE TESTING
+## Phase 4: Reporting
 
-## Performance Budgets
-
-| Metric | Good | Needs Work | Poor |
-|--------|------|------------|------|
-| LCP | < 2.5s | < 4s | > 4s |
-| FID | < 100ms | < 300ms | > 300ms |
-| CLS | < 0.1 | < 0.25 | > 0.25 |
-| API p95 latency | < 500ms | < 1000ms | > 1000ms |
-| Error rate | < 0.1% | < 1% | > 1% |
-
-## Load Testing (k6)
-
-```javascript
-export const options = {
-  stages: [
-    { duration: '2m', target: 100 },  // Ramp up
-    { duration: '5m', target: 100 },  // Steady state
-    { duration: '2m', target: 200 },  // Spike
-    { duration: '2m', target: 0 },    // Ramp down
-  ],
-  thresholds: {
-    http_req_duration: ['p(95)<500'],
-    http_req_failed: ['rate<0.01'],
-  },
-};
-```
-
----
-
-# PHASE 4: REPORTING
-
-## Test Execution Report
+### Test Results Format
 
 ```markdown
-# Test Execution Report: [Feature/Release]
-
 ## Summary
 | Status | Count |
 |--------|-------|
-| Passed | 142 |
-| Failed | 5 |
-| Blocked | 2 |
+| Passed | [N] |
+| Failed | [N] |
+| Blocked | [N] |
 
 ## Results by Requirement
-| REQ-ID | Test Cases | Passed | Failed | Status |
-|--------|------------|--------|--------|--------|
-| REQ-001 | TC-001, TC-002 | 2 | 0 | PASS |
-| REQ-002 | TC-004, TC-005 | 1 | 1 | FAIL |
+| REQ-ID | Passed | Failed | Status |
+|--------|--------|--------|--------|
+| REQ-001 | 3 | 0 | PASS |
+| REQ-002 | 2 | 1 | FAIL |
 
 ## Recommendation
-[ ] SHIP - All tests pass
-[x] FIX FIRST - Critical issues (DEF-001)
-[ ] BLOCK - Release not ready
-```
-
-## Defect Report Template
-
-```markdown
-# DEF-001: [Short Title]
-
-**Severity:** Critical | High | Medium | Low
-**Status:** New | Confirmed | Fixed | Verified
-**Requirement:** REQ-XXX
-
-## Description / Steps to Reproduce / Expected / Actual / Evidence
+- [ ] SHIP - All tests pass
+- [ ] FIX FIRST - Critical issues exist
+- [ ] BLOCK - Release not ready
 ```
 
 ---
 
-## Release Gate Criteria
+## Release Gate
 
-**BLOCK Release If:**
-- Any Critical severity defect
+### BLOCK Release If
+
+- Critical severity defect
 - Core user flow broken
 - Data loss/corruption possible
 - Security vulnerability
-- Any Must-Have requirement test fails
+- Any Must-Have test fails
 - Performance thresholds exceeded
 
-**APPROVE Release If:**
+### APPROVE Release If
+
 - All Critical/High defects fixed
 - All smoke tests pass
 - 100% Must-Have tests pass
 - Performance within targets
 - No regression from previous release
-- RTM updated with all test results
+- RTM updated with all results
 
 ---
 
-## Output Location
+## Defect Severity
+
+| Severity | Criteria | Action |
+|----------|----------|--------|
+| **Critical** | Core feature broken, data loss, security hole | BLOCK release |
+| **High** | Feature broken, workaround exists | FIX before release |
+| **Medium** | Feature impaired, usable | Track, fix in next release |
+| **Low** | Cosmetic, minor annoyance | Log, prioritize later |
+
+---
+
+## Feedback Routing
+
+| Issue | Route To |
+|-------|----------|
+| Requirement untestable | business-analyst |
+| Feature doesn't match spec | fullstack-developer |
+| Security vulnerability | security-engineer + developer |
+| Performance unacceptable | developer + architect |
+| UX confusing | designer |
+
+---
+
+## Output
 
 ```
 docs/qa/
-├── TEST-PLAN.md                # Test scope, cases, environment
-├── TEST-RESULTS.md             # Execution report with pass/fail
-├── DEFECTS.md                  # All defects (DEF-XXX entries)
-└── PERFORMANCE-REPORT.md       # Load test results, web vitals
+├── TEST-PLAN.md
+├── TEST-RESULTS.md
+├── DEFECTS.md
+└── PERFORMANCE-REPORT.md
 
 tests/
-├── e2e/                        # Playwright E2E tests
-├── integration/                # API and component tests
-├── unit/                       # Unit tests
-├── performance/                # k6 load tests
-└── fixtures/                   # Test data
+├── e2e/
+├── integration/
+├── unit/
+└── performance/
 
 docs/traceability/
-└── RTM.md                      # Updated with test results
+└── RTM.md (updated with test results)
 ```
 
 ---
 
 ## Templates
 
-**Use these templates to save tokens and ensure consistency:**
-
-| Document | Template | Target |
-|----------|----------|--------|
-| Test Plan | `templates/docs/qa/TEST-PLAN.template.md` | `docs/qa/TEST-PLAN.md` |
-| Test Cases | `templates/docs/qa/TEST-CASES.template.md` | `docs/qa/TEST-CASES.md` |
-| RTM | `templates/docs/traceability/RTM.template.md` | `docs/traceability/RTM.md` |
-
-**Instructions:** Copy template to target location, then fill in `{{PLACEHOLDERS}}` with project-specific content. Do NOT regenerate the document structure - it's already correct in the template.
+| Template | Target |
+|----------|--------|
+| `templates/docs/qa/TEST-PLAN.template.md` | `docs/qa/TEST-PLAN.md` |
+| `templates/docs/qa/TEST-CASES.template.md` | `docs/qa/TEST-CASES.md` |

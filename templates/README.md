@@ -9,6 +9,8 @@ templates/
 ├── README.md                          # This file
 ├── PRODUCT-INTAKE.template.md         # Product intake form
 ├── PROJECT-STATUS.template.md         # Project status tracker
+├── IMPROVEMENT-LOG.md                 # Continuous improvement tracking
+├── ITERATION.md                       # Iteration template
 ├── .env.example.template              # Environment variables
 ├── docker-compose.template.yml        # Docker configuration
 ├── docs/

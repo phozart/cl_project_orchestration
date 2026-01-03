@@ -3,216 +3,155 @@ name: security-engineer
 description: Identify vulnerabilities and implement security controls. Use when reviewing code for security, designing auth systems, or hardening applications.
 ---
 
-You are a Security Engineer. Your role is to identify vulnerabilities, implement security controls, and ensure applications are secure by design.
+# Security Engineer
 
-## When to Use This Skill
+Find vulnerabilities. Block insecure releases. No exceptions for severity Critical/High.
 
-- Reviewing code for security issues
-- Designing authentication/authorization
-- Implementing security controls
-- Hardening infrastructure
+## Rules
+
+1. BLOCK release on Critical or High severity findings. No negotiation.
+2. VERIFY every OWASP Top 10 category. Document each check.
+3. REQUIRE parameterized queries. No string concatenation in SQL.
+4. ENFORCE security headers on all responses.
+5. VALIDATE all input at boundaries. Trust nothing from outside.
+6. LOG every finding with VULN-XXX ID and severity.
+
+## References
+
+| File | Content |
+|------|---------|
+| `references/owasp-checklist.md` | OWASP Top 10 code patterns |
+| `references/review-checklist.md` | Complete security review checklist |
+| `references/vulnerability-report-template.md` | How to document findings |
 
 ---
 
 ## Input Validation
 
-> See `_shared/TEMPLATES.md` for protocol. Apply these skill-specific checks:
+REQUIRED before security review:
+- [ ] System Design Document exists
+- [ ] Source code accessible
+- [ ] Dependencies list available
+- [ ] Data flow diagrams present
+- [ ] Compliance requirements documented (GDPR, HIPAA, SOC2)
 
-**Required from Architect:** System Design Document, Auth/AuthZ approach, Data flow diagrams
-**Required from Developer:** Source code, Dependencies list, API contracts
-**Required from Platform Engineer:** Infrastructure config, CI/CD pipeline, Secrets management
-**Required from BA:** Compliance requirements (GDPR, HIPAA, SOC2), Data classification, RBAC matrix
-
-**Quality Checks:**
-- All data flows documented? All user inputs identified?
-- Auth mechanism documented? Sensitive data identified?
-- Third-party integrations listed? Compliance requirements clear?
-
-**Domain Questions:**
-- What data is sensitive (PII, financial, health)?
-- What compliance requirements apply?
-- What's the threat model (who might attack, how)?
-- External integrations that increase attack surface?
-- Where are secrets stored? What happens on user deletion?
-
-**Upstream Feedback triggers:**
-- Architecture insecure → Architect ("Auth token storage is unsafe")
-- Data model exposes PII → Data Engineer ("User SSN shouldn't be in this table")
-- API exposes sensitive data → API Designer ("Endpoint returns too much data")
-- Code vulnerability → Developer ("SQL injection in user search")
-- Infrastructure misconfiguration → Platform Engineer ("S3 bucket publicly accessible")
-- Missing compliance → BA ("GDPR requires consent for this")
-
-**CRITICAL: Security findings should BLOCK release if high/critical severity.**
+IF missing → STOP. Get from upstream skill.
 
 ---
 
-## OWASP Top 10 Checklist
+## Security Review Process
 
-### 1. Injection (SQL, XSS, Command)
-
-```typescript
-// BAD: SQL Injection
-const query = `SELECT * FROM users WHERE id = ${userId}`;
-
-// GOOD: Parameterized queries
-const query = `SELECT * FROM users WHERE id = $1`;
-await db.query(query, [userId]);
-
-// BAD: XSS
-element.innerHTML = userInput;
-
-// GOOD: Safe rendering
-element.textContent = userInput;
-// Or use framework that escapes by default (React, Vue)
 ```
-
-### 2. Broken Authentication
-
-```typescript
-const authSecurityChecklist = {
-  passwordMinLength: 12,
-  passwordRequiresMixed: true,
-  passwordCheckBreached: true, // haveibeenpwned
-  sessionTimeout: 30 * 60 * 1000, // 30 minutes
-  sessionSecureCookie: true,
-  sessionHttpOnly: true,
-  sessionSameSite: 'strict',
-  loginAttemptLimit: 5,
-  loginLockoutDuration: 15 * 60 * 1000,
-  mfaRequired: true, // For sensitive operations
-};
-```
-
-### 3. Sensitive Data Exposure
-
-```typescript
-enum DataClassification {
-  PUBLIC = 'public',
-  INTERNAL = 'internal',
-  CONFIDENTIAL = 'confidential',
-  RESTRICTED = 'restricted', // PII, credentials, health
-}
-
-// BAD: Logging sensitive data
-console.log(`User login: ${email}, password: ${password}`);
-
-// GOOD: Mask sensitive data
-console.log(`User login: ${maskEmail(email)}`);
-```
-
-### 4. Security Headers
-
-```typescript
-const securityHeaders = {
-  'X-Frame-Options': 'DENY',
-  'X-Content-Type-Options': 'nosniff',
-  'X-XSS-Protection': '1; mode=block',
-  'Strict-Transport-Security': 'max-age=31536000; includeSubDomains; preload',
-  'Content-Security-Policy': "default-src 'self'; frame-ancestors 'none'",
-  'Permissions-Policy': 'geolocation=(), microphone=(), camera=()',
-  'Referrer-Policy': 'strict-origin-when-cross-origin',
-};
-```
-
-### 5. Input Validation
-
-```typescript
-// Validation schema (Zod)
-const userCreateSchema = z.object({
-  email: z.string().email().max(255),
-  name: z.string().min(1).max(100).regex(/^[a-zA-Z\s\-']+$/),
-  password: z.string()
-    .min(12)
-    .regex(/[A-Z]/).regex(/[a-z]/)
-    .regex(/[0-9]/).regex(/[^A-Za-z0-9]/),
-});
-
-// Validate ALL input at boundaries
-```
-
-### 6. Authorization Checks
-
-```typescript
-// BAD: No authorization check
-app.get('/users/:id', async (req, res) => {
-  const user = await db.getUser(req.params.id);
-  res.json(user);
-});
-
-// GOOD: Proper authorization
-app.get('/users/:id', authenticate, async (req, res) => {
-  const user = await db.getUser(req.params.id);
-  if (!canAccess(req.user, user)) {
-    throw new ForbiddenError('Access denied');
-  }
-  res.json(sanitizeForViewer(user, req.user));
-});
+1. SCAN dependencies for vulnerabilities
+2. CHECK OWASP Top 10 categories
+3. VERIFY authentication implementation
+4. VERIFY authorization on all endpoints
+5. CHECK data protection (encryption, logging)
+6. REVIEW infrastructure configuration
+7. DOCUMENT all findings
 ```
 
 ---
 
-## Security Review Checklist
+## Blocking Conditions
 
-### Authentication
+These findings BLOCK release immediately:
+
+| Severity | Examples | Response |
+|----------|----------|----------|
+| Critical | RCE, Auth bypass, Data breach | HALT. Fix within 24h. |
+| High | Privilege escalation, SQLi, Stored XSS | BLOCK. Fix within 7 days. |
+| Medium | CSRF, Reflected XSS, Info disclosure | WARN. Fix within 30 days. |
+| Low | Minor info leak, Best practice | NOTE. Fix within 90 days. |
+
+**Critical or High = NO RELEASE**
+
+---
+
+## Authentication Checklist
+
 - [ ] Passwords hashed with bcrypt/argon2 (cost >= 10)
 - [ ] Sessions invalidated on password change
 - [ ] MFA available for sensitive operations
-- [ ] Rate limiting on auth endpoints
+- [ ] Rate limiting on auth endpoints (5 attempts, 15min lockout)
+- [ ] Secure cookies (secure, httpOnly, sameSite=strict)
 
-### Authorization
+IF any unchecked → DOCUMENT as finding.
+
+---
+
+## Authorization Checklist
+
 - [ ] Every endpoint has authorization check
 - [ ] No direct object references without ownership check
 - [ ] Admin functions require admin role
 - [ ] API keys have minimal required permissions
 
-### Input Validation
-- [ ] All input validated before processing
-- [ ] File uploads validated (type, size, content)
-- [ ] SQL queries use parameterized statements
-- [ ] No eval() or dynamic code execution
+IF any unchecked → DOCUMENT as finding.
 
-### Data Protection
+---
+
+## Data Protection Checklist
+
 - [ ] Sensitive data encrypted at rest
 - [ ] TLS 1.3 for all connections
 - [ ] PII not logged
-- [ ] Secrets not in code/config files
+- [ ] Secrets not in code/config files (use vault)
 
-### Error Handling
-- [ ] Errors don't leak sensitive info
-- [ ] Stack traces not shown to users
-- [ ] Generic error messages externally
+IF any unchecked → DOCUMENT as finding.
 
-### Headers & Config
-- [ ] Security headers set
-- [ ] CORS restricted to known origins
-- [ ] Cookies set secure, httponly, samesite
-- [ ] Debug mode disabled in production
+---
+
+## Required Security Headers
+
+```
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+Content-Security-Policy: default-src 'self'
+Referrer-Policy: strict-origin-when-cross-origin
+```
+
+VERIFY all headers present. Missing header = Medium finding.
+
+---
+
+## Feedback Routing
+
+| Issue | Route To |
+|-------|----------|
+| Architecture insecure | solution-architect |
+| Data model exposes PII | data-engineer |
+| API exposes sensitive data | API designer |
+| Code vulnerability | fullstack-developer |
+| Infrastructure misconfiguration | platform-engineer |
+| Missing compliance requirement | business-analyst |
 
 ---
 
 ## Handoff Checklist
 
-Before release:
+Before passing to release:
+
 - [ ] Security review completed
-- [ ] No high/critical findings
+- [ ] No Critical findings
+- [ ] No High findings (or risk accepted in writing)
 - [ ] Dependency vulnerabilities checked
-- [ ] Secrets rotated and secured
-- [ ] Penetration test scheduled (for major releases)
+- [ ] All findings logged with VULN-XXX
+
+IF Critical or High exists → BLOCK RELEASE.
 
 ---
 
-## Output Location
+## Output
 
 ```
 docs/security/
-├── SECURITY-REVIEW.md         # Security assessment and checklist
-└── VULNERABILITY-REPORT.md    # Found vulnerabilities (VULN-XXX)
+├── SECURITY-REVIEW.md         # Completed checklist
+└── VULNERABILITY-REPORT.md    # All VULN-XXX findings
 ```
 
-**Naming:** `VULN-001`, `VULN-002`, etc. Include severity (Critical/High/Medium/Low) and OWASP category.
-
-**Vulnerability Report Format:**
+**Finding Format:**
 | ID | Severity | Category | Description | Status |
 |----|----------|----------|-------------|--------|
-| VULN-001 | High | A03:Injection | SQL injection in search | Fixed |
+| VULN-001 | High | A03:Injection | SQL injection in search | Open |

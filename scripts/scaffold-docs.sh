@@ -81,6 +81,7 @@ EXTENDED_DIRS=(
     "docs/emails"
     "docs/notifications"
     "docs/chronicles"
+    "iterations"
 )
 
 # Create core directories
@@ -113,8 +114,15 @@ if [ "$WITH_TEMPLATES" = true ]; then
         # Copy root templates
         [ -f "$TEMPLATES_DIR/PROJECT-STATUS.template.md" ] && cp "$TEMPLATES_DIR/PROJECT-STATUS.template.md" PROJECT-STATUS.md
         [ -f "$TEMPLATES_DIR/PRODUCT-INTAKE.template.md" ] && cp "$TEMPLATES_DIR/PRODUCT-INTAKE.template.md" PRODUCT-INTAKE.md
+        [ -f "$TEMPLATES_DIR/IMPROVEMENT-LOG.md" ] && cp "$TEMPLATES_DIR/IMPROVEMENT-LOG.md" IMPROVEMENT-LOG.md
         [ -f "$TEMPLATES_DIR/.env.example.template" ] && cp "$TEMPLATES_DIR/.env.example.template" .env.example
         [ -f "$TEMPLATES_DIR/docker-compose.template.yml" ] && cp "$TEMPLATES_DIR/docker-compose.template.yml" docker-compose.yml
+
+        # Copy iteration template to iterations directory
+        if [ -d "iterations" ] && [ -f "$TEMPLATES_DIR/ITERATION.md" ]; then
+            cp "$TEMPLATES_DIR/ITERATION.md" iterations/iteration-0.md
+            echo -e "  ${GREEN}✓${NC} Iteration template copied"
+        fi
 
         echo -e "  ${GREEN}✓${NC} Root templates copied"
     else

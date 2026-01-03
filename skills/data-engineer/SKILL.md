@@ -1,19 +1,26 @@
 ---
 name: data-engineer
-description: Design database schemas, data models, data warehouses, ETL pipelines, and reporting infrastructure. Use when designing databases, building data pipelines, planning migrations, or creating BI reporting systems.
+description: Design database schemas and generate binding type contracts. Developer MUST use exact field names from TYPE-CONTRACTS.ts. No improvisation.
 ---
 
-You are a Data Engineer. Your role is to design data structures, pipelines, and analytics infrastructure that are performant, scalable, and maintainable.
+# Data Engineer
 
-## When to Use This Skill
+Design schemas. Generate type contracts. Developers use YOUR names, not their own.
 
-- Designing database schemas
-- Planning data migrations
-- Optimizing queries and indexes
-- Modeling complex domains
-- Building ETL pipelines
-- Setting up data warehouses
-- Creating reporting infrastructure
+## Rules
+
+1. GENERATE TYPE-CONTRACTS.ts with exact field names. This is the binding contract.
+2. USE snake_case for database columns. USE camelCase for TypeScript types.
+3. DOCUMENT field mapping explicitly (db_column → tsField).
+4. NO field name improvisation. If not in contract, it doesn't exist.
+5. BLOCK development if contracts incomplete.
+
+## References
+
+| File | Content |
+|------|---------|
+| `references/type-contracts.md` | How to generate TypeScript contracts |
+| `references/naming-conventions.md` | DB vs code naming rules |
 
 ---
 
@@ -265,11 +272,81 @@ CREATE INDEX idx_audit_log_target ON audit_log(target_type, target_id);
 
 ---
 
+---
+
+## TYPE CONTRACTS (MANDATORY)
+
+Generate binding TypeScript contracts for ALL entities:
+
+```typescript
+// docs/data/TYPE-CONTRACTS.ts
+
+/**
+ * DATABASE TO CODE MAPPING
+ * DB columns use snake_case, TypeScript uses camelCase
+ * This file is the SINGLE SOURCE OF TRUTH
+ */
+
+// === User Entity ===
+// DB Table: users
+export interface User {
+  id: string;           // DB: id (UUID)
+  email: string;        // DB: email (VARCHAR)
+  passwordHash: string; // DB: password_hash (VARCHAR)
+  createdAt: Date;      // DB: created_at (TIMESTAMP)
+  updatedAt: Date;      // DB: updated_at (TIMESTAMP)
+}
+
+// Field mapping for ORM/queries
+export const UserFields = {
+  id: 'id',
+  email: 'email',
+  passwordHash: 'password_hash',
+  createdAt: 'created_at',
+  updatedAt: 'updated_at',
+} as const;
+
+// === Create/Update DTOs ===
+export interface CreateUserDTO {
+  email: string;
+  password: string;  // Note: becomes passwordHash after hashing
+  name: string;
+}
+
+export interface UpdateUserDTO {
+  name?: string;
+  email?: string;
+}
+```
+
+### Contract Rules
+
+1. **Every entity** gets an interface with exact field names
+2. **Every field** includes comment with DB column name
+3. **Field mapping object** for ORM/raw queries
+4. **DTOs** for create/update operations
+
+### Developer Usage
+
+Developer MUST:
+```typescript
+import { User, UserFields, CreateUserDTO } from '@/types/contracts';
+
+// Correct - uses contract types
+const user: User = await db.query(`SELECT ${UserFields.email} FROM users`);
+
+// WRONG - inventing field names
+const user = { userName: '...' };  // ❌ Not in contract
+```
+
+---
+
 ## Output Location
 
 ```
 docs/data/
 ├── DATA-MODEL.md              # Entity definitions and relationships
+├── TYPE-CONTRACTS.ts          # BINDING TypeScript types (MANDATORY)
 ├── ERD.md                     # Entity-Relationship Diagram (Mermaid)
 ├── SCHEMA.sql                 # SQL schema definitions
 ├── WAREHOUSE-SCHEMA.md        # Star schema, dimensions, facts
@@ -279,3 +356,5 @@ docs/data/
     ├── 001_initial_schema.sql
     └── ...
 ```
+
+**CRITICAL:** TYPE-CONTRACTS.ts MUST exist before development starts. Developer MUST import and use these types.
