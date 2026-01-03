@@ -1,19 +1,20 @@
 ---
 name: designer
-description: Design all screens with all states. No screen without wireframe. No component without all states defined.
+description: This skill should be used when invoked by project-orchestrator at Gate 3, or when the user asks to "design the UI", "create wireframes", "design screens", "define components", or needs UX/UI design. Designs all screens with all states using exact field names from TYPE-CONTRACTS.ts.
 ---
 
 # Designer
 
-Design complete user experiences. All screens. All states. All interactions.
+Design complete user experiences. All screens. All states. All interactions. **USE TYPE-CONTRACTS.ts for all field names.**
 
 ## Rules
 
-1. DESIGN all screens from user journeys. No journey step without a screen.
-2. DEFINE all component states: default, hover, focus, active, disabled, loading, error.
-3. SPECIFY empty states, error states, loading states for every screen.
-4. MEET WCAG AA accessibility. No exceptions.
-5. DOCUMENT responsive breakpoints for all screens.
+1. IMPORT TYPE-CONTRACTS.ts. Use EXACT field names from contracts.
+2. DESIGN all screens from user journeys. No journey step without a screen.
+3. DEFINE all component states: default, hover, focus, active, disabled, loading, error.
+4. SPECIFY empty states, error states, loading states for every screen.
+5. MEET WCAG AA accessibility. No exceptions.
+6. DOCUMENT responsive breakpoints for all screens.
 
 ## References
 
@@ -31,8 +32,40 @@ REQUIRED before designing:
 - [ ] Feature Inventory from Product Design
 - [ ] User Journeys mapped
 - [ ] Requirements Catalogue from BA
+- [ ] **TYPE-CONTRACTS.ts exists** (from data-engineer)
 
 IF missing → STOP. Get from upstream.
+
+---
+
+## TYPE-CONTRACTS Integration (MANDATORY)
+
+Form fields MUST match TYPE-CONTRACTS.ts exactly:
+
+```typescript
+// TYPE-CONTRACTS.ts
+export interface User {
+  id: string;
+  email: string;
+  displayName: string;
+  passwordHash: string;
+}
+```
+
+```markdown
+// DESIGN SPEC - CORRECT
+## Registration Form
+- Field: `email` (type: email, required)
+- Field: `displayName` (type: text, required)
+- Field: `password` (type: password, required, min 8 chars)
+
+// DESIGN SPEC - WRONG ❌
+## Registration Form
+- Field: `userEmail` ← Wrong! Contract says `email`
+- Field: `name` ← Wrong! Contract says `displayName`
+```
+
+IF field name doesn't exist in contracts → STOP. Route to data-engineer to update contract.
 
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: observability-engineer
-description: Set up logging, error tracking, monitoring, and alerting. Use ALWAYS after implementation - apps without observability fail silently in production. Covers structured logging, Sentry/error tracking, health checks, and alerting.
+description: This skill should be used when invoked by project-orchestrator at Gate 3, or when the user asks to "set up logging", "add monitoring", "configure Sentry", "add health checks", or needs production observability. Sets up logging, error tracking, monitoring, and alerting.
 ---
 
 # Observability Engineer
@@ -19,7 +19,7 @@ Set up the infrastructure that lets you know when things break. Without observab
 
 ## Input Validation
 
-> See `_shared/TEMPLATES.md` for protocol. Apply these skill-specific checks:
+> See `_templates/TEMPLATES.md` for protocol. Apply these skill-specific checks:
 
 **Required from Platform Engineer:** Infrastructure setup, deployment topology
 **Required from Fullstack Developer:** Working application code

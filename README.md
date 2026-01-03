@@ -1,11 +1,16 @@
 # Development Workflow Plugin
 
-A comprehensive Claude Code plugin providing **34 specialized skills** for end-to-end product development. Features a streamlined workflow: **Product Intake → Product Design (Strategy→CX→Design) → BA → Architecture → Automated Implementation → QA → Product Validation → Deploy**.
+A comprehensive Claude Code plugin providing **48 specialized skills** for end-to-end product development - from raw idea through production. Supports **digital products, physical products, and services**.
+
+**Workflow**: **Innovation → Product Design → Marketing → BA → Architecture → Implementation → QA → Validation → Deploy**
 
 **Key Features:**
-- **Product Design as Central Authority** - Contains Strategy, CX, and Design phases internally; validates implementation before deploy
-- **Automated Implementation Phase** - Dev iterations flow without manual gate checks between each fix
-- **Combined Skills** - Reduced from 46+ to 34 by combining related skills (data-engineer, legal-compliance, project-tracker, etc.)
+- **13 Coordinator Agents** - Including innovation-coordinator and manufacturing-coordinator for full product lifecycle
+- **True Agile Parallelism** - `sprint-coordinator` manages work items at different phases simultaneously
+- **Multi-Product Support** - Digital (software), Physical (hardware/manufacturing), and Service design
+- **R&D/Innovation Phase** - Design thinking, feasibility studies, prototyping, IP strategy
+- **Full Documentation Suite** - User guides, training, technical docs, project chronicles
+- **48 Specialized Skills** - From innovation through production and user documentation
 - **10 Quality Gates** - From Product Design through Production Verification
 - **Requirements Traceability** - RTM tracks every requirement from design to production
 - **Project Chronicles** - Auto-generated HTML documentation at each milestone
@@ -153,7 +158,7 @@ Use the qa-engineer skill to create a test plan for my login feature.
 ```
 
 ```
-Use the svg-designer skill to create icons for my navigation menu.
+Use the visual-designer skill to create icons for my navigation menu.
 ```
 
 ```
@@ -168,7 +173,7 @@ Use the data-engineer skill to design a schema for user subscriptions.
 
 | Task | Skill to Use | Example Prompt |
 |------|--------------|----------------|
-| **Create icons/logos** | `svg-designer` | "Create a logo for my app called TaskFlow" |
+| **Create icons/logos** | `visual-designer` | "Create a logo for my app called TaskFlow" |
 | **Design database** | `data-engineer` | "Design a schema for an e-commerce product catalog" |
 | **Write tests** | `qa-engineer` | "Create test cases for user registration" |
 | **Review security** | `security-engineer` | "Review this API for security vulnerabilities" |
@@ -178,6 +183,9 @@ Use the data-engineer skill to design a schema for user subscriptions.
 | **Plan reliability** | `reliability-engineer` | "Design SLOs and monitoring for my API" |
 | **Create email templates** | `email-designer` | "Create a welcome email template" |
 | **Setup notifications** | `notification-designer` | "Design push notification strategy for my app" |
+| **Plan marketing** | `marketing-strategist` | "Create GTM strategy for my SaaS product launch" |
+| **Optimize for search** | `seo-specialist` | "Create SEO strategy and meta tags for my website" |
+| **Create diagrams** | `diagram-designer` | "Design architecture diagram for my microservices" |
 
 #### Skill Chaining (Manual Pipeline)
 
@@ -185,9 +193,40 @@ You can also chain skills manually for a focused workflow:
 
 ```
 1. Use the designer skill to create user flows and wireframes for checkout
-2. Use the svg-designer skill to create icons needed in the wireframes
+2. Use the visual-designer skill to create icons needed in the wireframes
 3. Use the fullstack-developer skill to implement the designs
 ```
+
+### Using Agents for Coordination
+
+Agents coordinate multiple skills for complex workflows. Use agents when:
+
+| Scenario | Agent to Use | What It Does |
+|----------|--------------|--------------|
+| Starting a new project | `project-lead` | Orchestrates full workflow from intake to deploy |
+| R&D / Early ideation | `innovation-coordinator` | Coordinates design thinking, feasibility, prototyping, IP |
+| Starting discovery/requirements | `discovery-coordinator` | Coordinates intake → product-design → research → BA |
+| Managing parallel work | `sprint-coordinator` | Tracks work items at different phases, routes blockers |
+| Design phase work | `design-coordinator` | Ensures design completeness, consistency, accessibility |
+| Architecture/security decisions | `technical-reviewer` | Coordinates architect + security + API reviews |
+| Physical product development | `manufacturing-coordinator` | Coordinates industrial design, manufacturing, compliance |
+| Data/analytics/ML work | `data-coordinator` | Coordinates schema, pipelines, test data, ML features |
+| Documentation & training | `docs-coordinator` | Coordinates technical docs, user guides, training, chronicles |
+| Production operations | `ops-coordinator` | Coordinates infrastructure, monitoring, reliability |
+| Preparing releases | `release-coordinator` | Coordinates versioning, deployment, rollback |
+
+**Example: Using sprint-coordinator for agile parallel work**
+
+```
+I have Feature A in QA, Feature B in design, and just got requirements for Feature C.
+Use the sprint-coordinator to manage these parallel work streams.
+```
+
+The sprint-coordinator will:
+1. Create a sprint board tracking all three features
+2. Route each to the appropriate phase coordinator
+3. Handle blockers without stopping other work
+4. Provide daily sync status across all items
 
 ## Commands
 
@@ -203,7 +242,7 @@ You can also chain skills manually for a focused workflow:
 | `/plan-next-release --minor` | Plan feature release |
 | `/plan-next-release --major` | Plan major version release |
 
-## Skills (34 Total)
+## Skills (51 Total)
 
 ### Meta/Management
 
@@ -215,12 +254,29 @@ You can also chain skills manually for a focused workflow:
 | `project-tracker`      | **Combined** - RTM + Kanban board + WIP limits + flow metrics |
 | `release-manager`      | Versioning, changelog, release notes           |
 
+### R&D / Innovation (NEW)
+
+| Skill                  | Purpose                                          |
+| ---------------------- | ------------------------------------------------ |
+| `innovation-strategist` | Design thinking, ideation, concept validation   |
+| `research-scientist`    | Technical feasibility, R&D planning, PoCs       |
+| `ip-strategist`         | Patents, trademarks, trade secrets, FTO         |
+| `prototype-engineer`    | Rapid prototyping, digital and physical         |
+
 ### Product Design (Central Authority)
 
 | Skill                | Purpose                                           |
 | -------------------- | ------------------------------------------------- |
 | `product-design`     | **3-phase flow**: Strategy → CX → Design. Validates implementation at end |
 | `ux-researcher`      | User interviews, usability testing                |
+| `service-designer`   | **NEW** - Service blueprints, touchpoints, operations |
+
+### Marketing & SEO
+
+| Skill                  | Purpose                                          |
+| ---------------------- | ------------------------------------------------ |
+| `marketing-strategist` | **NEW** - GTM strategy, brand positioning, campaign planning, launch communications |
+| `seo-specialist`       | **NEW** - Technical SEO, on-page SEO, content optimization, analytics setup |
 
 ### Requirements & Architecture
 
@@ -234,7 +290,8 @@ You can also chain skills manually for a focused workflow:
 | Skill          | Purpose                                              |
 | -------------- | ---------------------------------------------------- |
 | `designer`     | **Complete UX/UI/Interaction design** - flows, wireframes, visual design, design system, animations |
-| `svg-designer` | Icons, logos, illustrations, visual assets           |
+| `visual-designer` | Icons, logos, illustrations, posters, artistic pieces |
+| `diagram-designer` | **NEW** - Flowcharts, architecture diagrams, ERD, sequence diagrams, data visualizations |
 
 ### Data & API
 
@@ -304,18 +361,114 @@ You can also chain skills manually for a focused workflow:
 | `feature-flag-manager`      | **A/B testing, progressive rollouts, experiments** |
 | `i18n-designer`             | **Internationalization, localization, RTL support** |
 
-## Agents
+### Physical Products (NEW)
 
-Pre-configured agents for common workflows:
+| Skill                  | Purpose                                                |
+| ---------------------- | ------------------------------------------------------ |
+| `industrial-designer`  | Form design, ergonomics, CMF (Color, Material, Finish) |
+| `manufacturing-engineer` | Bill of Materials, production processes, quality control |
+| `packaging-designer`   | Primary/secondary packaging, unboxing experience, sustainability |
+| `regulatory-specialist` | CE/FCC/UL certifications, compliance testing, technical files |
 
-| Agent                | Purpose                                       |
-| -------------------- | --------------------------------------------- |
-| `project-lead`       | Orchestrates full development workflow        |
-| `code-developer`     | Implements features with best practices       |
-| `qa-reviewer`        | Verifies quality before release               |
-| `design-coordinator` | Coordinates UX + UI + Interaction alignment   |
-| `technical-reviewer` | Coordinates Architecture + Security reviews   |
-| `release-coordinator`| Coordinates Release Manager + DevOps          |
+### Documentation & Training (NEW)
+
+| Skill              | Purpose                                              |
+| ------------------ | ---------------------------------------------------- |
+| `user-guide-writer` | User manuals, quick start guides, FAQs, troubleshooting |
+| `training-designer` | Onboarding programs, courses, certification design   |
+| `docx` | Create/edit Word documents, tracked changes, professional exports |
+
+## Agents (16 Total)
+
+Pre-configured agents for orchestrating specialized workflows. Agents coordinate multiple skills and enable **true agile parallelism** where work items move through phases at different speeds.
+
+### Agent Coordination Architecture
+
+```
+                                 ┌─────────────────────────────────────────────────────────┐
+                                 │               project-lead (orchestrator)               │
+                                 │         Sets up projects, tracks gates & RTM            │
+                                 └─────────────────────────────────────────────────────────┘
+                                                            │
+     ┌──────────────────────────────────────────────────────┼──────────────────────────────────────────────────────┐
+     │                                                      │                                                      │
+     ▼                                                      ▼                                                      ▼
+┌────────────────────┐                           ┌───────────────────┐                           ┌───────────────────┐
+│ innovation-coord   │                           │ sprint-coord      │                           │ release-coord     │
+│ (R&D/ideation)     │──▶                        │ (parallel work)   │ ──── UPFB ────▶           │ (deploy)          │
+│ magenta            │                           │ magenta           │                           │ red               │
+└────────────────────┘                           └───────────────────┘                           └───────────────────┘
+     │                                            ┌────────┴────────┐
+     ▼                                            │                 │
+┌────────────────────┐                            ▼                 ▼
+│ discovery-coord    │                  ┌───────────────────┐ ┌───────────────────┐
+│ (intake→reqs)      │                  │ design-coord      │ │ code-developer    │
+│ cyan               │                  │ (UX/UI/a11y)      │ │ (implementation)  │
+└────────────────────┘                  │ cyan              │ │ green             │
+     │                                  └───────────────────┘ └───────────────────┘
+     ▼                                            │                   │
+┌────────────────────┐                            ▼                   ▼
+│ technical-reviewer │                  ┌───────────────────┐ ┌───────────────────┐
+│ (arch+security)    │                  │ docs-coordinator  │ │ qa-reviewer       │
+│ magenta            │                  │ (docs/chronicle)  │ │ (testing)         │
+└────────────────────┘                  │ yellow            │ │ yellow            │
+     │                                  └───────────────────┘ └───────────────────┘
+     ▼
+┌────────────────────┐   ┌────────────────────┐   ┌───────────────────┐
+│ data-coordinator   │   │ manufacturing-     │   │ ops-coordinator   │
+│ (data/ML/analytics)│   │ coordinator        │   │ (prod operations) │
+│ green              │   │ (physical products)│   │ red               │
+└────────────────────┘   │ green              │   └───────────────────┘
+                         └────────────────────┘
+```
+
+### Agent Descriptions
+
+| Agent | Color | Purpose | Skills Coordinated |
+| ----- | ----- | ------- | ------------------ |
+| `project-lead` | blue | Orchestrates full development workflow, enforces gates, manages RTM | All skills via routing |
+| `innovation-coordinator` | magenta | **NEW** - R&D from ideation through concept validation | innovation-strategist, research-scientist, ip-strategist, prototype-engineer |
+| `discovery-coordinator` | cyan | Early-phase work from intake through requirements | product-intake, product-design, **marketing-strategist**, ux-researcher, business-analyst |
+| `sprint-coordinator` | magenta | Manages parallel work items at different phases (key for agile) | All skills - routes work, manages blockers |
+| `design-coordinator` | cyan | Coordinates UX + UI + Interaction + Diagrams alignment | designer, visual-designer, **diagram-designer**, accessibility-specialist |
+| `technical-reviewer` | magenta | Coordinates Architecture + Security reviews | solution-architect, security-engineer, api-designer, data-engineer |
+| `manufacturing-coordinator` | green | **NEW** - Physical product development and compliance | industrial-designer, manufacturing-engineer, packaging-designer, regulatory-specialist |
+| `code-developer` | green | Implements features with best practices | fullstack-developer, **seo-specialist** (for web projects) |
+| `qa-reviewer` | yellow | Verifies quality before release | qa-engineer, implementation-verifier |
+| `data-coordinator` | green | All data-related work | data-engineer, data-analyst, demo-data-designer, ml-engineer |
+| `docs-coordinator` | yellow | Documentation across project lifecycle | technical-writer, content-strategist, project-chronicler, **user-guide-writer**, **training-designer**, **docx** |
+| `ops-coordinator` | red | Production operations and reliability | platform-engineer, observability-engineer, reliability-engineer |
+| `release-coordinator` | red | Coordinates Release Manager + DevOps | release-manager, platform-engineer, security-engineer |
+| `brownfield-coordinator` | cyan | **NEW** - Reverse engineering and documentation of existing codebases | codebase-archaeologist, service-designer, project-chronicler |
+| `integrations-coordinator` | green | **NEW** - Complex third-party integrations (payments, search, files, flags) | payment-integration-engineer, search-engineer, file-media-handler, feature-flag-manager |
+| `growth-coordinator` | magenta | **NEW** - Post-launch growth (SEO, notifications, marketing campaigns) | marketing-strategist, seo-specialist, notification-designer |
+
+### Agile Parallelism with sprint-coordinator
+
+The `sprint-coordinator` is the key agent enabling true agile development:
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          SPRINT BOARD                                        │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│   DISCOVERY    DESIGN      DEVELOPMENT     QA        RELEASE                │
+│   ─────────    ──────      ───────────     ──        ───────                │
+│   │WI-005│    │WI-003│      │WI-002│    │WI-001│                            │
+│   │WI-006│    │WI-004│      │      │    │      │    (waiting)               │
+│   └──────┘    └──────┘      └──────┘    └──────┘                            │
+│                                                                              │
+│   WI-001 is in QA while WI-005 is still in discovery                        │
+│   Each work item progresses independently                                   │
+│   Blockers are routed, other work continues                                 │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+**Key Capabilities:**
+- Track multiple work items at different phases simultaneously
+- Route blockers to appropriate coordinators without stopping all work
+- Enable feature tracks, hotfix tracks, and tech debt tracks in parallel
+- Maintain sprint visibility with daily syncs and flow metrics
 
 ## Agile Workflow (Bidirectional Feedback)
 
@@ -333,18 +486,33 @@ Pre-configured agents for common workflows:
 
 ```
 ┌────────────────────────────────────────────────────────────────────────────┐
-│                  project-orchestrator (10 Gates + AGILE)                    │
+│                  project-orchestrator (10+ Gates + AGILE)                   │
 │                                                                             │
 │   ◄─────────────────── UPSTREAM FEEDBACK FLOWS ─────────────────────►      │
 │   (Any skill can trigger changes to any earlier phase via UPFB-XXX)        │
 ├────────────────────────────────────────────────────────────────────────────┤
 │                                                                             │
 │   ╔═══════════════════════════════════════════════════════════════════╗    │
+│   ║          R&D / INNOVATION PHASE (Optional - for vague ideas)      ║    │
+│   ║   ┌──────────────────┐  ┌───────────────┐  ┌─────────────────┐    ║    │
+│   ║   │ INNOVATION       │─►│ RESEARCH      │─►│ PROTOTYPE       │    ║    │
+│   ║   │ STRATEGIST       │  │ SCIENTIST     │  │ ENGINEER        │    ║    │
+│   ║   │ (Design Thinking)│  │ (Feasibility) │  │ (PoC)           │    ║    │
+│   ║   └──────────────────┘  └───────────────┘  └─────────────────┘    ║    │
+│   ║                      + IP-STRATEGIST (Patent/Trademark Strategy)  ║    │
+│   ╚═══════════════════════════════════════════════════════════════════╝    │
+│                           ▼ [Validated Concept Ready]                      │
+│                                                                             │
+│   ╔═══════════════════════════════════════════════════════════════════╗    │
 │   ║                    PRODUCT DEFINITION PHASE                        ║    │
 │   ║   ┌────────────────┐    ┌─────────────────────────────────────┐   ║    │
 │   ║   │ PRODUCT INTAKE │ ─► │ PRODUCT DESIGN (3-Phase Flow)       │   ║    │
 │   ║   │ (Gather info)  │    │  Strategy → CX → Design             │   ║    │
-│   ║   └────────────────┘    └─────────────────────────────────────┘   ║    │
+│   ║   └────────────────┘    └───────────────────┬─────────────────┘   ║    │
+│   ║                                             ▼                     ║    │
+│   ║             ┌─────────────────────────────────────────────────┐   ║    │
+│   ║             │ MARKETING STRATEGIST (GTM, positioning)         │   ║    │
+│   ║             └─────────────────────────────────────────────────┘   ║    │
 │   ╚═══════════════════════════════════════════════════════════════════╝    │
 │                               ▼ [GATE 0: Product Design Complete?]         │
 │                                                                             │
@@ -358,7 +526,8 @@ Pre-configured agents for common workflows:
 │                                                                             │
 │   ╔═══════════════════════════════════════════════════════════════════╗    │
 │   ║                    DESIGN PHASE                                    ║    │
-│   ║   DESIGNER ──► PLATFORM-ENGINEER ──► COLLAB: Design+Dev           ║    │
+│   ║   DESIGNER ──► DIAGRAM-DESIGNER ──► PLATFORM-ENGINEER             ║    │
+│   ║                      ──► COLLAB: Design+Dev                        ║    │
 │   ╚═══════════════════════════════════════════════════════════════════╝    │
 │                               ▼ [GATE 3: Design + Infrastructure Ready?]   │
 │                                                                             │
@@ -401,6 +570,9 @@ Pre-configured agents for common workflows:
 |--------|-------------|
 | **Product Intake First** | Orchestrator calls `product-intake` before anything else |
 | **Product Design 3-Phase** | Strategy → CX → Design all within `product-design` skill |
+| **Marketing Strategy** | `marketing-strategist` runs alongside UX research for GTM planning |
+| **Diagram Design** | `diagram-designer` creates architecture, flowcharts, ERD with proper layout |
+| **SEO Integration** | `seo-specialist` ensures search visibility for web projects |
 | **Automated Implementation** | Dev iterations flow without manual gate checks |
 | **Product Validation Gate** | `product-design` validates implementation before deploy |
 | **Combined Skills** | Fewer skills, same coverage (data-engineer, legal-compliance, etc.) |
@@ -696,6 +868,48 @@ docs/
 │   ├── USER-FLOWS.md
 │   ├── WIREFRAMES.md
 │   └── UI-SPEC.md
+├── diagrams/            # Diagram Designer outputs
+│   ├── flows/           # Flowcharts
+│   ├── architecture/    # System diagrams
+│   ├── data/            # ERD diagrams
+│   └── charts/          # Data visualizations
+├── marketing/           # Marketing Strategist outputs
+│   ├── MARKETING-STRATEGY.md
+│   ├── MESSAGING-FRAMEWORK.md
+│   ├── CAMPAIGN-PLAN.md
+│   └── LAUNCH-PLAN.md
+├── seo/                 # SEO Specialist outputs
+│   ├── SEO-STRATEGY.md
+│   ├── TECHNICAL-SEO.md
+│   ├── ON-PAGE-SEO.md
+│   └── ANALYTICS-SETUP.md
+├── innovation/          # R&D / Innovation outputs (NEW)
+│   ├── VALIDATED-CONCEPT.md
+│   ├── FEASIBILITY-STUDY.md
+│   ├── IP-STRATEGY.md
+│   └── PROTOTYPE-REPORT.md
+├── manufacturing/       # Physical product outputs (NEW)
+│   ├── FORM-DESIGN.md
+│   ├── CMF-SPEC.md
+│   ├── BOM.md
+│   ├── MFG-PLAN.md
+│   ├── PACKAGING-SPEC.md
+│   └── REGULATORY/
+│       ├── TEST-PLAN.md
+│       └── TECHNICAL-FILE/
+├── service-design/      # Service design outputs (NEW)
+│   ├── SERVICE-BLUEPRINT.md
+│   ├── JOURNEY-MAPS.md
+│   └── OPERATIONS-DESIGN.md
+├── user-guide/          # User documentation (NEW)
+│   ├── USER-MANUAL.md
+│   ├── QUICK-START.md
+│   ├── HOW-TOS/
+│   └── FAQ.md
+├── training/            # Training content (NEW)
+│   ├── TRAINING-PLAN.md
+│   ├── ONBOARDING/
+│   └── CERTIFICATION/
 ├── qa/                  # QA Engineer outputs
 │   ├── TEST-PLAN.md
 │   └── DEFECT-LOG.md
@@ -712,14 +926,34 @@ docs/
 
 ## Project Chronicle
 
-The `project-chronicler` skill generates a self-contained HTML file documenting the entire project journey:
+The `project-chronicler` skill generates a **comprehensive, self-contained HTML documentation suite** that captures the complete project:
 
-- **Timeline**: Visual journey from discovery to deployment with gate markers
-- **Artifact Gallery**: All produced documents organized by type
-- **Decision Log**: ADRs with context and consequences
-- **Metrics Dashboard**: Gates passed, defects resolved, test coverage
-- **Diagrams**: Architecture, ERD, sequence diagrams (via Mermaid.js)
-- **Workflow Visualization**: Skill invocation sequence
+### Chronicle Sections
+
+| Section | Content |
+|---------|---------|
+| **Overview Dashboard** | Current phase, gates passed, days in dev, metrics |
+| **Journey Timeline** | Visual vertical timeline with gates and milestones |
+| **Artifact Gallery** | All documents organized by category |
+| **Requirements Traceability** | Coverage summary, REQ→Implementation→Test→Validation |
+| **Decision Log** | ADRs with context and consequences |
+| **Persona Gallery** | Visual persona cards with demographics, goals, pain points |
+| **User Journey Visualization** | Interactive flow diagrams with touchpoints |
+| **Feature-Capability Matrix** | Requirements mapped to delivered features |
+| **Design System Summary** | Colors, typography, components |
+| **Quick Start Guide** | Embedded from user-guide-writer |
+| **Release Information** | Version, features shipped, roadmap |
+| **Diagrams** | Architecture, ERD, sequences (Mermaid.js) |
+
+### Chronicle Variants
+
+| Variant | Command | Content |
+|---------|---------|---------|
+| **Full** | `/project-chronicle --full` | All sections, embedded artifacts |
+| **Minimal** | `/project-chronicle --minimal` | Summary, timeline, key metrics |
+| **Stakeholder** | `/project-chronicle --stakeholder` | Business-focused, no technical details |
+| **Developer** | `/project-chronicle --developer` | Technical focus, architecture, code refs |
+| **User** | `/project-chronicle --user` | User-facing, journeys, guides, features |
 
 Generated automatically at phase completion or manually via `/project-chronicle`.
 

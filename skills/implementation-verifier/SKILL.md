@@ -1,6 +1,6 @@
 ---
 name: implementation-verifier
-description: Verify the implementation actually works before QA testing. Smoke test infrastructure, routes, database connections, and basic functionality. Use ALWAYS after development, before QA. Catches "it doesn't even start" issues early.
+description: This skill should be used when invoked by project-orchestrator at Gate 5 (before QA), or when the user asks to "verify the implementation", "smoke test", "check if it runs", or needs pre-QA validation. Smoke tests infrastructure, routes, and database to catch "it doesn't even start" issues.
 ---
 
 # Implementation Verifier

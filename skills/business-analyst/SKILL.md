@@ -1,6 +1,6 @@
 ---
 name: business-analyst
-description: Transform features into testable requirements. VALIDATE product meets requirements before release. REJECT if stories fail.
+description: This skill should be used when invoked by project-orchestrator at Gate 1 (requirements) or Gate 6 (BAT validation), or when the user asks to "write requirements", "create user stories", or "validate the product". Transforms F-XXX features into REQ-XXX requirements and validates product meets requirements before release.
 ---
 
 # Business Analyst

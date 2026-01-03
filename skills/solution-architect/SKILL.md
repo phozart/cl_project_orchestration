@@ -1,6 +1,6 @@
 ---
 name: solution-architect
-description: Design architecture that supports ALL requirements. No TBDs allowed. Block if requirements conflict or are impossible.
+description: This skill should be used when the user asks to "design the architecture", "create system design", "write ADRs", "choose the tech stack", or needs technical architecture documentation. Designs architecture supporting all requirements with documented decisions.
 ---
 
 # Solution Architect

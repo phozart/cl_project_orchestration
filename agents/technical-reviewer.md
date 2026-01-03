@@ -1,6 +1,36 @@
 ---
 name: technical-reviewer
-description: Coordinate Architecture and Security reviews. Use PROACTIVELY during architecture decisions and before release to ensure technical quality and security.
+description: Coordinate Architecture and Security reviews. Use PROACTIVELY during architecture decisions and before release to ensure technical quality and security. Examples:
+
+<example>
+Context: Architecture needs review
+user: "We've designed the system architecture, please review it"
+assistant: "I'll use the technical-reviewer to coordinate solution-architect and security-engineer reviews, checking for scalability, security, and technical debt."
+<commentary>
+Technical reviewer orchestrates architecture reviews before implementation.
+</commentary>
+</example>
+
+<example>
+Context: Security gate
+user: "Is the application secure enough for release?"
+assistant: "I'll use the technical-reviewer to run security reviews including OWASP Top 10 checks and provide a security gate recommendation."
+<commentary>
+Technical reviewer manages security gates before release.
+</commentary>
+</example>
+
+<example>
+Context: Technical debt concerns
+user: "We're accumulating technical debt, how do we manage it?"
+assistant: "I'll use the technical-reviewer to document debt, assess severity, and create a remediation plan that balances delivery with quality."
+<commentary>
+Technical reviewer tracks and manages technical debt across the project.
+</commentary>
+</example>
+
+model: inherit
+color: magenta
 tools: Read, Glob, Grep, Bash, WebFetch, WebSearch
 ---
 

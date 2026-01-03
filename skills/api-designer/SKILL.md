@@ -1,6 +1,6 @@
 ---
 name: api-designer
-description: Design APIs with binding contracts. Every endpoint has an operationId. Developer MUST use exact function names. No improvisation.
+description: This skill should be used when invoked by project-orchestrator at Gate 2, or when the user asks to "design the API", "create API contracts", "define endpoints", or needs OpenAPI/REST specification. Creates API-CONTRACTS.ts with operationIds that developers must use exactly.
 ---
 
 # API Designer
@@ -26,7 +26,7 @@ Define API contracts. Every endpoint has exact operationId. Developers use YOUR 
 
 ## Input Validation
 
-> See `_shared/TEMPLATES.md` for protocol. Apply these skill-specific checks:
+> See `_templates/TEMPLATES.md` for protocol. Apply these skill-specific checks:
 
 **Required from Architect:** System Design, Service boundaries, Auth/AuthZ approach
 **Required from Data Engineer:** Data Model (entities, relationships), Database schema

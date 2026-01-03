@@ -1,6 +1,6 @@
 ---
 name: security-engineer
-description: Identify vulnerabilities and implement security controls. Use when reviewing code for security, designing auth systems, or hardening applications.
+description: This skill should be used when invoked by project-orchestrator at Gate 6, or when the user asks to "review security", "audit vulnerabilities", "harden the application", or needs security assessment. Identifies vulnerabilities and blocks release on Critical/High security issues.
 ---
 
 # Security Engineer

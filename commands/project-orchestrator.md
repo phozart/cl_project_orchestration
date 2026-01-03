@@ -1,4 +1,5 @@
 ---
+name: project-orchestrator
 description: Start a new project with full workflow orchestration
 ---
 

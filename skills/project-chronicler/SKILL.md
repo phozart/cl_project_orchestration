@@ -1,11 +1,23 @@
 ---
 name: project-chronicler
-description: Generate a comprehensive, visually rich HTML chronicle documenting the complete project journey. Use when the project reaches milestones, after gate passes, or when the user requests /project-chronicle. Creates a self-contained HTML file with timeline, artifacts, decisions, metrics, and diagrams.
+description: This skill should be used when invoked by project-orchestrator at Gate 6, or when the user asks to "generate chronicle", "document the project", "/project-chronicle", or needs project documentation. Creates a COMPREHENSIVE HTML documentation suite including timeline, artifacts, decisions, diagrams, persona galleries, interactive flows, capability matrices, and user guide summaries.
 ---
 
-# Project Chronicler
+# Project Chronicler - Full Documentation Generator
 
-Generate a static HTML file that captures the complete project journey from idea to validation, including timeline visualization, artifact gallery, decision log, metrics dashboard, and architecture diagrams.
+Generate a comprehensive, self-contained HTML documentation suite that captures the complete project from idea to validation. Beyond a simple timeline, this produces a **complete product documentation package** suitable for stakeholders, users, and future developers.
+
+## Full Documentation Suite
+
+This skill produces documentation that includes:
+- **Project Journey** - Timeline, gates, milestones
+- **Persona Galleries** - Visual persona cards with demographics, goals, pain points
+- **User Journey Visualization** - Interactive flow diagrams
+- **Feature-Capability Matrix** - Requirements mapped to delivered features
+- **Design System Summary** - Colors, typography, components
+- **Architecture Overview** - System diagrams with explanations
+- **User Guide Summary** - Key how-tos embedded from documentation
+- **Release Information** - What shipped, what's next
 
 ## When to Use This Skill
 
@@ -20,7 +32,7 @@ Generate a static HTML file that captures the complete project journey from idea
 
 ## Input Validation
 
-> See `_shared/TEMPLATES.md` for protocol. Apply these skill-specific checks:
+> See `_templates/TEMPLATES.md` for protocol. Apply these skill-specific checks:
 
 **Required from Orchestrator:** PROJECT-STATUS.md, gate history, artifact list
 **Required from BA:** RTM.md (Requirements Traceability Matrix)
@@ -102,21 +114,92 @@ Auto-generated from architecture artifacts:
 - Sequence diagrams
 - Deployment topology
 
+### 9. Persona Gallery (NEW)
+Visual persona cards from UX research:
+```html
+<!-- Persona Card Template -->
+<div class="persona-card">
+  <div class="persona-avatar">[Generated avatar or placeholder]</div>
+  <h3>Sarah, Marketing Manager</h3>
+  <div class="persona-demographics">
+    <span class="age">34 years old</span>
+    <span class="location">San Francisco, CA</span>
+  </div>
+  <div class="persona-quote">"I need to see ROI on every tool we use."</div>
+  <div class="persona-section">
+    <h4>Goals</h4>
+    <ul><li>Streamline campaign management</li></ul>
+  </div>
+  <div class="persona-section">
+    <h4>Pain Points</h4>
+    <ul><li>Too many disconnected tools</li></ul>
+  </div>
+  <div class="persona-section">
+    <h4>Behaviors</h4>
+    <ul><li>Checks metrics daily</li></ul>
+  </div>
+</div>
+```
+
+### 10. User Journey Visualization (NEW)
+Interactive journey maps from service-designer/designer:
+- Step-by-step flow with emotional indicators
+- Touchpoint icons (web, email, app, phone)
+- Pain point and delight markers
+- Connection to personas
+
+### 11. Feature-Capability Matrix (NEW)
+Maps requirements to delivered capabilities:
+```markdown
+| Requirement | Feature | Status | Evidence |
+|-------------|---------|--------|----------|
+| REQ-001: User login | Auth Module | ✅ Implemented | auth/login.ts:45 |
+| REQ-002: Dashboard | Dashboard | ✅ Implemented | pages/dashboard.tsx |
+| REQ-003: Export | Export Module | 🚧 Partial | export/csv.ts |
+```
+
+### 12. Design System Summary (NEW)
+Embedded design tokens and component preview:
+- Color palette with hex/rgb values
+- Typography scale
+- Spacing system
+- Key component examples (buttons, cards, forms)
+- Icon library preview
+
+### 13. Quick Start Guide (NEW)
+Embedded from user-guide-writer:
+- Installation steps
+- First-time setup
+- Key features with screenshots
+- Common tasks
+
+### 14. Release Information (NEW)
+- Current version and release date
+- Key features shipped
+- Known limitations
+- Roadmap preview (next 2-3 releases)
+- Migration notes (if applicable)
+
 ---
 
 ## Document Sources
 
-| Skill | Location | Files |
-|-------|----------|-------|
-| orchestrator | `./` | PROJECT-STATUS.md |
-| product-design | `docs/product/` | Vision, Features, MVP |
-| business-analyst | `docs/requirements/` | BRD, Catalogue, Stories |
-| project-tracker | `docs/traceability/` | RTM.md |
-| solution-architect | `docs/architecture/` | Design, Tech Stack, ADRs |
-| designer | `docs/design/` | Flows, Wireframes, System |
-| qa-engineer | `docs/testing/` | Plan, Results, Defects |
-| security-engineer | `docs/security/` | SECURITY-REVIEW.md |
-| feedback loops | `./FEEDBACK/` | FEEDBACK-*.md |
+| Skill | Location | Files | Chronicle Section |
+|-------|----------|-------|-------------------|
+| orchestrator | `./` | PROJECT-STATUS.md | Overview, Timeline |
+| product-design | `docs/product/` | Vision, Features, MVP | Overview, Features |
+| ux-researcher | `docs/research/` | Personas, Journeys | Persona Gallery, Journeys |
+| business-analyst | `docs/requirements/` | BRD, Catalogue, Stories | Requirements, Matrix |
+| project-tracker | `docs/traceability/` | RTM.md | Traceability |
+| solution-architect | `docs/architecture/` | Design, Tech Stack, ADRs | Architecture, Decisions |
+| designer | `docs/design/` | Flows, Wireframes, System | Design System, Journeys |
+| service-designer | `docs/service-design/` | Blueprints, Journeys | Journey Visualization |
+| user-guide-writer | `docs/user-guide/` | Quick Start, How-tos | Quick Start Guide |
+| release-manager | `docs/releases/` | CHANGELOG, Notes | Release Information |
+| qa-engineer | `docs/testing/` | Plan, Results, Defects | Metrics, Quality |
+| security-engineer | `docs/security/` | SECURITY-REVIEW.md | Security |
+| marketing-strategist | `docs/marketing/` | Messaging, Positioning | Product Overview |
+| feedback loops | `./FEEDBACK/` | FEEDBACK-*.md | Decisions |
 
 ---
 
@@ -200,6 +283,7 @@ Build cross-references by scanning for these patterns.
 
 ## Output
 
+### Primary Output
 **File**: `chronicles/PROJECT-CHRONICLE-[Name]-[Phase]-[YYYY-MM-DD].html`
 
 A self-contained HTML file that:
@@ -207,3 +291,25 @@ A self-contained HTML file that:
 - Supports dark/light theme toggle
 - Is print-friendly for PDF export
 - Can be shared as a standalone file
+
+### Chronicle Variants
+
+| Variant | Command | Content |
+|---------|---------|---------|
+| **Full** | `/project-chronicle --full` | All sections, embedded artifacts |
+| **Minimal** | `/project-chronicle --minimal` | Summary, timeline, key metrics only |
+| **Stakeholder** | `/project-chronicle --stakeholder` | Business-focused, no technical details |
+| **Developer** | `/project-chronicle --developer` | Technical focus, architecture, code refs |
+| **User** | `/project-chronicle --user` | User-facing, journeys, guides, features |
+
+### Interactive Features
+- **Navigation**: Sticky sidebar with section links
+- **Search**: Full-text search across all content
+- **Filters**: Filter by phase, status, persona
+- **Zoom**: Click diagrams to enlarge
+- **Print**: Optimized print styles, page breaks
+
+### Export Options
+- **HTML**: Self-contained, shareable file
+- **PDF**: Print dialog → Save as PDF
+- **JSON**: `/project-chronicle --json` for data export

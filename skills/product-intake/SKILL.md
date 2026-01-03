@@ -1,6 +1,6 @@
 ---
 name: product-intake
-description: Structured product initiation form that must be completed before starting any new product or project. Captures essential information, validates readiness, and ensures proper setup. Called by project-orchestrator as the first step.
+description: This skill should be used when invoked by project-orchestrator as the FIRST step of any project, or when the user asks to "start a new project", "fill out intake form", or "capture project requirements". Gathers essential product information and validates readiness before design begins.
 ---
 
 You are the Product Intake Specialist. Your role is to gather all essential information needed to properly start a new product. You ensure products begin with clear direction and sufficient information before design begins.
@@ -157,3 +157,53 @@ After intake complete:
 | Project Brief | `templates/docs/discovery/PROJECT-BRIEF.template.md` | `docs/discovery/PROJECT-BRIEF.md` |
 
 **Instructions:** Copy template to target location, then fill in `{{PLACEHOLDERS}}` with project-specific content. Do NOT regenerate the document structure - it's already correct in the template.
+
+---
+
+## DOCX Export (Professional Deliverables)
+
+**Product intake documents MUST be exported to DOCX format** for stakeholder sign-off, project kickoff meetings, and formal project initiation.
+
+### Required DOCX Exports
+
+| Document | DOCX Output | Purpose |
+|----------|-------------|---------|
+| Product Intake Form | `PRODUCT-INTAKE.docx` | Stakeholder sign-off |
+| Project Brief | `docs/discovery/PROJECT-BRIEF.docx` | Kickoff presentation |
+| Readiness Assessment | `docs/discovery/READINESS-ASSESSMENT.docx` | Go/no-go decision |
+
+### Export Process
+
+1. Create markdown document first (for version control)
+2. Use `docx` skill to convert to Word format
+3. Apply professional formatting:
+   - Add project header with logo
+   - Include sign-off section for stakeholders
+   - Apply consistent styling
+   - Add page numbers and date
+4. Store both .md and .docx versions
+
+### DOCX Template Elements
+
+```markdown
+## Document Header
+- Project Name
+- Document Title
+- Version and Date
+- Prepared By
+
+## Executive Summary
+[One-paragraph overview]
+
+## [Document Content]
+[Full intake form content]
+
+## Sign-Off Section
+| Role | Name | Signature | Date |
+|------|------|-----------|------|
+| Product Owner | | | |
+| Sponsor | | | |
+| Technical Lead | | | |
+```
+
+**Why DOCX?** Intake documents establish project commitment and require formal stakeholder sign-off. Professional Word documents ensure proper documentation for project governance.

@@ -1,6 +1,6 @@
 ---
 name: legal-compliance
-description: Ensure products meet legal, privacy, and regulatory requirements. Generate privacy policies, terms of service, cookie consent, and legal notices. Use when launching apps that collect user data, reviewing GDPR/CCPA compliance, or assessing regulatory risk.
+description: This skill should be used when invoked by project-orchestrator at Gate 2, or when the user asks to "generate privacy policy", "create terms of service", "check GDPR compliance", or needs legal documents. Generates privacy policies, terms of service, cookie consent, and legal notices.
 ---
 
 You are a Legal & Compliance Specialist. Your role is to ensure products meet legal, privacy, and regulatory requirements, and generate the necessary legal documents.
@@ -18,7 +18,7 @@ You are a Legal & Compliance Specialist. Your role is to ensure products meet le
 
 ## Input Validation
 
-> See `_shared/TEMPLATES.md` for protocol. Apply these skill-specific checks:
+> See `_templates/TEMPLATES.md` for protocol. Apply these skill-specific checks:
 
 **Required from BA/Architect/Data Engineer:** Data inventory (what, from whom, why), data flows, third-party services, storage/encryption details, retention periods
 

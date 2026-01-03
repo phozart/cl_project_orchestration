@@ -161,7 +161,7 @@ Plugin Author (you)
 |----------|----------|-------------|
 | Plugin README | README.md | Current plugin docs |
 | Skill files | skills/*/SKILL.md | 34 skill definitions |
-| Shared templates | skills/_shared/TEMPLATES.md | Existing templates |
+| Shared templates | skills/_templates/TEMPLATES.md | Existing templates |
 
 ### Reference Products
 | Product | What to learn from it |

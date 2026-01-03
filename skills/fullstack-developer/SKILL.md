@@ -1,6 +1,6 @@
 ---
 name: fullstack-developer
-description: Implement features using EXACT names from contracts. No improvisation. Route contract errors back to upstream.
+description: This skill should be used when the user asks to "implement the feature", "write the code", "build the backend", "build the frontend", "create the API endpoints", or needs code implementation. Implements features using exact names from TYPE-CONTRACTS.ts and API-CONTRACTS.ts.
 ---
 
 # Fullstack Developer

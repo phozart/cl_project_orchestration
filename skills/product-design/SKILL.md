@@ -1,6 +1,6 @@
 ---
 name: product-design
-description: Define product vision, features, and MVP scope. VALIDATOR for all downstream work. If implementation doesn't match design, it's wrong.
+description: This skill should be used when the user asks to "define the product", "create feature list", "scope the MVP", "map user journeys", "validate the implementation", or needs product strategy and feature inventory. Defines product vision, 50-100 features, and validates downstream work.
 ---
 
 # Product Design
@@ -199,3 +199,58 @@ docs/product/
 | `templates/docs/product/PRODUCT-VISION.template.md` | `docs/product/PRODUCT-VISION.md` |
 | `templates/docs/product/FEATURE-INVENTORY.template.md` | `docs/product/FEATURE-INVENTORY.md` |
 | `templates/docs/product/MVP-SCOPE.template.md` | `docs/product/MVP-SCOPE.md` |
+
+---
+
+## DOCX Export (Professional Deliverables)
+
+**All product design documents MUST be exported to DOCX format** for stakeholder review, executive presentations, and formal approvals.
+
+### Required DOCX Exports
+
+| Document | DOCX Output | Purpose |
+|----------|-------------|---------|
+| Product Vision | `docs/product/PRODUCT-VISION.docx` | Executive/board presentations |
+| Market Analysis | `docs/discovery/MARKET-ANALYSIS.docx` | Investor/stakeholder review |
+| Competitive Analysis | `docs/discovery/COMPETITIVE-ANALYSIS.docx` | Strategic planning |
+| Business Model | `docs/discovery/BUSINESS-MODEL.docx` | Business case approval |
+| Feature Inventory | `docs/product/FEATURE-INVENTORY.docx` | Scope sign-off |
+| MVP Scope | `docs/product/MVP-SCOPE.docx` | Milestone approval |
+| Customer Journeys | `docs/experience/CUSTOMER-JOURNEYS.docx` | CX review |
+| Validation Report | `docs/product/VALIDATION-REPORT.docx` | Release approval |
+
+### Export Process
+
+1. Create markdown document first (for version control)
+2. Use `docx` skill to convert to Word format
+3. Apply professional formatting:
+   - Add table of contents
+   - Include executive summary
+   - Apply consistent styling
+   - Add page numbers and date
+4. Store both .md and .docx versions
+
+### DOCX Template Elements
+
+```markdown
+## Document Header
+- Product/Project Name
+- Document Title
+- Version and Date
+- Author/Team
+- Confidentiality notice
+
+## Executive Summary
+[Brief overview for stakeholders]
+
+## Table of Contents
+[Auto-generated]
+
+## [Document Content]
+[Full content from markdown]
+
+## Appendices
+[Supporting materials]
+```
+
+**Why DOCX?** Product design documents require stakeholder approval and are frequently shared with executives, investors, and partners who expect professional Word documents for review and sign-off.

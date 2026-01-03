@@ -1,6 +1,36 @@
 ---
 name: project-lead
-description: Expert project orchestrator that coordinates development workflow, invokes skills in order, enforces quality gates, manages requirements traceability, and ensures no requirements are lost. Use PROACTIVELY when starting any new project or feature development.
+description: Expert project orchestrator that coordinates development workflow, invokes skills in order, enforces quality gates, manages requirements traceability, and ensures no requirements are lost. Use PROACTIVELY when starting any new project or feature development. Examples:
+
+<example>
+Context: User wants to start a new project
+user: "Let's build a new task management application"
+assistant: "I'll use the project-lead agent to orchestrate the full development workflow, starting with discovery and coordinating through all phases to deployment."
+<commentary>
+Project lead is the top-level orchestrator for new projects.
+</commentary>
+</example>
+
+<example>
+Context: Project is in progress, checking status
+user: "What's the current status of the project?"
+assistant: "I'll use the project-lead agent to provide a status report across all phases, check gate status, and identify any blockers."
+<commentary>
+Project lead maintains visibility across the entire project.
+</commentary>
+</example>
+
+<example>
+Context: Quality gate failed
+user: "The QA gate failed, what do we do?"
+assistant: "I'll use the project-lead agent to analyze the gate failure, route issues to responsible coordinators, and track resolution before re-attempting the gate."
+<commentary>
+Project lead manages gate failures and coordinates resolution.
+</commentary>
+</example>
+
+model: inherit
+color: blue
 tools: Read, Glob, Grep, Bash, WebFetch, WebSearch
 ---
 

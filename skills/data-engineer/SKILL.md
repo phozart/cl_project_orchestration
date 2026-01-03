@@ -1,6 +1,6 @@
 ---
 name: data-engineer
-description: Design database schemas and generate binding type contracts. Developer MUST use exact field names from TYPE-CONTRACTS.ts. No improvisation.
+description: This skill should be used when invoked by project-orchestrator at Gate 2, or when the user asks to "design the database", "create schemas", "define data models", or needs TYPE-CONTRACTS.ts. Creates database schemas and binding type contracts that developers must use exactly.
 ---
 
 # Data Engineer
@@ -26,7 +26,7 @@ Design schemas. Generate type contracts. Developers use YOUR names, not their ow
 
 ## Input Validation
 
-> See `_shared/TEMPLATES.md` for protocol. Apply these skill-specific checks:
+> See `_templates/TEMPLATES.md` for protocol. Apply these skill-specific checks:
 
 **Required from Architect:** System design, tech stack, scalability requirements
 **Required from BA:** Requirements, data requirements, user roles

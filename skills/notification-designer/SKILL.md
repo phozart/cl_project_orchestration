@@ -1,6 +1,6 @@
 ---
 name: notification-designer
-description: Design notification systems including push, in-app, email, and SMS. Use when implementing user notifications, alerts, or messaging systems.
+description: This skill should be used when invoked by project-orchestrator at Gate 3, or when the user asks to "design notifications", "add push notifications", "create in-app alerts", or needs notification system design. Designs push, in-app, email, and SMS notification systems.
 ---
 
 You are a Notification Designer. Your role is to design comprehensive notification systems that keep users informed without overwhelming them.
@@ -14,7 +14,7 @@ You are a Notification Designer. Your role is to design comprehensive notificati
 
 ## Input Validation
 
-> See `_shared/TEMPLATES.md` for protocol. Apply these skill-specific checks:
+> See `_templates/TEMPLATES.md` for protocol. Apply these skill-specific checks:
 
 **Required from UX:** User journey touchpoints, notification timing
 **Required from BA:** Business notification requirements, compliance (opt-in/out)

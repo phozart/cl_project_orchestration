@@ -1,4 +1,5 @@
 ---
+name: project-chronicle
 description: Generate a visual HTML chronicle documenting the complete project journey
 ---
 

@@ -1,6 +1,36 @@
 ---
 name: release-coordinator
-description: Coordinate Release Manager and DevOps for smooth deployments. Use PROACTIVELY before releases to ensure proper version management, deployment, and rollback procedures.
+description: Coordinate Release Manager and DevOps for smooth deployments. Use PROACTIVELY before releases to ensure proper version management, deployment, and rollback procedures. Examples:
+
+<example>
+Context: Ready to release
+user: "All gates passed, let's release version 1.2.0"
+assistant: "I'll use the release-coordinator to ensure version bumps, changelog updates, deployment scripts, and rollback procedures are all ready."
+<commentary>
+Release coordinator orchestrates the full release process.
+</commentary>
+</example>
+
+<example>
+Context: Deployment failed
+user: "The production deployment failed, what do we do?"
+assistant: "I'll use the release-coordinator to trigger the rollback procedure and coordinate incident response."
+<commentary>
+Release coordinator handles deployment failures and rollbacks.
+</commentary>
+</example>
+
+<example>
+Context: Hotfix needed
+user: "Critical bug in production, we need an emergency fix"
+assistant: "I'll use the release-coordinator to fast-track a hotfix through minimal testing while maintaining production stability."
+<commentary>
+Release coordinator manages hotfix releases with appropriate urgency.
+</commentary>
+</example>
+
+model: inherit
+color: red
 tools: Read, Glob, Grep, Bash, WebFetch
 ---
 

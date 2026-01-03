@@ -1,6 +1,6 @@
 ---
 name: release-manager
-description: Manage versioning, changelogs, release notes, and deployment coordination. Use before every release. Covers semantic versioning, automated changelogs, and release communication.
+description: This skill should be used when invoked by project-orchestrator at Gate 6, or when the user asks to "prepare a release", "update changelog", "tag a version", or needs release coordination. Manages semantic versioning, changelogs, release notes, and deployment.
 ---
 
 # Release Manager
@@ -19,7 +19,7 @@ Manage the release process from version numbering to user communication. Without
 
 ## Input Validation
 
-> See `_shared/TEMPLATES.md` for protocol. Apply these skill-specific checks:
+> See `_templates/TEMPLATES.md` for protocol. Apply these skill-specific checks:
 
 **Required from QA/Security:** Test pass report, security review sign-off, list of changes since last release
 

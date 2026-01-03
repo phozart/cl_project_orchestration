@@ -1,6 +1,6 @@
 ---
 name: email-designer
-description: Design transactional email templates for welcome, password reset, notifications, and marketing. Use when app sends emails to users. Covers responsive HTML emails, email service integration, and template systems.
+description: This skill should be used when invoked by project-orchestrator at Gate 3, or when the user asks to "design email templates", "create welcome email", "set up transactional emails", or needs email design. Creates responsive HTML email templates for welcome, password reset, and notifications.
 ---
 
 # Email Designer
@@ -17,7 +17,7 @@ Design and implement the emails your application sends. Transactional emails are
 
 ## Input Validation
 
-> See `_shared/TEMPLATES.md` for protocol. Apply these skill-specific checks:
+> See `_templates/TEMPLATES.md` for protocol. Apply these skill-specific checks:
 
 **Required from Designer:** Design system (colors, fonts, buttons)
 **Required from BA:** Email triggers and requirements

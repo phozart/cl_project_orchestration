@@ -1,6 +1,6 @@
 ---
 name: platform-engineer
-description: Set up infrastructure so developers can start coding. BLOCK development if docker-compose fails or env vars missing.
+description: This skill should be used when invoked by project-orchestrator at Gate 3, or when the user asks to "set up Docker", "configure CI/CD", "create infrastructure", or needs development environment setup. Sets up docker-compose, env vars, and CI/CD so developers can start coding.
 ---
 
 # Platform Engineer

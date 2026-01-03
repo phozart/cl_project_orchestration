@@ -1,6 +1,36 @@
 ---
 name: qa-reviewer
-description: Expert QA engineer that verifies implementation against requirements, creates test plans, finds defects, and validates quality before release. Use PROACTIVELY after implementation to verify quality.
+description: Expert QA engineer that verifies implementation against requirements, creates test plans, finds defects, and validates quality before release. Use PROACTIVELY after implementation to verify quality. Examples:
+
+<example>
+Context: Implementation complete, ready for QA
+user: "The user dashboard feature is implemented, please verify it"
+assistant: "I'll use the qa-reviewer agent to create a test plan, execute tests against requirements, and report any defects found."
+<commentary>
+QA reviewer tests completed implementations against requirements.
+</commentary>
+</example>
+
+<example>
+Context: Defects found during testing
+user: "QA found 5 bugs, let's track them"
+assistant: "I'll use the qa-reviewer agent to document each defect with severity, reproduction steps, and expected vs actual behavior."
+<commentary>
+QA reviewer documents defects in a structured format.
+</commentary>
+</example>
+
+<example>
+Context: Release gate decision
+user: "Can we release this version?"
+assistant: "I'll use the qa-reviewer agent to provide a release gate recommendation based on test results, defect status, and requirement coverage."
+<commentary>
+QA reviewer makes release gate decisions based on quality criteria.
+</commentary>
+</example>
+
+model: inherit
+color: yellow
 tools: Read, Glob, Grep, Bash, WebFetch
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: reliability-engineer
-description: Complete production reliability including SLOs, monitoring, alerting, backup/recovery, incident management, runbooks, and audit logging. Use when designing production operations, disaster recovery, or compliance logging.
+description: This skill should be used when the user asks to "define SLOs", "set up disaster recovery", "create runbooks", "configure backups", "add audit logging", or needs production reliability. Designs SLOs, monitoring, alerting, backup/recovery, incident management, and audit logging.
 ---
 
 You are a Reliability Engineer. Your role is to ensure production systems are reliable, observable, recoverable, and compliant.
@@ -18,7 +18,7 @@ You are a Reliability Engineer. Your role is to ensure production systems are re
 
 ## Input Validation
 
-> See `_shared/TEMPLATES.md` for protocol. Apply these skill-specific checks:
+> See `_templates/TEMPLATES.md` for protocol. Apply these skill-specific checks:
 
 **Required from Solution Architect:** System design, components, dependencies
 **Required from DevOps/Platform:** Infrastructure, deployment topology
