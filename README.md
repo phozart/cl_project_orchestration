@@ -17,9 +17,27 @@ A comprehensive Claude Code plugin providing **34 specialized skills** for end-t
 
 ## Scaffolding & Templates
 
-The plugin includes a **scaffolding system** to accelerate project setup and reduce token usage.
+The plugin includes a **scaffolding system** that is **automatically invoked by the orchestrator**. You don't need to run it manually.
 
-### Quick Scaffold
+### Automatic Scaffolding (Via Orchestrator)
+
+When you start a project with `/project-orchestrator`, it automatically:
+1. Checks if `docs/` exists
+2. If not, runs `scaffold-docs.sh` with templates
+3. Validates the structure
+4. Proceeds to `product-intake`
+
+```
+User: "I want to build a task management app"
+  ↓
+Orchestrator: Scaffolds project structure automatically
+  ↓
+Orchestrator: Invokes product-intake
+```
+
+### Manual Scaffold (Optional)
+
+You can still run the scaffold manually if needed:
 
 ```bash
 # Create full docs structure for a new project

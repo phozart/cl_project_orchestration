@@ -44,15 +44,37 @@ INIT → INTAKE → GATE 0 → BA → GATE 1 → ARCH → GATE 2 → DESIGN → 
 
 ## Commands
 
-### INIT (New Projects Only)
+### INIT (New Projects - Automatic)
 
-```bash
-./scripts/scaffold-docs.sh "Project Name" --with-templates
-./scripts/validate-gate.sh init
+When starting a new project, the orchestrator AUTOMATICALLY:
+
+1. **CHECK** if `docs/` directory exists
+2. **IF NOT EXISTS** → RUN scaffold script:
+   ```bash
+   /path/to/plugin/scripts/scaffold-docs.sh "Project Name" --with-templates
+   ```
+3. **VALIDATE** structure:
+   ```bash
+   /path/to/plugin/scripts/validate-gate.sh init
+   ```
+4. **INVOKE** `product-intake` to gather project information
+
+**User does NOT need to run scaffold manually.** The orchestrator handles it.
+
+```
+User says: "I want to build an app that..."
+     ↓
+Orchestrator checks: docs/ exists?
+     ↓ NO
+Orchestrator runs: scaffold-docs.sh "Project Name" --with-templates
+     ↓
+Orchestrator validates: validate-gate.sh init
+     ↓ PASS
+Orchestrator invokes: product-intake
 ```
 
-IF script fails → FIX before proceeding.
-IF docs/ exists → SKIP to appropriate phase.
+IF docs/ already exists → SKIP scaffold, proceed to appropriate phase.
+IF scaffold fails → SHOW error, FIX before proceeding.
 
 ### GATE 0: Product Design
 
